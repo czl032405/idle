@@ -1,0 +1,29 @@
+{
+  "name": "guagei",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "pro": "node  --harmony-async-await index.js",
+    "dev": "nodemon  --harmony-async-await --debug index.js test -e js,css,html"
+  },
+  "engines": {
+    "node": "7.0.0",
+    "npm": "3.10.8"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.16.0",
+    "compression": "^1.6.2",
+    "cookie-parser": "^1.4.3",
+    "express": "^4.14.0",
+    "express-session": "^1.15.0",
+    "glob": "^7.1.1",
+    "http-proxy": "^1.16.2",
+    "md5": "^2.2.1",
+    "mongoose": "^4.7.7",
+    "socket.io": "^1.7.2",
+    "uuid": "^3.0.1"
+  }
+}

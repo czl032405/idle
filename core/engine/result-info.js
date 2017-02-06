@@ -11,6 +11,7 @@ class ResultInfo {
             dropEquits: [],
             dropItems: [],
             dropExp:0,
+            isLevelUp:false
 
         }
         Object.assign(this, defaultParam, o);

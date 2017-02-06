@@ -9,38 +9,25 @@ module.exports = function (app) {
 
 router.get('*', (req, res, next) => {
     var user = req.session.user;
-    if(/create|login/.test(req.url)){
+    if (/create|login/.test(req.path)) {
         next();
         return;
     }
-    if(!user){
+    if (!user) {
         next("not login");
         return;
     }
-    if(user.name=="czl"){
-        next();
-        return;
-    }
-    
-    next("not auth");
-
-    
-})
-
-router.get('/list', async (req, res, next) => {
-    var result = await Idle.Data.User.find();
-    result = JSON.parse(JSON.stringify(result));
-    for (let i in result) {
-        delete result[i].pw;
-    }
-    res.send({ status: 1, result })
-
+    next();
 })
 
 router.get('/get', async (req, res, next) => {
     var id = req.query.id;
-    var result = await Idle.Data.User.find({ id });
-    res.send({ status: 1, result })
+    try {
+        var result = Idle.Action.User.get(id)
+    }
+    catch (e) {
+        next(e)
+    }
 })
 
 router.get('/create', async (req, res, next) => {
@@ -59,15 +46,12 @@ router.get('/create', async (req, res, next) => {
         return;
     }
     try {
-        var result = await Idle.Data.User.create(name, pw);
-        result = JSON.parse(JSON.stringify(result));
-        delete result.pw;
+        var result = await Idle.Action.User.create(name, pw);
         res.send({ status: 1, result });
     }
     catch (e) {
-        next(e)
+        next(e);
     }
-
 })
 
 
@@ -83,48 +67,17 @@ router.get('/login', async (req, res, next) => {
         return;
     }
     try {
-        var result = await Idle.Data.User.login(name, pw);
-        if (result) {
-            result = JSON.parse(JSON.stringify(result));
-            delete result.pw;
-
-            var date = new Date();
-            var maxAge = 30 * 24 * 60 * 1000;
-            res.cookie('u', result._id, { maxAge });
-            res.cookie('d', date.getTime(), { maxAge });
-            res.cookie('k', md5(result._id + date.getTime() + "boom"), { maxAge });
-            req.session.user = result;
-            res.send({ status: 1, result });
-        }
-        else {
-            next("账号或密码不正确");
-        }
+        var result = await Idle.Action.User.login(name, pw);
+        var date = new Date();
+        var maxAge = 30 * 24 * 60 * 1000;
+        res.cookie('u', result._id, { maxAge });
+        res.cookie('d', date.getTime(), { maxAge });
+        res.cookie('k', md5(result._id + date.getTime() + "boom"), { maxAge });
+        req.session.user = result;
+        res.send({ status: 1, result });
     }
     catch (e) {
         next(e)
     }
 });
 
-router.get('/ban', async (req, res, next) => {
-    var name = req.query.name;
-    if (!name) {
-        next("请输入名字");
-        return;
-    }
-    try {
-        var result = await Idle.Data.User.ban(name);
-        if (result) {
-            result = JSON.parse(JSON.stringify(result));
-            delete result.pw;
-
-            res.send({ status: 1, result });
-        }
-        else {
-            next("用户不存在");
-        }
-
-    }
-    catch (e) {
-        next(e)
-    }
-})

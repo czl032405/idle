@@ -25,7 +25,10 @@ class Skill extends Entity {
 
     }
 
-    canLearn() {
+    /**
+     * @param {Object} hero 持久层hero
+     */
+    static canLearn(hero) {
         return true;
     }
 

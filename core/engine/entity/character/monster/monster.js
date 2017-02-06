@@ -8,7 +8,7 @@ const MonsterSetting = require('../../../setting/monster.json');
 class Monster extends Character {
     constructor(name, baseProps, skills, equits, drops) {
         super(name, baseProps, skills, equits);
-        this.drops = drops || {}; //read from setting
+        this.drops = drops || {}; 
     }
 
     static build(name, lv) {
@@ -17,7 +17,7 @@ class Monster extends Character {
         var exist = fs.existsSync(classPath);
         if (exist) {
             var MonsterClass = require(classPath);
-            var monster = new MonsterClass();
+            var monster = new MonsterClass(lv);
             return monster;
         }
         else {
@@ -39,10 +39,8 @@ class Monster extends Character {
                     var equit = Equit.build(i,setting.equits[i]);
                     equit && equits.push(equit);
                 }
-                // for (let i in setting.drops) {
-
-                // }
-                var monster = new Monster(name, props, skills, equits, setting.drops)
+                var drops = setting.drops||{};
+                var monster = new Monster(name, props, skills, equits, drops)
             }
 
         }

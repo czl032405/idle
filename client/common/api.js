@@ -1,6 +1,7 @@
 var PopMessage = console.error;
+const HeroSocket = io('/hero');
 const Api = {
-    serverPath:"/",
+    serverPath: "/",
     getJson(url, param, type = "get", dataType = "json") {
         dataType == "jsonp" && (type = "jsonp");
         if (!/http/i.test(url)) url = this.serverPath + url;
@@ -27,12 +28,25 @@ const Api = {
 
         })
     },
-    go2login(){
+    go2login() {
         console.info(233)
     },
-    user:{
-        list(param){
-            return Api.getJson('user/list',param);
+    user: {
+        list() {
+            return Api.getJson('user/list');
+        },
+        get(id) {
+            return Api.getJson('user/get', { id });
+        },
+        create(name, pw) {
+            return Api.getJson('user/create', { name, pw });
+        },
+        login(name, pw) {
+            return Api.getJson('user/login', { name, pw });
+        },
+        ban(name) {
+            return Api.getJson('user/ban', { name });
         }
-    }
+    },
+ 
 }

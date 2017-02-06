@@ -5,7 +5,7 @@ var EquitSchema = new Schema({ name: String, lv: Number, date: { type: Date, def
 var JobSchema = new Schema({ name: { type: String, default: '初心者', }, date: { type: Date, default: Date.now } });
 var ItemSchema = new Schema({ name: String, count: { type: Number, default: 1 }, date: { type: Date, default: Date.now } })
 var Hero = mongoose.model('Hero', new Schema({
-    name: { type: String, required: true ,unique:true},
+    name: { type: String, required: true, unique: true },
     baseProps: {
         lv: Number,
         exp: Number,
@@ -23,8 +23,14 @@ var Hero = mongoose.model('Hero', new Schema({
     equits: [
         EquitSchema
     ],
+    canLearnJobs: [
+        JobSchema
+    ],
     learnedJobs: [
         JobSchema
+    ],
+    canLearnSkills: [
+        SkillSchema
     ],
     learnedSkills: [
         SkillSchema
@@ -114,48 +120,54 @@ module.exports = {
     },
     /**
      * @param {Object} hero
-     * @param {String} job
+     * @param {Object} job
+     * @param {String} job.name
      */
     async learnJob(hero, job) {
-        for (let i in hero.learnedJobs) {
-            if (hero.learnedJobs[i].name == job) {
-                return;
-            }
-        }
-        hero.learnedJobs.push({ name: job });
+
+        hero.learnedJobs.push(job);
         return await hero.save();
     },
     /**
      * @param {Object} hero
-     * @param {String} skill
-     * @param {Number} lv
+     * @param {Object} skill
+     * @param {String} skill.name
+     * @param {Number} skill.lv
      */
-    async learnSkill(hero, skill, lv) {
+    async learnSkill(hero, skill) {
         for (let i in hero.learnedSkills) {
-            if (hero.learnedSkills[i].name == skill) {
-                hero.learnedSkills[i].lv = lv;
+            if (hero.learnedSkills[i].name == skill.name) {
+                hero.learnedSkills[i].lv = skill.lv;
                 return await hero.save();
             }
         }
-        hero.learnedSkills.push({ name: skill, lv });
+        hero.learnedSkills.push(skill);
         return await hero.save();
     },
     /**
      * @param {Object} hero
-     * @param {String} equit
-     * @param {Number} lv
+     * @param {Object} equit
+     * @param {String} equit.name
+     * @param {Number} equit.lv
      */
-    async addEquit(hero, equit, lv) {
-        hero.bagEquits.push({ name: equit, lv });
+    async addEquit(hero, equit) {
+        hero.bagEquits.push(equit);
         return await hero.save();
     },
     /**
      * @param {Object} hero
-     * @param {String} item
-     * @param {Number} count
+     * @param {Object} item
+     * @param {String} item.name
+     * @param {Number} item.count
      */
-    async addItem(hero, item, count) {
-        count = count || 1;
+    async addItem(hero, item) {
+        item.count = item.count || 1;
+        for (let i in hero.bagItems) {
+            if (hero.bagItems[i].name == item.name) {
+                hero.bagItems[i].count += count;
+                return await hero.save();
+            }
+        }
         hero.bagItems.push({ name: item, count });
         return await hero.save();
     },
@@ -163,14 +175,14 @@ module.exports = {
      * @param {Object} hero
      * @param {Number[]} ids
      */
-    removeEquits(hero, ids) {
+    async removeEquits(hero, ids) {
 
     },
     /**
      * @param {Object} hero
      * @param {Number[]} ids
      */
-    removeItem(hero, ids) {
+    async removeItem(hero, ids) {
 
     },
     /**
@@ -178,7 +190,7 @@ module.exports = {
      * @param {Object} hero2
      * @param {Number[]} ids
      */
-    sendEquit(hero, hero2, ids) {
+    async sendEquit(hero, hero2, ids) {
 
     },
     /**
@@ -186,7 +198,7 @@ module.exports = {
      * @param {Object} hero
      * @param {Number[]} ids
      */
-    sendItem(hero, hero2, ids) {
+    async sendItem(hero, hero2, ids) {
 
     },
 

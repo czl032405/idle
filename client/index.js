@@ -1,10 +1,10 @@
-window.onload = function () {
+{
     var vm = new Vue({
         el: '.app',
-        async mounted(){
+        async mounted() {
             console.info(Api)
-           var result = await Api.user.list();
-           console.info(result);
+            var result = await Api.user.list();
+            console.info(result);
         }
     })
 

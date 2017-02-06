@@ -1,4 +1,5 @@
-const Monster = require('../entity/character/monster/monster.js');
+const Hero = require('./entity/character/hero/hero.js');
+const Monster = require('./entity/character/monster/monster.js');
 const Battle = require("./battle");
 const Engine ={
     buildBattle(A, B) {
@@ -7,18 +8,19 @@ const Engine ={
         return battle;
     },
     buildHero(name,job,baseProps,skills,equits){
-        var HeroClass = require(`../entity/character/hero/${job}.js`);
-        var hero = new HeroClass();
+        var hero = Hero.build(name,job,baseProps,skills,equits);
         return hero;
     },
     buildMonster(name,lv){
         var monster = Monster.build(name,lv);
         return monster;
-        // var MonsterClass = require(`../entity/character/monster/${name}.js`);
-        // var monster = new MonsterClass();
-        // return monster;
-    }
+    },
+    calCanLearnJobs(hero){
 
+    },
+    calCanLearnSkills(hero){
+
+    }
 }
 
 module.exports = Engine;

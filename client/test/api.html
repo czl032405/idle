@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Test:api</title>
+    <link rel="import" href="../common/common.html">
+</head>
+
+<body>
+    <div class="container">
+
+    </div>
+    <script>
+        var rawConsoleLog = console.log;
+        var rawConsoleGroup = console.groupCollapsed;
+        console.log = function (msg) {
+            
+            rawConsoleLog(msg);
+            typeof msg!="string" && (msg=JSON.stringify(msg))
+            var html = `<p>${msg}</p>`;
+            var cHtml = document.querySelector(".container").innerHTML;
+            cHtml += html;
+            document.querySelector(".container").innerHTML = cHtml;
+
+        }
+        console.groupCollapsed = function (msg) {
+            rawConsoleGroup(msg);
+               typeof msg!="string" && (msg=JSON.stringify(msg))
+            var html = `<p>${msg}</p>`;
+            var cHtml = document.querySelector(".container").innerHTML;
+            cHtml += html;
+            document.querySelector(".container").innerHTML = cHtml;
+
+        }
+        var runTest = async function () {
+            await Api.user.list();
+            await Api.user.get(2);
+            await Api.user.create(Math.floor(Math.random()*10000),123456);
+            await Api.user.login("abc",1234);
+            await Api.user.ban("abc")
+        }
+
+        runTest();
+    </script>
+</body>
+
+</html>

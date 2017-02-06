@@ -1,8 +1,8 @@
 const EndReason = require('./end-reason.js');
 const ResultInfo = require('./result-info.js');
 const RoundInfo = require('./round-info');
-const Character = require('../entity/character/character.js');
-const Buff = require('../entity/skill/buff/buff.js');
+const Character = require('./entity/character/character.js');
+const Buff = require('./entity/skill/buff/buff.js');
 class Battle {
     constructor(A, B) {
         this.A = A;

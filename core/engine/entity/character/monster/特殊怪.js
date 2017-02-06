@@ -9,9 +9,7 @@ class 特殊怪 extends Monster {
         var vit = 99 * lv;
         var dex = 99 * lv;
         var luk = 99 * lv;
-        var skills = [];
-        var equits = [];
-        super("特殊怪", new BaseProps({ lv, str, int, agi, vit, dex, luk }), skills, equits);
+        super("特殊怪", new BaseProps({ lv, str, int, agi, vit, dex, luk }));
 
     }
 }

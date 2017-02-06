@@ -3,14 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <title>Document</title>
+        <link rel="import" href="../common/common.html">
 </head>
 <body>
-        23335
-    <script src="./index.js"></script>
-    <script src="/socket.io/socket.io.js"></script>
+    
     <script>
-    var socket = io.connect('http://localhost');
-    socket.on('socket test from server', function (data) {
+    var socket = io('/hero');
+    socket.on('connected', function (data) {
         console.log(data);
         socket.emit('socket test from client', { status: 'success' });
     });

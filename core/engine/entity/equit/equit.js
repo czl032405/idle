@@ -22,6 +22,13 @@ class Equit extends Entity {
         
     }
 
+    /**
+     * @param {Object} hero 持久层hero
+     */
+    static canEquit(hero){
+
+    }
+
 
 
 }

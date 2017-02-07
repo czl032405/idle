@@ -90,7 +90,7 @@ const Idle = require("../core/idle");
         }
 
         //带有_参数设定永久缓存
-        if (req.query._) {
+        if (req.query._&&/js/.test(req.path)) {
             res.set("Cache-Control", "max-age=666666666")
             res.setHeader("eggg", "233");
         }

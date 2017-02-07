@@ -1,5 +1,5 @@
 var Entity = require('../entity.js');
-var RoundInfo = require('../../engine/round-info.js');
+var RoundInfo = require('../../round-info.js');
 var BattleProps = require('./battle-props.js');
 var PositiveSkill = require('../skill/positive/positive.js')
 var PasstiveSkill = require('../skill/passtive/passtive.js');

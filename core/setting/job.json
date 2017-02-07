@@ -1,0 +1,29 @@
+{
+    "初心者": {
+        "levelup": {
+            "baseProps": {
+                "str": 1,
+                "int": 1,
+                "agi": 1,
+                "vit": 1,
+                "dex": 1,
+                "luk": 1
+            }
+        }
+    },
+    "战士": {
+        "levelup": {
+            "baseProps": {
+                "str": 2,
+                "int": 1,
+                "agi": 1,
+                "vit": 2,
+                "dex": 1,
+                "luk": 1
+            }
+        },
+        "pre": {
+           
+        }
+    }
+}

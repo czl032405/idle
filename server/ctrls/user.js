@@ -21,9 +21,11 @@ router.get('*', (req, res, next) => {
 })
 
 router.get('/get', async (req, res, next) => {
-    var id = req.query.id;
+    var id = req.query.id||req.session.user.id;
     try {
-        var result = Idle.Action.User.get(id)
+        var result =await Idle.Action.User.get(id);
+
+        res.send({status:1,result})
     }
     catch (e) {
         next(e)
@@ -47,6 +49,7 @@ router.get('/create', async (req, res, next) => {
     }
     try {
         var result = await Idle.Action.User.create(name, pw);
+        result = await Idle.Action.User.get(result.id);
         res.send({ status: 1, result });
     }
     catch (e) {
@@ -70,10 +73,11 @@ router.get('/login', async (req, res, next) => {
         var result = await Idle.Action.User.login(name, pw);
         var date = new Date();
         var maxAge = 30 * 24 * 60 * 1000;
-        res.cookie('u', result._id, { maxAge });
+        res.cookie('u', result.id, { maxAge });
         res.cookie('d', date.getTime(), { maxAge });
-        res.cookie('k', md5(result._id + date.getTime() + "boom"), { maxAge });
+        res.cookie('k', md5(result.id + date.getTime() + "boom"), { maxAge });
         req.session.user = result;
+        result = await Idle.Action.User.get(result.id);
         res.send({ status: 1, result });
     }
     catch (e) {

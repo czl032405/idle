@@ -3,8 +3,12 @@ const Data = require('../data/data.js');
 
 const Admin = {
     User: {
-        list(condition) {
-            var result = await Data.User.find(condition);
+        async get(id){
+            var result = await Data.User.findById(id);
+            return result;
+        },
+        async list(condition) {
+            var result = await Data.User.find(condition || {});
             result = JSON.parse(JSON.stringify(result));
             for (let i in result) {
                 delete result[i].pw;
@@ -12,8 +16,16 @@ const Admin = {
             return result
         },
 
-        ban() {
-            var result = await Idle.Data.User.ban(name);
+        async ban() {
+            var result = null;
+            var user = await User.findOne({ name });
+            if (user) {
+                user.status = 2;
+                result = await user.save();
+            }
+            else {
+                result = user;
+            }
             if (result) {
                 result = JSON.parse(JSON.stringify(result));
                 delete result.pw;
@@ -24,8 +36,8 @@ const Admin = {
             }
         }
     },
-    Hero:{
-        list(condition){
+    Hero: {
+        async list(condition) {
             var result = await Data.Hero.find(condition);
             return result;
         }

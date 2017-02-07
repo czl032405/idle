@@ -1,6 +1,5 @@
 {
-    "map1": {
-        "minLevel": 0,
+    "新手村": {
         "monsters": {
             "史莱姆": {
                 "minLevel": 1,
@@ -19,6 +18,9 @@
                 "boss":true
             }
             
+        },
+        "pre":{
+            "lv":1
         }
     }
 }

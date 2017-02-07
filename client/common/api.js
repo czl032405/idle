@@ -1,5 +1,4 @@
 var PopMessage = console.error;
-const HeroSocket = io('/hero');
 const Api = {
     serverPath: "/",
     getJson(url, param, type = "get", dataType = "json") {
@@ -17,10 +16,10 @@ const Api = {
             param && console.log(param)
             data && console.log(data);
             console.groupEnd();
-            if (/notLogined/i.test(data.msg)) {
+            if (/not login/i.test(data.msg)) {
                 Api.go2login();
             }
-            if (!/succ|1/.test(data.status)) {
+            if (!data.status != 1) {
                 data.msg && PopMessage(`${data.msg}`);
                 return data;
             }
@@ -29,12 +28,9 @@ const Api = {
         })
     },
     go2login() {
-        console.info(233)
+        //location.href="login.html";
     },
     user: {
-        list() {
-            return Api.getJson('user/list');
-        },
         get(id) {
             return Api.getJson('user/get', { id });
         },
@@ -44,9 +40,32 @@ const Api = {
         login(name, pw) {
             return Api.getJson('user/login', { name, pw });
         },
-        ban(name) {
-            return Api.getJson('user/ban', { name });
-        }
     },
- 
+    hero: {
+        create(name) {
+            return Api.getJson('hero/create', { name })
+        },
+        select(id) {
+            return Api.getJson('hero/select', { id })
+        },
+        changeJob(job) {
+            return Api.getJson('hero/changeJob', { job })
+        },
+        useSkills(skills) {
+            return Api.getJson('hero/useSkills', { skills })
+        },
+        useEquits(equits) {
+            return Api.getJson('hero/useEquits', { equits })
+        },
+        learnJob(job) {
+            return Api.getJson('hero/learnJob', { job })
+        },
+        learnSkill(skill, lv) {
+            return Api.getJson('hero/learnSkill', { skill, lv });
+        },
+        fight() {
+            return Api.getJson('hero/fight')
+        }
+    }
+
 }

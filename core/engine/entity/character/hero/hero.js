@@ -1,5 +1,5 @@
 const Character = require("../character.js");
-const Data = require('../../../data/data.js'); 
+const Data = require('../../../../data/data.js');
 class Hero extends Character {
     constructor(name, baseProps, job, skills, equits) {
         super(name, baseProps, skills, equits);
@@ -9,29 +9,17 @@ class Hero extends Character {
     static build(name, baseProps, job, skills, equits) {
         var classPath = path.resolve(__dirname, `./${job}.js`);
         var exist = fs.existsSync(classPath);
-        if(exist){
+        if (exist) {
             var HeroClass = require(classPath);
-            var hero = new HeroClass(name,baseProps,skills,equits);
+            var hero = new HeroClass(name, baseProps, skills, equits);
             return hero;
         }
-        else{
+        else {
             return new Hero(name, baseProps, job, skills, equits)
         }
 
     }
 
-    /**
-     * @param {Object} hero 持久层hero
-     */
-    static canLearn(hero){
-        
-    }
 
-
-
-  
-
-
- 
 }
 module.exports = Hero;

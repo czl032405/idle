@@ -8,10 +8,9 @@ class ResultInfo {
             endReason:EndReason.None,
             
             
-            dropEquits: [],
-            dropItems: [],
+            dropEquits: [],//{name,lv}
+            dropItems: [],//{name,count}
             dropExp:0,
-            isLevelUp:false
 
         }
         Object.assign(this, defaultParam, o);

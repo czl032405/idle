@@ -15,12 +15,8 @@ const Engine ={
         var monster = Monster.build(name,lv);
         return monster;
     },
-    calCanLearnJobs(hero){
 
-    },
-    calCanLearnSkills(hero){
 
-    }
 }
 
 module.exports = Engine;

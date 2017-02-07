@@ -30,7 +30,7 @@ router.get('/create', async function (req, res, next) {
     var name = req.query.name;
     var user = req.session.user;
     try {
-        var result = await Idle.Action.Hero.create(name, user);
+        var result = await Idle.Action.Hero.create( user,name);
         res.send({ status: 1, result })
     }
     catch (e) {
@@ -135,3 +135,14 @@ router.get('/learnSkill',async function(req,res,next){
     }
 })
 
+
+router.get('/fight',async function(req,res,next){
+    var hero = req.session.hero;
+    try{
+        var result = await Idle.Action.Hero.fight(hero);
+        res.send({status:1,result});
+    }
+    catch(e){
+        next(e);
+    }
+})

@@ -9,39 +9,60 @@
 
 <body>
     <div class="container">
+        <div class="" v-for="(u,key,index) in Api" style="overflow: hidden;" >
+            <h1>{{key}}</h1><br>
+            <div class="card" v-for="(fun,key,index) in u" style="margin-bottom:20px;width:33%;float:left;">
+                <h4 class="card-title">{{key}}</h4>
+                <input class="form-text" type="text" v-for="p in fun.args2" :placeholder="p.name" v-model="p.value">
+                <pre>{{fun.result}}</pre>
+                <button class="btn btn-primary" v-on:click="action(fun)">action</button>
+            </div>
+        </div>
 
     </div>
     <script>
-        var rawConsoleLog = console.log;
-        var rawConsoleGroup = console.groupCollapsed;
-        console.log = function (msg) {
-            
-            rawConsoleLog(msg);
-            typeof msg!="string" && (msg=JSON.stringify(msg))
-            var html = `<p>${msg}</p>`;
-            var cHtml = document.querySelector(".container").innerHTML;
-            cHtml += html;
-            document.querySelector(".container").innerHTML = cHtml;
+        var vm = new Vue({
+            el: '.container',
+            data: {
+                Api: Object.assign({}, Api)
+            },
+            mounted() {
+                for (let i in this.Api) {
+                    if (!/user|hero/.test(i)) {
+                        Vue.delete(this.Api, i);
+                        continue;
+                    }
+                    for (let j in this.Api[i]) {
+                        var func = this.Api[i][j];
+                        var args = func.toString()
+                            .match(/\(([^)]*)\)/)[1]
+                            .split(',')
+                            .map(function (arg) {
+                                return arg.replace(/\/\*.*\*\//, "").trim();
+                            }).filter(function (arg) {
+                                return arg;
+                            });
+                        var args2 = [];
+                        for (var a in args) {
+                            args2.push({ name: args[a], value: "" })
+                        }
+                        this.Api[i][j] = { func, name: j, args, args2 ,result:""}
+                    }
+                }
 
-        }
-        console.groupCollapsed = function (msg) {
-            rawConsoleGroup(msg);
-               typeof msg!="string" && (msg=JSON.stringify(msg))
-            var html = `<p>${msg}</p>`;
-            var cHtml = document.querySelector(".container").innerHTML;
-            cHtml += html;
-            document.querySelector(".container").innerHTML = cHtml;
-
-        }
-        var runTest = async function () {
-            await Api.user.list();
-            await Api.user.get(2);
-            await Api.user.create(Math.floor(Math.random()*10000),123456);
-            await Api.user.login("abc",1234);
-            await Api.user.ban("abc")
-        }
-
-        runTest();
+            },
+            methods: {
+                async action(func) {
+                     func.result="";
+                    var values = [];
+                    for (let i in func.args2) {
+                        values.push(func.args2[i].value);
+                    }
+                    var result = await func.func.apply(Api,values )
+                    func.result = JSON.stringify(result,null,2)
+                }
+            }
+        })
     </script>
 </body>
 

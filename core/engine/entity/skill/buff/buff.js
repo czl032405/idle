@@ -1,6 +1,6 @@
 var Skill = require('../skill.js');
 var PasstiveSkill = require('../passtive/passtive.js')
-var RoundInfo = require('../../../engine/round-info.js');
+var RoundInfo = require('../../../round-info.js');
 class Buff extends PasstiveSkill {
     constructor(name, lv) {
         super(name, lv);

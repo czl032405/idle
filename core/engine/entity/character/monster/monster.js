@@ -3,8 +3,7 @@ const path = require('path');
 const Character = require("../character.js");
 const Skill = require('../../skill/skill.js');
 const Equit = require('../../equit/equit.js');
-const MonsterSetting = require('../../../setting/monster.json');
-
+const MonsterSetting = require('../../../../setting/monster.json');
 class Monster extends Character {
     constructor(name, baseProps, skills, equits, drops) {
         super(name, baseProps, skills, equits);
@@ -21,7 +20,6 @@ class Monster extends Character {
             return monster;
         }
         else {
-            console.info(MonsterSetting)
             if (MonsterSetting[name]) {
                 //var setting = Object.assign({},MonsterSetting[name]);
                 var setting = MonsterSetting[name];
@@ -45,6 +43,7 @@ class Monster extends Character {
 
         }
     }
+
 
 }
 module.exports = Monster;

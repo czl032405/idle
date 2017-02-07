@@ -1,19 +1,17 @@
 const fs = require('fs');
 const path = require('path');
 const Entity = require('../entity.js');
-class Equit extends Entity {
-    constructor(name, lv) {
+class Item extends Entity {
+    constructor(name) {
         super(name);
-        this.lv = lv;//精炼等级
- 
     }
 
     static build(name,lv){
         var classPath = path.resolve(__dirname, `./${name}.js`);
         var exist = fs.existsSync(classPath);
         if (exist) {
-            var EquitClass = require(classPath);
-            return new EquitClass(lv);
+            var ItemClass = require(classPath);
+            return new ItemClass(lv);
         }
         return null;
     }
@@ -23,8 +21,11 @@ class Equit extends Entity {
     }
 
 
+    static canUse(hero){
+        return true;
+    }
 
 
 
 }
-module.exports = Equit;
+module.exports = Item;

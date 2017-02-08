@@ -45,6 +45,9 @@ const Api = {
         create(name) {
             return Api.getJson('hero/create', { name })
         },
+        del(id){
+             return Api.getJson('hero/del', { id })
+        },
         select(id) {
             return Api.getJson('hero/select', { id })
         },
@@ -65,6 +68,21 @@ const Api = {
         },
         fight() {
             return Api.getJson('hero/fight')
+        }
+    },
+    admin:{
+        user:{
+            list(){
+                return Api.getJson("admin/user/list")
+            },
+            ban(name){
+                return Api.getJson("admin/user/ban",{name})
+            }
+        },
+        hero:{
+            list(){
+                return Api.getJson("admin/hero/list")
+            }
         }
     }
 

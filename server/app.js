@@ -33,7 +33,7 @@ const Idle = require("../core/idle");
             return uuidV4() // use UUIDs for session IDs
         },
     }));
-    app.set('port', (process.env.PORT || 80));
+    app.set('port', (process.env.PORT || 81));
 }
 
 
@@ -172,6 +172,10 @@ const Idle = require("../core/idle");
         });
 
         app.use(function (err, req, res, next) {
+            if(req.query.test){
+                next(err);
+                return;
+            }
             if (err.message || err.errmsg || typeof err == "string") {
                 res.status(200)
                 res.send({ status: 0, msg: err.message || err.errmsg || err })

@@ -1,3 +1,4 @@
+var path = require('path');
 var Entity = require('../entity.js');
 var RoundInfo = require('../../round-info.js');
 var BattleProps = require('./battle-props.js');

@@ -24,7 +24,7 @@ router.get('*', async (req, res, next) => {
 
 router.get('/user/list', async (req, res, next) => {
     try {
-        var result = Idle.Action.Admin.User.list();
+        var result = await Idle.Action.Admin.User.list();
         res.send({ status: 1, result })
     }
     catch (e) {
@@ -53,7 +53,7 @@ router.get('/user/ban', async (req, res, next) => {
 
 router.get('/hero/list', async (req, res, next) => {
     try {
-        var result = Idle.Action.Admin.Hero.list();
+        var result = await Idle.Action.Admin.Hero.list();
         res.send({ status: 1, result })
     }
     catch (e) {

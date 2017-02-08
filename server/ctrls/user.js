@@ -58,6 +58,7 @@ router.get('/create', async (req, res, next) => {
 })
 
 
+
 router.get('/login', async (req, res, next) => {
     var name = req.query.name || "";
     var pw = req.query.pw || "";
@@ -72,7 +73,7 @@ router.get('/login', async (req, res, next) => {
     try {
         var result = await Idle.Action.User.login(name, pw);
         var date = new Date();
-        var maxAge = 30 * 24 * 60 * 1000;
+        var maxAge = 30 * 24 * 60*60 * 1000;
         res.cookie('u', result.id, { maxAge });
         res.cookie('d', date.getTime(), { maxAge });
         res.cookie('k', md5(result.id + date.getTime() + "boom"), { maxAge });

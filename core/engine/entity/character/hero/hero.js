@@ -1,3 +1,5 @@
+const fs = require('fs');
+const path = require('path');
 const Character = require("../character.js");
 const Data = require('../../../../data/data.js');
 class Hero extends Character {

@@ -111,7 +111,7 @@ class Battle {
         }
     }
     checkStatus() {
-         var A = this.A;
+        var A = this.A;
         var B = this.B;
         var resultInfo = new ResultInfo();
         if (A.battleProps.hp <= 0 && B.battleProps.hp <= 0) {

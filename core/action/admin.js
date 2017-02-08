@@ -3,7 +3,7 @@ const Data = require('../data/data.js');
 
 const Admin = {
     User: {
-        async get(id){
+        async get(id) {
             var result = await Data.User.findById(id);
             return result;
         },
@@ -11,7 +11,11 @@ const Admin = {
             var result = await Data.User.find(condition || {});
             result = JSON.parse(JSON.stringify(result));
             for (let i in result) {
-                delete result[i].pw;
+                for (let j in result[i]) {
+                    if (/pw/.test(j)) {
+                        delete result[i][j]
+                    }
+                }
             }
             return result
         },
@@ -37,8 +41,20 @@ const Admin = {
         }
     },
     Hero: {
+        async get(id){
+            var result = await Data.Hero.findById(id);
+            return result;
+        },
         async list(condition) {
-            var result = await Data.Hero.find(condition);
+            var result = await Data.Hero.find(condition || {});
+            result = JSON.parse(JSON.stringify(result));
+            for (let i in result) {
+                for (let j in result[i]) {
+                    if (!/name|id|prop/i.test(j)) {
+                        delete result[i][j]
+                    }
+                }
+            }
             return result;
         }
     }

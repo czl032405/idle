@@ -12,20 +12,45 @@ const SkillSetting = require('../setting/skill.json');
 
 const Hero = {
     async create(user, name) {
-        var result = await Data.Hero.create({ name });
-        user.heros.push(result.id);
-        var result2 = await user.save();
-        return result;
+        var maxHero = IdleSetting.maxHero;
+        if (user.heros.length >= maxHero) {
+            throw "cant create more heros";
+        }
+        else {
+            var result = await Data.Hero.create({ name });
+            user.heros.push({ _id: result.id, name: result.name });
+            var result2 = await user.save();
+            return result;
+        }
+    },
+    async del(user, id) {
+        var delIndex = -1;
+        var result = null;
+        for (let i in user.heros) {
+            if (user.heros[i]._id == id) {
+                result = await Data.Hero.findById(id);
+                await result.remove();
+                delIndex = i;
+                break;
+            }
+        }
+        if (delIndex >= 0) {
+            user.heros.splice(delIndex, 1);
+            await user.save();
+            return ;
+        }
+        throw "ban:trys to del hero not yours"
 
     },
     async select(user, id) {
-        if (user.heros.indexOf(id)) {
-            var result = await Data.Hero.findById(id);
-            return result;
+        for (let i in user.heros) {
+            if (user.heros[i]._id == id) {
+                var result = await Data.Hero.findById(id);
+                return result;
+            }
         }
-        else {
-            throw "ban:trys to select hero not yours";
-        }
+        throw "ban:trys to select hero not yours";
+
     },
     async changeMap(hero, map) {
         hero.map = map;
@@ -50,7 +75,7 @@ const Hero = {
             }
         }
         if (result) {
-            return result;
+            return result.job;
         }
         else {
             throw "ban:trys to change to the job not learned";
@@ -72,7 +97,7 @@ const Hero = {
         if (checked) {
             hero.skills = skills;
             result = await hero.save();
-            return result;
+            return result.skills;
         }
         else {
             throw "ban:trys to use skills not learned";
@@ -95,7 +120,7 @@ const Hero = {
         if (checked) {
             hero.equits = equits;
             result = await hero.save();
-            return result;
+            return result.equits;
         }
         else {
             throw "ban:trys to use equits not owned";
@@ -103,37 +128,60 @@ const Hero = {
 
     },
     async learnJob(hero, job) {
+        hero.canLearnJobs = this.calCanLearnJobs(hero);
         for (let i in hero.learnedJobs) {
             if (hero.learnedJobs[i].name == job.name) {
                 throw "learnJob fail:learned";
                 return;
             }
         }
+        var learnIndex = -1;
         for (let i in hero.canLearnJobs) {
             if (hero.canLearnJobs[i].name == job.name) {
-                hero.learnedJobs.push(job);
-                await hero.save();
-                return hero.canLearnJobs[i]
+                learnIndex = i;
+                break;
             }
         }
+        if (learnIndex >= 0) {
+            hero.learnedJobs.push(job);
+            hero.job = job;
+            var result = hero.canLearnJobs.splice(learnIndex, 1);
+            await hero.save();
+            return result;
+        }
+
+
         throw "ban:trys to learn job cant learn";
 
     },
 
     async learnSkill(hero, skill) {
+        hero.canLearnSkills = this.calCanLearnSkills(hero);
+        var learnIndex = -1;
         for (let i in hero.canLearnSkills) {
-            if (hero.canLearnSkills[i].name == skill.name && hero.canLearnSkills.lv == skill.lv) {
-                for (let j in hero.learnedSkills) {
-                    if (hero.learnedSkills[j].name == skill.name) {
-                        hero.learnedSkills[j].lv = skill.lv;
-                        await hero.save();
-                        return hero.canLearnSkills[i]
-                    }
-                }
-                hero.learnedSkills.push(skill);
-                await hero.save();
-                return hero.canLearnSkills[i]
+            if (hero.canLearnSkills[i].name == skill.name && hero.canLearnSkills[i].lv == skill.lv) {
+                learnIndex = i;
             }
+        }
+        if (learnIndex >= 0) {
+            var result = hero.canLearnSkills.splice(learnIndex, 1);
+            var isSkillLevelup = false;
+            for (let j in hero.learnedSkills) {
+                if (hero.learnedSkills[j].name == skill.name) {
+                    hero.learnedSkills[j].lv = skill.lv;
+                    isSkillLevelup = true;
+                    break;
+                }
+            }
+            for (let s in hero.skills) {
+                if (hero.skills[s].name == skill.name) {
+                    hero.skills[s].lv = skill.lv;
+                    break;
+                }
+            }
+            !isSkillLevelup && hero.learnedSkills.push(skill);
+            await hero.save();
+            return result;
         }
         throw "ban:trys to learn skill cant learn";
     },
@@ -196,6 +244,7 @@ const Hero = {
     },
     handlePre(hero, pre) {
         var pass = true;
+        pre = pre || {};
         if (pre.job) {
             pass = false;
             for (let i in hero.learnedJobs) {
@@ -250,7 +299,17 @@ const Hero = {
     calCanLearnJobs(hero) {
         var canLearnJobs = [];
         for (let i in JobSetting) {
-            if (this.handlePre(hero, JobSetting.pre)) {
+            var isLearned = false;
+            for (let j in hero.learnedJobs) {
+                if (hero.learnedJobs[j].name == i) {
+                    isLearned = true;
+                    break;
+                }
+            }
+            if (isLearned) {
+                continue;
+            }
+            if (this.handlePre(hero, JobSetting[i].pre)) {
                 canLearnJobs.push({ name: i })
             }
         }
@@ -259,9 +318,18 @@ const Hero = {
     calCanLearnSkills(hero) {
         var canLearnSkills = [];
         for (let i in SkillSetting) {
-            if (this.handlePre(hero, SkillSetting.pre)) {
-                var name = i.split("-")[0];
-                var lv = i.split("-")[1] || 1;
+            var isLearned = false;
+            var name = i.split("-")[0];
+            var lv = i.split("-")[1] || 1;
+            for (let j in hero.learnedSkills) {
+                if (hero.learnedSkills[j].name == name && hero.learnedSkills[j].lv >= lv) {
+                    isLearned = true;
+                }
+            }
+            if (isLearned) {
+                continue;
+            }
+            if (this.handlePre(hero, SkillSetting[i].pre)) {
                 canLearnSkills.push({ name, lv });
             }
         }
@@ -269,15 +337,15 @@ const Hero = {
 
     },
     parseNextEngineMonster(hero) {
-        var monsters = MapSetting[hero.map.name];
+        var monsters = MapSetting[hero.map.name].monsters;
         var randomTotal = 0;
         var random = 0;
         var target = 0;
-        var targetMonsters = [];
+        var targetMonsters = {};
         for (let i in monsters) {
             if (monsters[i].minLevel <= hero.baseProps.lv) {
                 randomTotal += monsters[i].appear || 0;
-                targetMonsters.push(monsters[i]);
+                targetMonsters[i]=monsters[i]
             }
         }
         random = Math.floor(Math.random() * randomTotal) + 1;
@@ -295,7 +363,7 @@ const Hero = {
     },
     parseEngineHero(hero) {
         hero = JSON.parse(JSON.stringify(hero));
-        return Engine.buildHero(hero.name, hero.job.name, hero.baseProps, hero.skills, hero.equits);
+        return Engine.buildHero(hero.name,  hero.baseProps,hero.job.name, hero.skills, hero.equits);
     },
 
     async handleBattleResult(hero, resultInfo) {
@@ -322,7 +390,7 @@ const Hero = {
         }
     },
     async fight(hero) {
-        var engineMonster = this.parseNextMonster(hero);
+        var engineMonster = this.parseNextEngineMonster(hero);
         var engineHero = this.parseEngineHero(hero);
         var battle = Engine.buildBattle(engineHero, engineMonster);
         var result = battle.run();

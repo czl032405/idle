@@ -27,8 +27,11 @@
                 Api: Object.assign({}, Api)
             },
             mounted() {
+                 this.Api["admin-user"]=this.Api.admin.user;
+                 this.Api["admin-hero"]=this.Api.admin.hero;
+                 delete this.Api["admin"];
                 for (let i in this.Api) {
-                    if (!/user|hero/.test(i)) {
+                    if (!/user|hero|admin/.test(i)) {
                         Vue.delete(this.Api, i);
                         continue;
                     }

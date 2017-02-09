@@ -5,7 +5,7 @@ class PositiveSkill extends Skill {
     }
 
     attack(roundInfo){
-        
+        roundInfo.aniDelay=100;
     }
 
 }

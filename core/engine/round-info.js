@@ -4,7 +4,8 @@ class RoundInfo {
             attacker: null,
             defender: null,
 
-            delay: 0,
+            delay: 0,//毫秒后执行
+            aniDelay:0,//执行时长
             skillName: "-",
             isAvoid: false,
             isParry: false,

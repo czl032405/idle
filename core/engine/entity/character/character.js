@@ -76,13 +76,29 @@ class Character extends Entity {
     attack(roundInfo) {
         var skill = this.parseNextSkill();
         var skillName = skill.__proto__.constructor.name;
-        roundInfo.skillName= skillName;
+        roundInfo.skillName = skillName;
         skill.attack(roundInfo);
         return roundInfo;
     }
 
     defend(roundInfo) {
         return roundInfo;
+    }
+
+    getRoundInfoStatus() {
+        var obj = JSON.parse(JSON.stringify(this));
+        delete obj.equits;
+        delete obj.job;
+        delete obj.passtiveSkills;
+        delete obj.positiveSkills;
+        delete obj.skills;
+        delete obj.drops;
+        return obj;
+    }
+
+    getCurrentStatus() {
+         var obj = JSON.parse(JSON.stringify(this));
+        return obj;
     }
 
 }

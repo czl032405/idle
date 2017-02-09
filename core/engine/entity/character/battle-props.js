@@ -22,7 +22,8 @@ class BattleProps{
         Object.assign(this,defaultParm);
 
 
-        // this.hp = baseProps.str
+        this.maxhp = baseProps.str
+        this.hp = this.maxhp;
 
 
         this.nextInterval = this.interval;

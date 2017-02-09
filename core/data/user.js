@@ -7,7 +7,7 @@ const User = mongoose.model('User', new Schema({
     heros: [{ _id: String ,name:String}],
     status: { type: Number, default: 1 },
     creatdDate: { type: Date, default: Date.now },
-}));
+},{ versionKey: false }));
 
 
 module.exports = User;

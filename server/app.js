@@ -33,7 +33,7 @@ const Idle = require("../core/idle");
             return uuidV4() // use UUIDs for session IDs
         },
     }));
-    app.set('port', (process.env.PORT || 81));
+    app.set('port', (process.env.PORT || 80));
 }
 
 

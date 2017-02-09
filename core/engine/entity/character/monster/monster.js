@@ -46,6 +46,16 @@ class Monster extends Character {
         }
     }
 
+    getCurrentStatus() {
+        var obj = JSON.parse(JSON.stringify(this));
+        delete obj.drops;
+        delete obj.passtiveSkills;
+        delete obj.positiveSkills;
+        delete obj.skills;
+        delete obj.equits;
+        return obj;
+    }
+
 
 }
 module.exports = Monster;

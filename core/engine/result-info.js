@@ -2,8 +2,8 @@ const EndReason = require('./end-reason');
 class ResultInfo {
     constructor(o) {
         var defaultParam = {
-            winner: null,
-            loser: null,
+            winner: "",
+            loser: "",
             duration: 0,
             endReason:EndReason.None,
             

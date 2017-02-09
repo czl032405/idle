@@ -13,13 +13,17 @@ class Battle {
     run() {
         var roundInfos = [];
         var resultInfo = this.checkStatus();
+        var A = this.A.getCurrentStatus();
+        var B = this.B.getCurrentStatus();
         while (resultInfo.endReason == EndReason.None) {
             roundInfos.push(this.action());
             resultInfo = this.checkStatus();
         }
         return {
             roundInfos,
-            resultInfo
+            resultInfo,
+            A,
+            B
         }
 
 
@@ -32,7 +36,6 @@ class Battle {
         var action = this.parseNextAction();
         var delay = action.nextInterval || action.battleProps.nextInterval;
         var roundInfo = null;
-        this.duration += delay;
         A.buffs.forEach((b) => {
             b.nextInterval -= delay;
         })
@@ -43,9 +46,11 @@ class Battle {
         B.battleProps.nextInterval -= delay;
 
         if (action instanceof Buff) {
-            roundInfo = action.fire()
+            roundInfo = action.fire();
+            action.nextInterval = action.interval;
         }
         if (action instanceof Character) {
+            action.battleProps.nextInterval = action.battleProps.interval;
             var attacker = action;
             var defender = action == A ? B : A
             roundInfo = attacker.preAttack(defender);
@@ -66,9 +71,17 @@ class Battle {
         }
 
         roundInfo.delay = delay;
+        this.duration += roundInfo.delay;
+        this.duration += roundInfo.aniDelay;
         this.calRoundInfo(roundInfo);
+
+        roundInfo.attacker = roundInfo.attacker.getRoundInfoStatus();
+        roundInfo.defender = roundInfo.defender.getRoundInfoStatus();
+
         return roundInfo;
     }
+
+
 
 
 
@@ -90,7 +103,7 @@ class Battle {
         if (A.battleProps.nextInterval < action.nextInterval) {
             action = A;
         }
-        if (B.battleProps.nextInterval < action.nextInterval) {
+        if (B.battleProps.nextInterval < (action.nextInterval || action.battleProps.nextInterval)) {
             action = B;
         }
 
@@ -100,14 +113,17 @@ class Battle {
     calRoundInfo(roundInfo) {
         var A = this.A;
         var B = this.B;
+        var attacker = A.name == roundInfo.attacker.name ? A : B;
+        var defender = attacker == A ? B : A;
+
         if (roundInfo.isAvoid || roundInfo.isParry) {
             roundInfo.d.hp < 0 && (roundInfo.d.hp = 0);
         }
-        for(let i in roundInfo.a){
-            A.battleProps[i]+=roundInfo.a[i];
+        for (let i in roundInfo.a) {
+            attacker.battleProps[i] += roundInfo.a[i];
         }
-        for(let i in roundInfo.d){
-            B.battleProps[i]+=roundInfo.d[i];
+        for (let i in roundInfo.d) {
+            defender.battleProps[i] += roundInfo.d[i];
         }
     }
     checkStatus() {
@@ -119,13 +135,13 @@ class Battle {
         }
         if (A.battleProps.hp <= 0) {
             resultInfo.endReason = EndReason.AttackerDie;
-            resultInfo.winner = this.B;
-            resultInfo.loser = this.A;
+            resultInfo.winner = this.B.name;
+            resultInfo.loser = this.A.name;
         }
         if (B.battleProps.hp <= 0) {
             resultInfo.endReason = EndReason.DefenderDie;
-            resultInfo.winner = this.A;
-            resultInfo.loser = this.B;
+            resultInfo.winner = this.A.name;
+            resultInfo.loser = this.B.name;
         }
         if (this.duration >= 300 * 1000) {
             resultInfo.endReason = EndReason.TimeOut;

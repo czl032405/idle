@@ -53,7 +53,7 @@ var Hero = mongoose.model('Hero', new Schema({
         ItemSchema
     ],
     creatdDate: { type: Date, default: Date.now },
-}));
+},{ versionKey: false }));
 
 
 module.exports = Hero;

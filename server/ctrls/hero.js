@@ -54,7 +54,8 @@ router.get('/del', async function (req, res, next) {
     var id = req.query.id;
     var user = req.session.user;
     try {
-        var result = await Idle.Action.Hero.del(user, id)
+        var result = await Idle.Action.Hero.del(user, id);
+        delete req.session.hero;
         res.send({ status: 1, result });
     }
     catch (e) {

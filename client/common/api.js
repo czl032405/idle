@@ -1,4 +1,6 @@
-var PopMessage = console.error;
+var PopMessage =  function(msg){
+    window.vm && (window.vm.msg= msg);
+};
 const Api = {
     serverPath: "/",
     getJson(url, param, type = "get", dataType = "json") {
@@ -18,19 +20,20 @@ const Api = {
             console.groupEnd();
             if (/not login/i.test(data.msg)) {
                 Api.go2login();
+                return;
             }
-            if (!data.status != 1) {
+            if (data.status <1) {
                 data.msg && PopMessage(`${data.msg}`);
-                return data;
+                throw data;
             }
             return data;
 
         })
     },
     go2login() {
-        //location.href="login.html";
+        location.href="login.html";
     },
-    user: {
+    User: {
         get(id) {
             return Api.getJson('user/get', { id });
         },
@@ -41,7 +44,7 @@ const Api = {
             return Api.getJson('user/login', { name, pw });
         },
     },
-    hero: {
+    Hero: {
         create(name) {
             return Api.getJson('hero/create', { name })
         },
@@ -70,8 +73,8 @@ const Api = {
             return Api.getJson('hero/fight')
         }
     },
-    admin:{
-        user:{
+    Admin:{
+        User:{
             list(){
                 return Api.getJson("admin/user/list")
             },
@@ -79,7 +82,7 @@ const Api = {
                 return Api.getJson("admin/user/ban",{name})
             }
         },
-        hero:{
+        Hero:{
             list(){
                 return Api.getJson("admin/hero/list")
             }

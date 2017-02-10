@@ -3,6 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <title>Document</title>
     <link rel="import" href="./common/common.html">
     <link rel="import" href="./comps/comps.html">
@@ -12,7 +13,29 @@
 
 <body>
     <div class="app">
-        
+        <common-header></common-header>
+        <div class="container" v-if="user">
+            <div class="jumbotron">
+                <h1 class="display-3">Hello, {{user.name}}</h1>
+                <p class="lead">Select your heros.</p>
+                <hr class="my-4">
+                <div class="card-deck ">
+                    <a  class="card" v-for="hero in user.heros" style="cursor: pointer" @click.prevent="selectHero(hero._id)">
+                        <div class="card-block">
+                            <h4 class="card-title">{{hero.name}}</h4>
+                            <p class="card-text">need more message.</p>
+                        </div>
+                        <div class="card-footer">
+                            <small class="text-muted">Last updated 3 mins ago</small>
+                        </div>
+                    </a>
+                </div>
+                <p class="lead"></p>
+                <p class="lead">
+                    <a class="btn btn-primary btn-lg" href="create-hero.html" role="button">create</a>
+                </p>
+            </div>
+        </div>
     </div>
     <script src="./index.js"></script>
 </body>

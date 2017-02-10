@@ -206,7 +206,7 @@ const Idle = require("../core/idle");
 //run
 {
     server.listen(app.get('port'), () => {
-        console.log("server hosted")
+        console.log(`server hosted ${app.get('port')}`)
     })
 }
 

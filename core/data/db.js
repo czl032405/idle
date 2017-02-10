@@ -4,5 +4,5 @@ const DBURL = require('../setting/idle.json')[/test/.test(args) ? "dburl2" : "db
 mongoose.connect(DBURL);
 mongoose.Promise = global.Promise;
 const db = mongoose.connection;
-db.on('error', console.error.bind(console, 'connection error'))
-db.once('open', console.error.bind(console, 'connection success'));
+db.on('error', console.error.bind(console, 'db connection error'))
+db.once('open', console.error.bind(console, 'db connection success'));

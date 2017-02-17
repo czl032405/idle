@@ -29,6 +29,7 @@ class Buff extends PasstiveSkill {
         var roundInfo = new RoundInfo();
         roundInfo.attacker = origin;
         roundInfo.defender = receiver;
+        roundInfo.isBuff=true;
         return roundInfo;
     }
 

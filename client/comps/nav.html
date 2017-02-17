@@ -1,0 +1,18 @@
+<template>
+    <nav class="nav">
+        <a class="nav-link active" href="#">fight</a>
+        <a class="nav-link" href="#">Link</a>
+        <a class="nav-link" href="#">Link</a>
+        <a class="nav-link disabled" href="#">Disabled</a>
+    </nav>
+</template>
+
+<script>
+    {
+        var doc = document.currentScript.ownerDocument;
+        Vue.component('idle-nav', {
+            template: doc.querySelector("template").innerHTML
+        })
+    }
+
+</script>

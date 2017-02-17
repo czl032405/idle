@@ -2,11 +2,11 @@
     "初心者": {
         "levelup": {
             "baseProps": {
-                "str": 1,
+                "str": 5,
                 "int": 1,
-                "agi": 1,
-                "vit": 1,
-                "dex": 1,
+                "agi": 5,
+                "vit": 5,
+                "dex": 5,
                 "luk": 1
             }
         }

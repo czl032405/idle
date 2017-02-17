@@ -19,4 +19,12 @@
 
 </template>
 
-<script src="./header.js"></script>
+<script>
+    {
+        var doc = document.currentScript.ownerDocument;
+        Vue.component('idle-header', {
+            template: doc.querySelector("template").innerHTML
+        })
+    }
+
+</script>

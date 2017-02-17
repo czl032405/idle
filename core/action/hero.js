@@ -37,7 +37,7 @@ const Hero = {
         if (delIndex >= 0) {
             user.heros.splice(delIndex, 1);
             await user.save();
-            return ;
+            return;
         }
         throw "ban:trys to del hero not yours"
 
@@ -51,6 +51,12 @@ const Hero = {
         }
         throw "ban:trys to select hero not yours";
 
+    },
+    async myList(user) {
+        var ids = user.heros.map(function (hero) {
+            return hero.id;
+        });
+        return await Data.Hero.find({ _id: { $in: ids } });
     },
     async changeMap(hero, map) {
         hero.map = map;
@@ -345,7 +351,7 @@ const Hero = {
         for (let i in monsters) {
             if (monsters[i].minLevel <= hero.baseProps.lv) {
                 randomTotal += monsters[i].appear || 0;
-                targetMonsters[i]=monsters[i]
+                targetMonsters[i] = monsters[i]
             }
         }
         random = Math.floor(Math.random() * randomTotal) + 1;
@@ -363,10 +369,17 @@ const Hero = {
     },
     parseEngineHero(hero) {
         hero = JSON.parse(JSON.stringify(hero));
-        return Engine.buildHero(hero.name,  hero.baseProps,hero.job.name, hero.skills, hero.equits);
+        var engineHero= Engine.buildHero(hero.name, hero.baseProps, hero.job, hero.skills, hero.equits);
+        engineHero.map = hero.map;
+        return engineHero;
     },
 
-    async handleBattleResult(hero, resultInfo) {
+    async handleBattleResult(hero, result) {
+        var resultInfo  = result.resultInfo;
+        var now = new Date();
+        hero.lastActionDate = now;
+        hero.nextActionDate = now;
+        hero.nextActionDate.setSeconds(now.getSeconds() + resultInfo.battleDelay / 1000+resultInfo.duration/1000);
         if (resultInfo.dropEquits.length > 0) {
             await this.addEquits(hero, resultInfo.dropEquits);
         }
@@ -386,15 +399,20 @@ const Hero = {
                     hero.baseProps[i] += levelUpProps[i];
                 }
             }
-            await hero.save();
         }
+        await hero.save();
     },
     async fight(hero) {
+        if(new Date()<new Date(hero.nextActionDate)){
+            return hero.nextActionDate;
+        }
+
+
         var engineMonster = this.parseNextEngineMonster(hero);
         var engineHero = this.parseEngineHero(hero);
         var battle = Engine.buildBattle(engineHero, engineMonster);
         var result = battle.run();
-        await this.handleBattleResult(hero, result.resultInfo);
+        await this.handleBattleResult(hero, result);
         return result;
     },
 

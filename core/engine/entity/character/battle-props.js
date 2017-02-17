@@ -22,7 +22,7 @@ class BattleProps{
         Object.assign(this,defaultParm);
 
 
-        this.maxhp = baseProps.str
+        this.maxhp = baseProps.str+baseProps.vit;
         this.hp = this.maxhp;
 
 

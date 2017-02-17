@@ -54,6 +54,9 @@ const Api = {
         select(id) {
             return Api.getJson('hero/select', { id })
         },
+        myList(){
+            return Api.getJson('hero/myList');
+        },
         changeJob(job) {
             return Api.getJson('hero/changeJob', { job })
         },

@@ -1,8 +1,10 @@
+
 class BaseProps {
     constructor(o) {
         var defaultParam={
             lv:1,
             exp:0,
+            maxexp:0,
             str:0,
             int:0,
             agi:0,
@@ -13,6 +15,9 @@ class BaseProps {
         Object.assign(this,defaultParam,o)
 
     }
+
+
+
 }
 
 module.exports = BaseProps;

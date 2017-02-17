@@ -1,22 +1,101 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-        <link rel="import" href="./common/common.html">
+    <link rel="import" href="./common/common.html">
     <link rel="import" href="./comps/comps.html">
 
     <title>Document</title>
 </head>
+
 <body>
-     <div class="app">
-        <common-header></common-header>
-        <warning :msg="msg"></warning>
+    <div class="app">
+        <idle-header></idle-header>
+        <idle-warning :msg="msg"></idle-warning>
+        <idle-nav></idle-nav>
+
         <div class="container">
-          
+            <div class="btn-toolbar mb-3">
+                <div class="btn-group">
+                    <a href="" class="btn btn-primary" @click.prevent="autoFight">{{isAutoFight?'stop':'auto fight'}}</a>
+                </div>
+            </div>
+
+            <div class="card-group">
+                <div class="card" v-for="hero in [attacker,defender]">
+
+                    <div v-if="hero" class="card-block">
+                        <h4 class="card-title">{{hero.name}}</h4>
+                        <p class="card-text">{{hero.job && hero.job.name}} {{hero.baseProps && 'lv.'+hero.baseProps.lv}} {{hero.map && hero.map.name}}</p>
+                        <div v-if="hero.battleProps">
+                            <div class="progress mb-2">
+                                <div class="progress-bar bg-success text-muted" style="transition:width linear 0.1s;" :style="{width:hero.battleProps.hp>0?(hero.battleProps.hp/hero.battleProps.maxhp*100+'%'):0}">hp:{{hero.battleProps.hp}}/{{hero.battleProps.maxhp}}</div>
+                            </div>
+                            <div class="progress mb-2">
+                                <div class="progress-bar bg-info text-muted" style="transition:width linear 0.1s;" :style="{width:hero.battleProps.mp>0?(hero.battleProps.mp/hero.battleProps.maxmp*100+'%'):0}">mp:{{hero.battleProps.mp}}/{{hero.battleProps.maxmp}}</div>
+                            </div>
+                            <div class="progress mb-2">
+                                <div class="progress-bar bg-warning text-muted" style="transition:width linear 0.1s;" :style="{width:hero.baseProps.exp/hero.baseProps.maxexp*100+'%'}">exp:{{hero.baseProps.exp}}/{{hero.baseProps.maxexp}}</div>
+                            </div>
+                            <div style="height: 25px">
+                                <span class="badge badge-info" v-for="buff in hero.buffs">{{buff.name}}</span>
+                            </div>
+
+                            <p class="text-muted">
+                                <span v-if="hero.battleProps && /attack|defense|speed/.test(key)" v-for="(value,key) in hero.battleProps">{{key}}:{{value}}</span>
+                            </p>
+                            <p class="text-muted">
+                                <span v-if="hero.battleProps && /hit|avoid|parry|crit$|counter/.test(key)" v-for="(value,key) in hero.battleProps">{{key}}:{{value}}</span>
+                            </p>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <ul class="list-group">
+                <li class="list-group-item fadeIn" :style="{'animation-duration':'0.2s'}" v-if="countDownSecond>=0">
+
+                    <span>休息中 请等待{{countDownSecond}}秒</span>
+
+                </li>
+                <li class="list-group-item fadeIn" v-if="resultInfo" :style="{'animation-duration':'0.1s'}">
+                    <span><b  class="text-primary">{{resultInfo.winner}}</b> 击败了<b  class="text-mute">{{resultInfo.loser}} </b></span>
+                    <span v-if="resultInfo.dropExp">获得{{resultInfo.dropExp}}点经验</span>
+                    <span v-if="resultInfo.dropEquits.length||resultInfo.dropItems.length">
+                        掉落了
+                        <b v-for="dropEquit in resultInfo.dropEquits" class="text-primary">{{dropEquit.name}} lv.{{dropEquit.lv}}</b>
+                        <b v-for="dropItem in resultInfo.dropItems" class="text-info">{{dropItem.name}} x {{dropItem.count}}</b>
+                    </span>
+                </li>
+                <li class="list-group-item fadeIn" :style="{'animation-duration':(roundInfo.aniDelay/1000)+'s'}" v-for="roundInfo in roundInfos">
+
+                    <div v-if="roundInfo.isBuff==false">
+                        <b class="text-primary">{{roundInfo.attacker.name}}</b>
+                        <span>使用 <b class="text-danger">{{roundInfo.skillName}}</b></span>
+                        <div v-if="c.hasValue" v-for="(c,index) in [roundInfo.d,roundInfo.a]">
+                            <span v-if="index==0">令<b class="text-mute">{{roundInfo.defender.name}}</b></span>
+                            <span v-if="index==1">令<b class="text-mute">自己</b></span>
+                            <span v-if="c.maxhp<0">最大生命值下降</span>
+                            <span v-if="c.maxhp>0">最大生命值上升</span>
+                            <span v-if="c.maxmp<0">最大魔法值下降</span>
+                            <span v-if="c.maxmp>0">最大魔法值上升</span>
+                            <span v-if="c.hp<0">造成{{-c.hp}}点伤害</span>
+                            <span v-if="c.hp>0">恢复{{c.hp}}点生命</span>
+                        </div>
+                    </div>
+                    <div v-if="roundInfo.isBuff==true">
+                        buff roundInfo
+                    </div>
+                </li>
+
+            </ul>
         </div>
     </div>
 
     <script src="./idle.js"></script>
 </body>
+
 </html>

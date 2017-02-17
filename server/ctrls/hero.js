@@ -85,6 +85,17 @@ router.get('/select', async function (req, res, next) {
 })
 
 
+router.get('/myList', async function (req, res, next) {
+    var user = req.session.user;
+    try {
+        var result = await Idle.Action.Hero.myList(user);
+        res.send({status:1,result});
+    }
+    catch (e) {
+        next(e)
+    }
+})
+
 
 router.get('/changeJob', async function (req, res, next) {
     var jobName = req.query.job;

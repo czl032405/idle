@@ -6,6 +6,7 @@ var PositiveSkill = require('../skill/positive/positive.js')
 var PasstiveSkill = require('../skill/passtive/passtive.js');
 var BaseProps = require('./base-props.js');
 var 直接攻击 = require('../skill/positive/直接攻击.js');
+const ExpSetting = require('../../../setting/exp.json');
 class Character extends Entity {
     constructor(name, baseProps, skills, equits) {
         super(name);
@@ -13,6 +14,7 @@ class Character extends Entity {
         this.skills = skills || [];
         this.equits = equits || [];
         this.skills.push(new 直接攻击());
+        this.buffs=[];
         this.init();
     }
 
@@ -22,6 +24,7 @@ class Character extends Entity {
         this.initEquits();
         this.initSkills();
         this.initBuffs();
+        this.baseProps.maxexp= ExpSetting[this.baseProps.lv];
     }
 
     initBattleProps() {
@@ -88,7 +91,6 @@ class Character extends Entity {
     getRoundInfoStatus() {
         var obj = JSON.parse(JSON.stringify(this));
         delete obj.equits;
-        delete obj.job;
         delete obj.passtiveSkills;
         delete obj.positiveSkills;
         delete obj.skills;

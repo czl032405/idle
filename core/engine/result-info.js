@@ -11,6 +11,12 @@ class ResultInfo {
             dropEquits: [],//{name,lv}
             dropItems: [],//{name,count}
             dropExp:0,
+            
+            levelup:0,
+            maxexp:0,
+
+
+            battleDelay:1000,//每次战斗的时间间隔
 
         }
         Object.assign(this, defaultParam, o);

@@ -52,6 +52,8 @@ var Hero = mongoose.model('Hero', new Schema({
     bagItems: [
         ItemSchema
     ],
+    lastActionDate:{type:Date,default:Date.now},
+    nextActionDate:{type:Date,default:Date.now},
     creatdDate: { type: Date, default: Date.now },
 },{ versionKey: false }));
 

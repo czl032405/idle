@@ -1,6 +1,7 @@
 class RoundInfo {
     constructor(o) {
         var defaultParam = {
+            isBuff:false,//是否buff回合
             attacker: null,
             defender: null,
 

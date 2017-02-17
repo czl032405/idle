@@ -3,6 +3,7 @@ const ResultInfo = require('./result-info.js');
 const RoundInfo = require('./round-info');
 const Character = require('./entity/character/character.js');
 const Buff = require('./entity/skill/buff/buff.js');
+const ExpSetting = require('../setting/exp.json');
 class Battle {
     constructor(A, B) {
         this.A = A;
@@ -19,6 +20,8 @@ class Battle {
             roundInfos.push(this.action());
             resultInfo = this.checkStatus();
         }
+
+   
         return {
             roundInfos,
             resultInfo,
@@ -131,9 +134,11 @@ class Battle {
         var B = this.B;
         var resultInfo = new ResultInfo();
         if (A.battleProps.hp <= 0 && B.battleProps.hp <= 0) {
+            resultInfo.battleDelay = 6000;
             resultInfo.endReason = EndReason.AllDie;
         }
         if (A.battleProps.hp <= 0) {
+            resultInfo.battleDelay = 6000;
             resultInfo.endReason = EndReason.AttackerDie;
             resultInfo.winner = this.B.name;
             resultInfo.loser = this.A.name;
@@ -142,6 +147,23 @@ class Battle {
             resultInfo.endReason = EndReason.DefenderDie;
             resultInfo.winner = this.A.name;
             resultInfo.loser = this.B.name;
+
+            var drops = this.B.drop();
+            resultInfo.dropExp = drops.dropExp;
+            resultInfo.dropItems  = drops.dropItems;
+            resultInfo.dropEquits = drops.dropEquits;
+
+            //handler drop
+            var newExp = this.A.baseProps.exp+resultInfo.dropExp;
+            var newLv = this.A.baseProps.lv;
+            while(ExpSetting[newLv]<=newExp){
+                newLv++;
+            }
+            resultInfo.levelup = newLv-this.A.baseProps.lv;
+            resultInfo.maxexp = ExpSetting[newLv];
+          
+            
+
         }
         if (this.duration >= 300 * 1000) {
             resultInfo.endReason = EndReason.TimeOut;

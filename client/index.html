@@ -13,26 +13,29 @@
 
 <body>
     <div class="app">
-        <common-header></common-header>
+        <idle-header></idle-header>
         <div class="container" v-if="user">
             <div class="jumbotron">
                 <h1 class="display-3">Hello, {{user.name}}</h1>
-                <p class="lead">Select your heros.</p>
+                <p  v-if="user.heros.length" class="lead">Select your heros. <a href="" @click.prevent="deleteMode=!deleteMode">{{deleteMode?'cancel':'delete'}}</a></p>
                 <hr class="my-4">
                 <div class="card-deck ">
-                    <a  class="card" v-for="hero in user.heros" style="cursor: pointer" @click.prevent="selectHero(hero._id)">
+                    <div class="card" v-for="hero in heros" style="cursor: pointer" @click.prevent="selectHero(hero._id)">
                         <div class="card-block">
                             <h4 class="card-title">{{hero.name}}</h4>
-                            <p class="card-text">need more message.</p>
+                            <p class="card-text">{{hero.job.name}} lv.{{hero.baseProps.lv}}</p>
                         </div>
                         <div class="card-footer">
-                            <small class="text-muted">Last updated 3 mins ago</small>
+                            <small class="text-muted">offline for {{((new Date()-new Date(hero.lastActionDate))/1000/3600).toFixed(0)}} hrs {{((new Date()-new Date(hero.lastActionDate))/1000/60%60).toFixed(0)}} mins</small>
                         </div>
-                    </a>
+                        <div class="card-footer" v-if="deleteMode">
+                            <a href="" class="btn btn-danger" @click.prevent.stop="deleteHero(hero._id)">delete</a>
+                        </div>
+                    </div>
                 </div>
                 <p class="lead"></p>
                 <p class="lead">
-                    <a class="btn btn-primary btn-lg" href="create-hero.html" role="button">create</a>
+                    <a class="btn btn-primary btn-lg" href="create-hero.html" role="button">Create Hero</a>
                 </p>
             </div>
         </div>

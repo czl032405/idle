@@ -3,6 +3,7 @@ const path = require('path');
 const Character = require("../character.js");
 const Skill = require('../../skill/skill.js');
 const Equit = require('../../equit/equit.js');
+const Item = require('../../item/item.js');
 const MonsterSetting = require('../../../../setting/monster.json');
 class Monster extends Character {
     constructor(name, baseProps, skills, equits, drops) {
@@ -43,6 +44,28 @@ class Monster extends Character {
                 return monster;
             }
 
+        }
+    }
+
+    drop(){
+        var dropExp = this.baseProps.exp;
+        var dropEquits=[];
+        var dropItems=[];
+
+        for(let i in this.drops){
+            var random = Math.random();
+            if(random<this.drops[i]){
+                var equit = Equit.build(i,1);
+                equit && this.dropEquits.push(equit);
+                var item = Item.build(i);
+                item && this.dropItems.push(item);
+            }
+        }
+
+        return {
+            dropExp,
+            dropItems,
+            dropEquits,
         }
     }
 

@@ -4,5 +4,5 @@
     "equitMult":1,
     "maxHero":4,
     "dburl2":"mongodb://localhost:27017/eggg",
-    "dburl":"mongodb://czl:666@ds041556.mlab.com:41556/eggg"
+    "dburl":"mongodb://2333"
 }

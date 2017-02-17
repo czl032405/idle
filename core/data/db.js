@@ -1,6 +1,12 @@
 const args = process.argv.join(" ");;
 const mongoose = require('mongoose');
-const DBURL = require('../setting/idle.json')[/test/.test(args) ? "dburl2" : "dburl"];
+const http = require('http');
+var DBURL = require('../setting/idle.json')["dburl2"];
+
+
+if(process.env.DBURL){
+    DBURL=process.env.DBURL;
+}
 mongoose.connect(DBURL);
 mongoose.Promise = global.Promise;
 const db = mongoose.connection;

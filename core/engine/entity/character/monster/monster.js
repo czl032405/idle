@@ -56,9 +56,9 @@ class Monster extends Character {
             var random = Math.random();
             if(random<this.drops[i]){
                 var equit = Equit.build(i,1);
-                equit && this.dropEquits.push(equit);
+                equit && dropEquits.push(equit);
                 var item = Item.build(i);
-                item && this.dropItems.push(item);
+                item && dropItems.push(item);
             }
         }
 

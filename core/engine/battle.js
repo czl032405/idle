@@ -21,7 +21,7 @@ class Battle {
             resultInfo = this.checkStatus();
         }
 
-   
+
         return {
             roundInfos,
             resultInfo,
@@ -133,6 +133,7 @@ class Battle {
         var A = this.A;
         var B = this.B;
         var resultInfo = new ResultInfo();
+        resultInfo.maxexp = ExpSetting[this.A.baseProps.lv];
         if (A.battleProps.hp <= 0 && B.battleProps.hp <= 0) {
             resultInfo.battleDelay = 6000;
             resultInfo.endReason = EndReason.AllDie;
@@ -150,19 +151,19 @@ class Battle {
 
             var drops = this.B.drop();
             resultInfo.dropExp = drops.dropExp;
-            resultInfo.dropItems  = drops.dropItems;
+            resultInfo.dropItems = drops.dropItems;
             resultInfo.dropEquits = drops.dropEquits;
 
             //handler drop
-            var newExp = this.A.baseProps.exp+resultInfo.dropExp;
+            var newExp = this.A.baseProps.exp + resultInfo.dropExp;
             var newLv = this.A.baseProps.lv;
-            while(ExpSetting[newLv]<=newExp){
+            while (ExpSetting[newLv] <= newExp) {
                 newLv++;
             }
-            resultInfo.levelup = newLv-this.A.baseProps.lv;
+            resultInfo.levelup = newLv - this.A.baseProps.lv;
             resultInfo.maxexp = ExpSetting[newLv];
-          
-            
+
+
 
         }
         if (this.duration >= 300 * 1000) {

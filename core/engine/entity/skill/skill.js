@@ -21,7 +21,7 @@ class Skill extends Entity {
             var SkillClass = require(classPath);
             return new SkillClass(lv);
         }
-        return null;
+        return new Skill(name,lv);
 
     }
 

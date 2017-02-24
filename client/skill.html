@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <link rel="import" href="./common/common.html">
+    <link rel="import" href="./comps/comps.html">
+
+    <title>Document</title>
+</head>
+
+<body>
+    <div class="app">
+        <idle-header></idle-header>
+        <idle-warning :msg="msg"></idle-warning>
+        <idle-nav></idle-nav>
+        <div class="container">
+            <p>skillPoints:{{hero.skillPoints}}</p>
+            <div class="list-group d-inline-block align-top">
+                <a class="list-group-item list-group-item-info active">skills learned</a>
+                <a href="" @click.prevent="" class="list-group-item list-group-item-action" v-for="skill in hero.learnedSkills">{{skill.name}} lv.{{skill.lv}}</a>
+            </div>
+            <div class="list-group d-inline-block align-top">
+                <a class="list-group-item  list-group-item-info active">skills can learn</a>
+                <a href="" @click.prevent="learnSkill(skill)" class="list-group-item list-group-item-action" v-for="skill in hero.canLearnSkills">{{skill.name}} lv.{{skill.lv}} cost.{{skill.cost||0}}</a>
+            </div>
+        </div>
+    </div>
+    <script src="./skill.js"></script>
+</body>
+
+</html>

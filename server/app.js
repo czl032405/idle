@@ -40,7 +40,7 @@ const Idle = require("../core/idle");
 
 //static
 {
-    var staticPath = path.resolve(__dirname, '../client');
+    const staticPath = path.resolve(__dirname, '../client');
     var files = glob.sync('**/**.{js,html}', { cwd: staticPath });
     var manifest = {};
     var staticMap = {};
@@ -53,7 +53,8 @@ const Idle = require("../core/idle");
         manifest[`/${path.posix.join(file)}`] = { hash: file + "?_=" + hex, content }
     });
     manifest["/"] = manifest["/index.html"]
-    //替换路径src
+
+    //替换路径src：替换html中的src
     for (let i in manifest) {
         if (/\.html$/.test(i)) {
             var filePath = path.dirname(i);
@@ -64,36 +65,55 @@ const Idle = require("../core/idle");
                 }
                 return a;
             })
+            var hash = crypto.createHash('md5');
+            hash.update(manifest[i].content);
+            var hex = hash.digest('hex').substr(0, 10);
+            manifest[i].hash = manifest[i].hash.replace(/\?_=.*/, `?_=${hex}`);
         }
-        if (/\.js$/.test(i)) {
-            // manifest[i].content = manifest[i].content.replace(/\n\r/, ";");
+    }
+
+    for (let i in manifest) {
+        if (/comps|common/.test(i)) {
+            var filePath = path.dirname(i);
+            manifest[i].content = manifest[i].content.replace(/(href)=['"](.*)['"]/g, function (a, b, c) {
+                var key = `${path.posix.join(filePath, c)}`;
+                if (manifest[key]) {
+                    return `${b}="/${manifest[key].hash}"`
+                }
+                return a;
+            })
         }
     }
 
     //请求拦截
     app.use(function (req, res, next) {
-        var ban = function () {
-            req.session.ban = true;
-            res.status(404);
-            res.send()
-        }
         var referer = req.headers.referer;
         //scu和api必须在common或者comps中请求,否则ban
         if (/scu.js|api.js/.test(req.path) && !/common|comps/.test(referer)) {
-            ban();
+            next("ban:scu api not currect");
             return;
         }
         //其他地方定义session需要ban
         if (req.session.ban) {
-            ban();
+            next("ban: session ban");
             return;
         }
 
         //带有_参数设定永久缓存
-        if (req.query._&&/js/.test(req.path)) {
-            res.set("Cache-Control", "max-age=666666666")
+        console.info(req.path)
+        if (req.query._ && !/api/.test(req.path)) {
+            res.set("Cache-Control", "max-age=666666666");
             res.setHeader("eggg", "233");
         }
+
+        //带有_参数设定永久缓存
+        if (/js/.test(req.path)) {
+            res.set('Content-Type', 'application/javascript');
+
+        }
+
+
+
         //如果请求manifest中的文件，则返回内容
         if (manifest[req.path]) {
             if (/common.html$/.test(req.path)) {
@@ -115,18 +135,6 @@ const Idle = require("../core/idle");
     app.use(express.static(staticPath));
 }
 
-//socket
-{
-    // const io = require('socket.io')(server);
-    // app.io = io;
-    // io.on('connection', function (socket) {
-
-    //     socket.emit('socket test from server', { hello: 'world' });
-    //     socket.on('socket test from client', function (data) {
-    //         console.log(data);
-    //     });
-    // });
-}
 
 
 //api filter
@@ -172,13 +180,13 @@ const Idle = require("../core/idle");
         });
 
         app.use(function (err, req, res, next) {
-            if(req.query.test){
+            if (!/api/.test(req.path)) {
                 next(err);
                 return;
             }
             if (err.message || err.errmsg || typeof err == "string") {
                 res.status(200)
-                res.send({ status: 0, msg: err.message || err.errmsg || err })
+                res.send({ status: 0, msg: err.stack || err.errmsg || err })
                 return;
             }
             res.status(500)

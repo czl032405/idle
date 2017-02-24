@@ -58,18 +58,34 @@ const Hero = {
         });
         return await Data.Hero.find({ _id: { $in: ids } });
     },
+    async mapList(hero) {
+        //后期修改为可见列表和hero有关
+        var maps = JSON.parse(JSON.stringify(MapSetting));
+        var mapsArr = [];
+        for (let i in maps) {
+            delete maps[i].monsters;
+            maps[i].name = i;
+            mapsArr.push(maps[i]);
+        }
+        return mapsArr;
+
+    },
+
     async changeMap(hero, map) {
-        hero.map = map;
-        return await hero.save();
-        // if (hero.baseProps.lv >= MapSetting[map.name]) {
-
-        //     hero.map = map;
-        //     return await hero.save();
-        // }
-        // else {
-        //     throw "trys to select map too dangerous";
-        // }
-
+        if (!MapSetting[map.name]) {
+            throw "ban: trys to enter map not exist";
+            return;
+        }
+        var pre = MapSetting[map.name].pre;
+        var pass = this.handlePre(hero, pre);
+        if (pass) {
+            hero.map = map;
+            await hero.save();
+            return hero.map;
+        }
+        else {
+            throw `you cant enter ${map.name}`;
+        }
     },
     async changeJob(hero, job) {
         var result = null;
@@ -111,20 +127,25 @@ const Hero = {
     },
     async useEquits(hero, equitIds) {
         var result = null;
-        var checked = false;
-        var equits = [];
+        var checked = true;
+        var equitIds = equitIds && equitIds.split(",");
+
+        //把装备移回背包
+        hero.bagEquits = hero.bagEquits.concat(hero.equits);
+        hero.equits = [];
         for (let s in equitIds) {
             checked = false;
-            for (let i in hero.bagEquits) {
-                if (hero.bagEquits[i].id == equitIds[s]) {
-                    checked = true;
-                    equits.push(hero.bagEquits[i]);
-                    break;
-                }
+            var bagEquitIndex = hero.bagEquits.findIndex(bagEquit => {
+                return bagEquit && bagEquit.id == equitIds[s];
+            })
+            if (bagEquitIndex >= 0) {
+                checked = true;
+                hero.equits.push(hero.bagEquits[bagEquitIndex]);
+                hero.bagEquits.splice(bagEquitIndex, 1);
             }
         }
+
         if (checked) {
-            hero.equits = equits;
             result = await hero.save();
             return result.equits;
         }
@@ -162,34 +183,47 @@ const Hero = {
     },
 
     async learnSkill(hero, skill) {
+        //检测技能是否存在
+        if (!SkillSetting[skill.name + '-' + skill.lv]) {
+            throw "ban:trys to learn skill cant learn";
+            return;
+        }
+        //检测技能点是否足够
+        var cost = SkillSetting[skill.name + '-' + skill.lv].cost || 0;
+        if (hero.skillPoints < cost) {
+            throw "not enough skill points";
+            return;
+        }
+        //检测是否可以学习
         hero.canLearnSkills = this.calCanLearnSkills(hero);
-        var learnIndex = -1;
-        for (let i in hero.canLearnSkills) {
-            if (hero.canLearnSkills[i].name == skill.name && hero.canLearnSkills[i].lv == skill.lv) {
-                learnIndex = i;
+        var learnIndex = hero.canLearnSkills.findIndex((clSkill) => {
+            return clSkill.name == skill.name && clSkill.lv == skill.lv;
+        });
+        if (learnIndex < 0) {
+            throw "ban:trys to learn skill cant learn";
+            return;
+        }
+        //学习
+        var result = hero.canLearnSkills.splice(learnIndex, 1);
+        var isSkillLevelup = false;
+        for (let j in hero.learnedSkills) {
+            if (hero.learnedSkills[j].name == skill.name) {
+                hero.learnedSkills[j].lv = skill.lv;
+                isSkillLevelup = true;
+                break;
             }
         }
-        if (learnIndex >= 0) {
-            var result = hero.canLearnSkills.splice(learnIndex, 1);
-            var isSkillLevelup = false;
-            for (let j in hero.learnedSkills) {
-                if (hero.learnedSkills[j].name == skill.name) {
-                    hero.learnedSkills[j].lv = skill.lv;
-                    isSkillLevelup = true;
-                    break;
-                }
+        for (let s in hero.skills) {
+            if (hero.skills[s].name == skill.name) {
+                hero.skills[s].lv = skill.lv;
+                break;
             }
-            for (let s in hero.skills) {
-                if (hero.skills[s].name == skill.name) {
-                    hero.skills[s].lv = skill.lv;
-                    break;
-                }
-            }
-            !isSkillLevelup && hero.learnedSkills.push(skill);
-            await hero.save();
-            return result;
         }
-        throw "ban:trys to learn skill cant learn";
+        !isSkillLevelup && hero.learnedSkills.push(skill);
+        await hero.save();
+        return result;
+
+
     },
     async addEquits(hero, equits) {
         for (let i in equits) {
@@ -327,6 +361,7 @@ const Hero = {
             var isLearned = false;
             var name = i.split("-")[0];
             var lv = i.split("-")[1] || 1;
+            var cost = SkillSetting[i].cost || 0;
             for (let j in hero.learnedSkills) {
                 if (hero.learnedSkills[j].name == name && hero.learnedSkills[j].lv >= lv) {
                     isLearned = true;
@@ -336,7 +371,7 @@ const Hero = {
                 continue;
             }
             if (this.handlePre(hero, SkillSetting[i].pre)) {
-                canLearnSkills.push({ name, lv });
+                canLearnSkills.push({ name, lv, cost });
             }
         }
         return canLearnSkills;
@@ -369,17 +404,17 @@ const Hero = {
     },
     parseEngineHero(hero) {
         hero = JSON.parse(JSON.stringify(hero));
-        var engineHero= Engine.buildHero(hero.name, hero.baseProps, hero.job, hero.skills, hero.equits);
+        var engineHero = Engine.buildHero(hero.name, hero.baseProps, hero.job, hero.skills, hero.equits);
         engineHero.map = hero.map;
         return engineHero;
     },
 
     async handleBattleResult(hero, result) {
-        var resultInfo  = result.resultInfo;
+        var resultInfo = result.resultInfo;
         var now = new Date();
         hero.lastActionDate = now;
         hero.nextActionDate = now;
-        hero.nextActionDate.setSeconds(now.getSeconds() + resultInfo.battleDelay / 1000+resultInfo.duration/1000);
+        hero.nextActionDate.setSeconds(now.getSeconds() + resultInfo.battleDelay / 1000 + resultInfo.duration / 1000);
         if (resultInfo.dropEquits.length > 0) {
             await this.addEquits(hero, resultInfo.dropEquits);
         }
@@ -391,19 +426,22 @@ const Hero = {
         }
         if (hero.baseProps.exp > ExpSetting[hero.baseProps.lv]) {
             hero.baseProps.lv++;
-            hero.canLearnJobs = this.calCanLearnJobs(hero);
-            hero.calCanLearnSkills = this.calCanLearnSkills(hero);
+
             var levelUpProps = JobSetting[hero.job.name].levelup.baseProps;
             for (let i in levelUpProps) {
                 if (hero.baseProps[i] != undefined) {
                     hero.baseProps[i] += levelUpProps[i];
                 }
             }
+            hero.skillPoints += Math.ceil(hero.baseProps.lv / 10);
         }
+        //WASTE CPU
+        hero.canLearnJobs = this.calCanLearnJobs(hero);
+        hero.canLearnSkills = this.calCanLearnSkills(hero);
         await hero.save();
     },
     async fight(hero) {
-        if(new Date()<new Date(hero.nextActionDate)){
+        if (new Date() < new Date(hero.nextActionDate)) {
             return hero.nextActionDate;
         }
 

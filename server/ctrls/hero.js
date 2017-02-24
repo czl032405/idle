@@ -110,6 +110,31 @@ router.get('/changeJob', async function (req, res, next) {
 
 })
 
+router.get('/changeMap', async function (req, res, next) {
+    var mapName = req.query.map;
+    var hero = req.session.hero;
+    try {
+        var result = await Idle.Action.Hero.changeMap(hero, { name: mapName });
+        res.send({ status: 1, result });
+    }
+    catch (e) {
+        next(e);
+    }
+
+})
+
+router.get('/mapList', async function (req, res, next) {
+    var hero = req.session.hero;
+    try {
+        var result = await Idle.Action.Hero.mapList(hero);
+        res.send({ status: 1, result });
+    }
+    catch (e) {
+        next(e);
+    }
+
+})
+
 router.get('/useSkills', async function (req, res, next) {
     var hero = req.session.hero;
     var skillsStr = req.query.skills;//a-1,b-1,c-1
@@ -149,10 +174,6 @@ router.get('/useSkills', async function (req, res, next) {
 router.get('/useEquits', async function (req, res, next) {
     var hero = req.session.hero;
     var equitIds = req.query.equits;//233,444,555
-    if (!equitIds) {
-        next("ban:query err");
-        return;
-    }
     try {
         var result = await Idle.Action.Hero.useEquits(hero, equitIds);
         res.send({ status: 1, result });

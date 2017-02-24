@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>service-worker test</title>
+</head>
+
+<body>
+
+    <script>
+        var rawLog = console.log;
+        console.log = function (msg) {
+            rawLog.apply(this, arguments);
+            document.writeln(msg);
+        }
+
+        fetch("233").then(async res => console.log(await res.text()))
+
+
+        const applicationServerPublicKey = 'BD2vAnZnBSze_LvkhFuw2oCuqt0XKTUbbMfsM7e4uCEUTM4ZS7nWOuCm542J13O8bFp828XpHFTDWTJaOHZV4Jg';
+        var swRegistration = null;
+
+        function urlB64ToUint8Array(base64String) {
+            const padding = '='.repeat((4 - base64String.length % 4) % 4);
+            const base64 = (base64String + padding)
+                .replace(/\-/g, '+')
+                .replace(/_/g, '/');
+
+            const rawData = window.atob(base64);
+            const outputArray = new Uint8Array(rawData.length);
+
+            for (let i = 0; i < rawData.length; ++i) {
+                outputArray[i] = rawData.charCodeAt(i);
+            }
+            return outputArray;
+        }
+
+
+
+        navigator.serviceWorker.register('../service-worker.js').then(function (registration) {
+            // Registration was successful
+            console.log('ServiceWorker registration successful with scope: ', registration.scope);
+            swRegistration = registration;
+
+            const applicationServerKey = urlB64ToUint8Array(applicationServerPublicKey);
+
+            swRegistration.pushManager.subscribe({
+                userVisibleOnly: true,
+                applicationServerKey: applicationServerKey
+            }).then(function(subscribtion){
+                console.info(JSON.stringify(subscribtion))
+            })
+
+
+        }).catch(function (err) {
+            // registration failed :(
+            console.log('ServiceWorker registration failed: ', err);
+        });
+    </script>
+</body>
+
+</html>

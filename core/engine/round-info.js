@@ -8,6 +8,7 @@ class RoundInfo {
             delay: 0,//毫秒后执行
             aniDelay:0,//执行时长
             skillName: "-",
+            skillLv:0,
             isAvoid: false,
             isParry: false,
             isCrit: false,

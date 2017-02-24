@@ -13,18 +13,19 @@ class Character extends Entity {
         this.baseProps = baseProps || new BaseProps();
         this.skills = skills || [];
         this.equits = equits || [];
-        this.skills.push(new 直接攻击());
-        this.buffs=[];
+        this.buffs = [];
         this.init();
     }
 
     init() {
         this.buffs = [];
+        this.passtiveSkills = [];
+        this.positiveSkills = [];
         this.initBattleProps();
         this.initEquits();
         this.initSkills();
         this.initBuffs();
-        this.baseProps.maxexp= ExpSetting[this.baseProps.lv];
+        this.baseProps.maxexp = ExpSetting[this.baseProps.lv];
     }
 
     initBattleProps() {
@@ -48,7 +49,7 @@ class Character extends Entity {
                 this.passtiveSkills.push(skills[i]);
             }
         }
-
+        !this.positiveSkills.length && this.positiveSkills.push(new 直接攻击());
         for (let i in passtiveSkills) {
             passtiveSkills[i].apply(this);
         }
@@ -79,7 +80,9 @@ class Character extends Entity {
     attack(roundInfo) {
         var skill = this.parseNextSkill();
         var skillName = skill.__proto__.constructor.name;
+        var lv = skill.lv;
         roundInfo.skillName = skillName;
+        roundInfo.skillLv = lv;
         skill.attack(roundInfo);
         return roundInfo;
     }
@@ -99,7 +102,7 @@ class Character extends Entity {
     }
 
     getCurrentStatus() {
-         var obj = JSON.parse(JSON.stringify(this));
+        var obj = JSON.parse(JSON.stringify(this));
         return obj;
     }
 

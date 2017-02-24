@@ -23,9 +23,8 @@
                 </div>
             </div>
 
-            <div class="card-group">
-                <div class="card" v-for="hero in [attacker,defender]">
-
+            <div class="card-deck"> 
+                <div class="card d-inline-block" v-for="hero in [attacker,defender]"  >
                     <div v-if="hero" class="card-block">
                         <h4 class="card-title">{{hero.name}}</h4>
                         <p class="card-text">{{hero.job && hero.job.name}} {{hero.baseProps && 'lv.'+hero.baseProps.lv}} {{hero.map && hero.map.name}}</p>
@@ -42,24 +41,14 @@
                             <div style="height: 25px">
                                 <span class="badge badge-info" v-for="buff in hero.buffs">{{buff.name}}</span>
                             </div>
-
-                            <p class="text-muted">
-                                <span v-if="hero.battleProps && /attack|defense|speed/.test(key)" v-for="(value,key) in hero.battleProps">{{key}}:{{value}}</span>
-                            </p>
-                            <p class="text-muted">
-                                <span v-if="hero.battleProps && /hit|avoid|parry|crit$|counter/.test(key)" v-for="(value,key) in hero.battleProps">{{key}}:{{value}}</span>
-                            </p>
                         </div>
-
                     </div>
                 </div>
             </div>
 
-            <ul class="list-group">
+            <ul class="list-group mt-2">
                 <li class="list-group-item fadeIn" :style="{'animation-duration':'0.2s'}" v-if="countDownSecond>=0">
-
                     <span>休息中 请等待{{countDownSecond}}秒</span>
-
                 </li>
                 <li class="list-group-item fadeIn" v-if="resultInfo" :style="{'animation-duration':'0.1s'}">
                     <span><b  class="text-primary">{{resultInfo.winner}}</b> 击败了<b  class="text-mute">{{resultInfo.loser}} </b></span>
@@ -74,7 +63,7 @@
 
                     <div v-if="roundInfo.isBuff==false">
                         <b class="text-primary">{{roundInfo.attacker.name}}</b>
-                        <span>使用 <b class="text-danger">{{roundInfo.skillName}}</b></span>
+                        <span>使用 <b class="text-danger">{{roundInfo.skillName}} lv.{{roundInfo.skillLv}}</b></span>
                         <div v-if="c.hasValue" v-for="(c,index) in [roundInfo.d,roundInfo.a]">
                             <span v-if="index==0">令<b class="text-mute">{{roundInfo.defender.name}}</b></span>
                             <span v-if="index==1">令<b class="text-mute">自己</b></span>

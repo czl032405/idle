@@ -20,7 +20,35 @@
             
         },
         "pre":{
-            "lv":1
+            "baseProps":{
+                "lv":1
+            }
+        }
+    },
+    "新手村2": {
+        "monsters": {
+            "史莱姆": {
+                "minLevel": 10,
+                "maxLevel": 13,
+                "appear": 50
+            },
+            "金属史莱姆": {
+                "minLevel": 15,
+                "maxLevel": 20,
+                "appear": 10
+            },
+            "特殊怪": {
+                "minLevel": 20,
+                "maxLevel": 20,
+                "appear": 1,
+                "boss":true
+            }
+            
+        },
+        "pre":{
+            "baseProps":{
+                "lv":10
+            }
         }
     }
 }

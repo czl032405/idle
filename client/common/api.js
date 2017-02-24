@@ -1,5 +1,5 @@
-var PopMessage =  function(msg){
-    window.vm && (window.vm.msg= msg);
+var PopMessage = function (msg) {
+    window.vm && (window.vm.msg = msg);
 };
 const Api = {
     serverPath: "/",
@@ -22,7 +22,7 @@ const Api = {
                 Api.go2login();
                 return;
             }
-            if (data.status <1) {
+            if (data.status < 1) {
                 data.msg && PopMessage(`${data.msg}`);
                 throw data;
             }
@@ -31,7 +31,7 @@ const Api = {
         })
     },
     go2login() {
-        location.href="login.html";
+        location.href = "login.html";
     },
     User: {
         get(id) {
@@ -48,17 +48,23 @@ const Api = {
         create(name) {
             return Api.getJson('hero/create', { name })
         },
-        del(id){
-             return Api.getJson('hero/del', { id })
+        del(id) {
+            return Api.getJson('hero/del', { id })
         },
         select(id) {
             return Api.getJson('hero/select', { id })
         },
-        myList(){
+        myList() {
             return Api.getJson('hero/myList');
         },
         changeJob(job) {
             return Api.getJson('hero/changeJob', { job })
+        },
+        changeMap(map) {
+            return Api.getJson('hero/changeMap', { map });
+        },
+        mapList(){
+            return Api.getJson('hero/mapList');
         },
         useSkills(skills) {
             return Api.getJson('hero/useSkills', { skills })
@@ -76,17 +82,17 @@ const Api = {
             return Api.getJson('hero/fight')
         }
     },
-    Admin:{
-        User:{
-            list(){
+    Admin: {
+        User: {
+            list() {
                 return Api.getJson("admin/user/list")
             },
-            ban(name){
-                return Api.getJson("admin/user/ban",{name})
+            ban(name) {
+                return Api.getJson("admin/user/ban", { name })
             }
         },
-        Hero:{
-            list(){
+        Hero: {
+            list() {
                 return Api.getJson("admin/hero/list")
             }
         }

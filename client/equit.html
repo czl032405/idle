@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <link rel="import" href="./common/common.html">
+    <link rel="import" href="./comps/comps.html">
+
+    <title>Document</title>
+</head>
+
+<body>
+    <div class="app">
+        <idle-header></idle-header>
+        <idle-warning :msg="msg"></idle-warning>
+        <idle-nav></idle-nav>
+        <div class="container">
+            <p>todo : 同一类装备只能装备一个</p>
+            <div class="d-inline-block">
+                <div class="list-group">
+                    <a href=""   class="list-group-item list-group-item-info active">equited</a>
+                    <a href="" @click.prevent="removeEquit(equit)" v-if="equit" v-for="equit in hero.equits" class="list-group-item ">{{equit.name}}</a>
+                </div>
+            </div>
+            <div class="d-inline-block">
+                <div class="list-group">
+                    <a href="" class="list-group-item list-group-item-info active">can equited</a>
+                    <a href="" @click.prevent="addEquit(equit)" v-if="equit"  v-for="equit in hero.bagEquits" class="list-group-item">{{equit.name}}</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="./equit.js"></script>
+</body>
+
+</html>

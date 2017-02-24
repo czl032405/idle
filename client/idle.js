@@ -33,7 +33,7 @@
             async fight() {
                 this.roundInfos = [];
                 this.resultInfo = null;
-                this.defender = {};
+                this.defender = null;
                 this.isFighting = true;
                 var result = (await Api.Hero.fight()).result;
 
@@ -67,15 +67,16 @@
 
                         }
                         this.roundInfos.unshift(roundInfo);
+                        await this.wait(roundInfo.aniDelay);
                         this.attacker = roundInfo.attacker.name == this.attacker.name ? roundInfo.attacker : roundInfo.defender;
                         this.defender = roundInfo.defender.name == this.defender.name ? roundInfo.defender : roundInfo.attacker;
-                        await this.wait(roundInfo.aniDelay);
+
                     }
-           
+
                     await this.wait(1000);
                     this.resultInfo = result.resultInfo;
-                    this.attacker.baseProps.exp+=result.resultInfo.dropExp;
-                    this.attacker.baseProps.lv+=result.resultInfo.levelup;
+                    this.attacker.baseProps.exp += result.resultInfo.dropExp;
+                    this.attacker.baseProps.lv += result.resultInfo.levelup;
                     this.attacker.baseProps.maxexp = result.resultInfo.maxexp;
                     await this.countDown(Math.ceil(result.resultInfo.battleDelay / 1000));
                 }

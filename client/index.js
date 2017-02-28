@@ -3,6 +3,7 @@
         el: '.app',
         data() {
             return {
+                msg:"",
                 user: null,
                 heros:[],
                 deleteMode:false,

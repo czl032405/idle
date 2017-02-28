@@ -2,7 +2,7 @@ var express = require("express");
 const Idle = require("../../core/idle");
 var router = express.Router();
 module.exports = function (app) {
-    app.use('/admin', router);
+    app.use('/api/admin', router);
 };
 
 router.get('*', async (req, res, next) => {

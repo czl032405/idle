@@ -1,0 +1,23 @@
+{
+    "name": "EGGG IDLE",
+    "short_name": "eggg idle",
+    "start_url": ".",
+    "display": "standalone",
+    "background_color": "#fff",
+    "description": "IDLE",
+    "orientation": "portrait",
+    "icons": [
+        {
+            "src": "favicon64.png",
+            "sizes": "64x64"
+        },
+        {
+            "src": "favicon.png",
+            "sizes": "128x128"
+        },
+        {
+            "src": "favicon256.png",
+            "sizes": "256x256"
+        }
+    ]
+}

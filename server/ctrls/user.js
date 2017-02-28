@@ -3,7 +3,7 @@ const router = express.Router();
 const Idle = require("../../core/idle");
 const md5 = require('md5');
 module.exports = function (app) {
-    app.use('/user', router);
+    app.use('/api/user', router);
 
 };
 

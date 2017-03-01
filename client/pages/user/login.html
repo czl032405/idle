@@ -1,0 +1,17 @@
+<template>
+    <div class="jumbotron">
+        <h2 class="display-4">Login</h2>
+        <form action="">
+            <div class="form-group">
+                <input type="text" v-model="name" class="form-control" placeholder="username">
+            </div>
+            <div class="form-group">
+                <input type="text" v-model="pw" class="form-control" placeholder="pw">
+            </div>
+            <button class="btn btn-primary" @click.prevent="login">submit</button>
+            <router-link to="register" class="btn btn-default">register</router-link>
+        </form>
+    </div>
+</template>
+
+<script src="./login.js"></script>

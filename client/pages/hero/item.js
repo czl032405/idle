@@ -1,7 +1,6 @@
 {
     var doc = document.currentScript.ownerDocument;
-    Vue.component('warning', {
+    Vue.component('page-hero-item', {
         template: doc.querySelector("template").innerHTML,
-        props:['msg'],
-    })
+    });
 }

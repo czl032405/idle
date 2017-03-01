@@ -1,14 +1,11 @@
 <template>
-    <div v-if="msg" class="alert alert-warning" role="alert">
-        <strong>!</strong> {{msg}}
-    </div>
+    <router-view class="hero-view"></router-view>
 </template>
 <script>
     {
         var doc = document.currentScript.ownerDocument;
-        Vue.component('idle-warning', {
+        Vue.component('page-hero', {
             template: doc.querySelector("template").innerHTML,
-            props: ['msg'],
         })
     }
 

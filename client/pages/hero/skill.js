@@ -1,6 +1,7 @@
 {
-    window.vm = new Vue({
-        el: '.app',
+    var doc = document.currentScript.ownerDocument;
+    Vue.component('page-hero-skill', {
+        template: doc.querySelector("template").innerHTML,
         data() {
             return {
                 msg: "",

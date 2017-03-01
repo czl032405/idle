@@ -1,11 +1,12 @@
 {
-    window.vm = new Vue({
-        el: '.app',
+    var doc = document.currentScript.ownerDocument;
+    Vue.component('page-hero-battle', {
+        template: doc.querySelector("template").innerHTML,
         data() {
             return {
                 msg: "",
-                attacker: null,
-                defender: null,
+                attacker: {},
+                defender: {},
 
                 roundInfos: [],
                 resultInfo: null,
@@ -21,19 +22,17 @@
         methods: {
             async autoFight() {
                 this.isAutoFight = !this.isAutoFight;
-
                 while (this.isAutoFight) {
                     if (this.isFighting) {
                         break;
                     }
                     await this.fight();
-                    //this.isAutoFight = false;
                 }
             },
             async fight() {
                 this.roundInfos = [];
                 this.resultInfo = null;
-                this.defender = null;
+                this.defender = {};
                 this.isFighting = true;
                 var result = (await Api.Hero.fight()).result;
 

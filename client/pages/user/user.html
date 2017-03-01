@@ -1,0 +1,12 @@
+<template>
+    <router-view class="user-view"></router-view>
+</template>
+<script>
+    {
+        var doc = document.currentScript.ownerDocument;
+        Vue.component('page-user', {
+            template: doc.querySelector("template").innerHTML,
+        });
+    }
+
+</script>

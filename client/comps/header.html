@@ -1,20 +1,19 @@
 <template>
-    <nav class="navbar navbar-toggleable-md   navbar-inverse bg-inverse">
+    <nav class="navbar navbar-toggleable-md sticky-top navbar-inverse bg-inverse">
         <a class="navbar-brand" href="#">Idle</a>
-        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <button class="navbar-toggler navbar-toggler-right" type="button" @click="expand=!expand"><span class="navbar-toggler-icon"></span></button>
+            <div class=" navbar-collapse" :class="{collapse:!expand}"  >
                 <ul class="navbar-nav mr-auto">
+                    <li class="nav-item" :class="{active:selected=='index'}" @click="selected='index';expand=false;">
+                        <router-link class="nav-link" to="/index">index</router-link>
+                    </li>
+                    <li class="nav-item" :class="{active:selected=='user'}" @click="selected='user';expand=false;">
+                        <router-link class="nav-link" to="/user">user</router-link>
+                    </li>
+                    <li class="nav-item" :class="{active:selected=='hero'}" @click="selected='hero';expand=false;">
+                        <router-link class="nav-link" to="/hero">hero</router-link>
+                    </li>
 
-                    <li class="nav-item active">
-                        <a class="nav-link" href="index.html">index </a>
-                    </li>
-                    <li class="nav-item active">
-                        <a class="nav-link" href="idle.html">battle </a>
-                    </li>
-                   
                 </ul>
             </div>
     </nav>
@@ -25,7 +24,13 @@
     {
         var doc = document.currentScript.ownerDocument;
         Vue.component('idle-header', {
-            template: doc.querySelector("template").innerHTML
+            template: doc.querySelector("template").innerHTML,
+            data() {
+                return {
+                    selected: "",
+                    expand:false,
+                }
+            }
         })
     }
 

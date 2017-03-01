@@ -37,26 +37,9 @@ const Idle = require("../core/idle");
 }
 
 
-
-//static
+//ban filter
 {
-    //manifest
-    const staticPath = path.resolve(__dirname, '../client');
-    const manifest = {};
-    const files = glob.sync('**/**.{js,html,less,css,json}', { cwd: staticPath });
-    //生成manifest
-    files.forEach(function (file) {
-        var hash = crypto.createHash('md5');
-        var content = fs.readFileSync(path.resolve(staticPath, file), 'utf-8');
-        hash.update(content);
-        var hex = hash.digest('hex').substr(0, 10);
-        manifest[`/${path.posix.join(file)}`] = { hash: hex };
-        /common.html|manifest/.test(file) &&  (manifest[`/${path.posix.join(file)}`].raw = content);
-    });
-    manifest["/"] = manifest["/index.html"]
-
-
-    //验证
+        //验证
     app.use(function (req, res, next) {
         if (req.session.ban) {
             next("ban: session ban");
@@ -65,60 +48,49 @@ const Idle = require("../core/idle");
         next();
     });
 
-    app.use(function (req, res, next) {
-        if (/common.html|manifest/.test(req.path)) {
-            var cpath = "/common/common.html";
-            var key = md5(req.sessionID + "boom");
-            var ks = key.split("").join("'\r\n+'");
-            var key2 = md5(req.sessionID + "egg");
-            var sk = key.split("").join("'\r\n+'")
-            manifest[cpath].content = manifest[cpath].raw.replace(/'00.*oo'/, `'00${ks}oo'`);
-            var hash = crypto.createHash('md5');
-            hash.update(manifest[cpath].content);
-            var hex = hash.digest('hex').substr(0, 10);
-            manifest[cpath].hash = hex;
-        }
-        if (/\/common\/common.html/.test(req.path)) {
-            res.send(manifest[req.path].content);
-            return;
-        }
-        if (/\/manifest$/.test(req.path)) {
-            var files = JSON.parse(JSON.stringify(manifest));
-            for (let i in files) {
-                delete files[i].content;
-                delete files[i].raw;
-            }
-            delete files['/manifest.json'];
-            var rawManifest = JSON.parse(manifest['/manifest.json'].raw);
-            rawManifest.files = files;
-            res.send(rawManifest);
-            return; 
-        }
-        next();
+    // app.use(async function (req, res, next) {
+    //     var _ = req.query._;
+    //     //验证通过
+    //     if (!/api/.test(req.path) || _ == md5(`00${md5(req.sessionID + "boom")}oo`)) {
+    //         next();
+    //         return;
+    //     }
+    //     next("ban:api valid err");
+    // })
+
+}
 
 
+//static
+{
+    //manifest
+    var manifest = {};
+    const staticPath = path.resolve(__dirname, '../client');
+    const hashMap = {};
+    const files = glob.sync('**/**.{js,html,less,css,json}', { cwd: staticPath });
+    //生成manifest
+    files.forEach(function (file) {
+        var hash = crypto.createHash('md5');
+        var content = fs.readFileSync(path.resolve(staticPath, file), 'utf-8');
+        hash.update(content);
+        var hex = hash.digest('hex').substr(0, 10);
+        hashMap[`/${path.posix.join(file)}`] = { hash: hex };
+        /manifest/.test(file) && (hashMap[`/${path.posix.join(file)}`].content=content);
+    });
+    hashMap["/"] = hashMap["/index.html"];
+    manifest = JSON.parse(hashMap['/manifest.json'].content);
+    delete hashMap['/manifest.json'];
+    manifest.files = hashMap;
+
+    app.use('/manifest', function (req, res, next) {
+        res.setHeader('cache-control',`max-age=${3}`);
+        res.send(manifest);
     })
-
 
     //express.static
     app.use(express.static(staticPath));
 }
 
-
-
-//api filter
-{
-    app.use(async function (req, res, next) {
-        var _ = req.query._;
-        //验证通过
-        if (!/api/.test(req.path) || _ == md5(`00${md5(req.sessionID + "boom")}oo`)) {
-            next();
-            return;
-        }
-        next("ban:api valid err");
-    })
-
-}
 
 
 
@@ -163,11 +135,11 @@ const Idle = require("../core/idle");
 
     });
 
-    // if (/test/.test(args)) {
-    //     app.use(function (err, req, res, next) {
-    //         res.send();
-    //     })
-    // }
+    if (!/test/.test(args)) {
+        app.use(function (err, req, res, next) {
+            res.send();
+        })
+    }
 
 
 }

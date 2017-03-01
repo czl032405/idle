@@ -1,0 +1,14 @@
+<template>
+    <div class="container">
+        <div class="list-group d-inline-block align-top">
+            <a class="list-group-item list-group-item-info active">jobs learned</a>
+            <a href="" @click.prevent="changeJob(job)" :class="{active:hero.job.name==job.name}" class="list-group-item list-group-item-action"
+                v-for="job in hero.learnedJobs">{{job.name}}</a>
+        </div>
+        <div class="list-group d-inline-block align-top">
+            <a class="list-group-item  list-group-item-info active">jobs can learn</a>
+            <a href="" @click.prevent="learnJob(job)" class="list-group-item list-group-item-action" v-for="job in hero.canLearnJobs">{{job.name}}</a>
+        </div>
+    </div>
+</template>
+<script src="./job.js"></script>

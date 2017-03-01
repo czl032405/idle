@@ -1,20 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <link rel="import" href="./common/common.html">
-    <link rel="import" href="./comps/comps.html">
-
-    <title>Document</title>
-</head>
-
-<body>
-    <div class="app">
-        <idle-header></idle-header>
-        <idle-warning :msg="msg"></idle-warning>
-        <idle-nav></idle-nav>
+<template>
         <div class="container">
             <div class="list-group">
                 <a href="" class="list-group-item d-block" :class="{active:hero.map && hero.map.name==map.name}" v-for="map in maps" @click.prevent="changeMap(map)">
@@ -25,8 +9,5 @@
                 </a>
             </div>
         </div>
-    </div>
+  </template>
     <script src="./map.js"></script>
-</body>
-
-</html>

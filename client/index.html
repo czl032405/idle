@@ -2,18 +2,19 @@
 <html lang="en">
 
 <head>
+    <title>Idle</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <title>Document</title>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="Eggg Idle">
+    <meta name="msapplication-TileImage" content="favicon256.png">
+    <meta name="msapplication-TileColor" content="#2F3BA2">
     <link rel="manifest" href="/manifest">
     <link rel="import" href="./common/common.html">
     <link rel="import" href="./comps/comps.html">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black">
-    <meta name="apple-mobile-web-app-title" content="Weather PWA">
+    <link rel="import" href="./pages/pages.html">
     <link rel="apple-touch-icon" href="favicon.png">
-    <meta name="msapplication-TileImage" content="favicon256.png">
-    <meta name="msapplication-TileColor" content="#2F3BA2">
 
 </head>
 
@@ -21,33 +22,10 @@
     <div class="app">
         <idle-header></idle-header>
         <idle-warning :msg="msg"></idle-warning>
-        <div class="container" v-if="user">
-            <div class="jumbotron">
-                <h1 class="display-3">Hello, {{user.name}}</h1>
-                <p v-if="user.heros.length" class="lead">Select your heros. <a href="" @click.prevent="deleteMode=!deleteMode">{{deleteMode?'cancel':'delete'}}</a></p>
-                <hr class="my-4">
-                <div class="card-deck ">
-                    <div class="card" v-for="hero in heros" style="cursor: pointer" @click.prevent="selectHero(hero._id)">
-                        <div class="card-block">
-                            <h4 class="card-title">{{hero.name}}</h4>
-                            <p class="card-text">{{hero.job.name}} lv.{{hero.baseProps.lv}}</p>
-                        </div>
-                        <div class="card-footer">
-                            <small class="text-muted">offline for {{((new Date()-new Date(hero.lastActionDate))/1000/3600).toFixed(0)}} hrs {{((new Date()-new Date(hero.lastActionDate))/1000/60%60).toFixed(0)}} mins</small>
-                        </div>
-                        <div class="card-footer" v-if="deleteMode">
-                            <a href="" class="btn btn-danger" @click.prevent.stop="deleteHero(hero._id)">delete</a>
-                        </div>
-                    </div>
-                </div>
-                <p class="lead"></p>
-                <p class="lead">
-                    <a class="btn btn-primary btn-lg" href="create-hero.html" role="button">Create Hero</a>
-                </p>
-            </div>
-        </div>
+        <router-view></router-view>
     </div>
-    <script src="./index.js"></script>
+
+    <script src="index.js"></script>
 </body>
 
 </html>

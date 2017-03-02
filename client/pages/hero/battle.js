@@ -18,14 +18,16 @@ Vue.component('page-hero-battle', {
         this.attacker = (await Api.Hero.select()).result;
     },
     methods: {
-        async autoFight() {
+        async toggleAutoFight() {
             this.isAutoFight = !this.isAutoFight;
-            while (this.isAutoFight) {
-                if (this.isFighting) {
-                    log("[fight] isFighting break");
-                    break;
-                }
+            this.isAutoFight && this.autoFight();
+        },
+        async autoFight() {
+            while (this.isAutoFight && !this.isFighting) {
                 await this.fight();
+            }
+            if(this.isFighting){
+                log("error isFighting");
             }
         },
         async fight() {

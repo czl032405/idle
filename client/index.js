@@ -38,7 +38,7 @@ Vue.config.errorHandler = function (err, vm) {
     console.error(err);
     console.error(vm);
     err.message && PopMessage(err.message);
-
+    err.message && log(err.message);
 }
 
 

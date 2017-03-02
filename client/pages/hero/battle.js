@@ -21,16 +21,18 @@ Vue.component('page-hero-battle', {
         async toggleAutoFight() {
             this.isAutoFight = !this.isAutoFight;
             this.isAutoFight && this.autoFight();
+            !this.isAutoFight && (this.isFighting = false);
         },
         async autoFight() {
             while (this.isAutoFight && !this.isFighting) {
                 await this.fight();
             }
-            if(this.isFighting){
+            if (this.isFighting) {
                 log("error isFighting");
             }
         },
         async fight() {
+            log("fight begin");
             this.roundInfos = [];
             this.resultInfo = null;
             this.defender = {};
@@ -84,11 +86,13 @@ Vue.component('page-hero-battle', {
             }
             catch (e) {
                 log("in battle error")
+                log(JSON.stringify(e));
                 e.message && log(e.message);
-                var waitTime = typeof e == "object" ? 20 : e;
+                var waitTime = typeof e == "object" ? 60 : e;
                 await this.countDown(parseInt(waitTime));
             }
             this.isFighting = false;
+            log("fight end");
         },
         async countDown(waitTime) {
             this.countDownSecond = waitTime;

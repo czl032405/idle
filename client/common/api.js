@@ -13,13 +13,14 @@ const Api = {
         }, (e) => {
             !/^(200|304|0)$/.test(e.status) && PopMessage(`${url}:${e.status}`);
             !navigator.onLine && PopMessage(`${url}:网络连接失败`);
-            log(`${url}:${e.status}`)
+            log(`[ajax error] ${url}:${e.status}`)
             throw e;
         }).then((data) => {
             console.groupCollapsed(`[ajax] ${url}`)
             param && console.log(param)
             data && console.log(data);
             console.groupEnd();
+            PopMessage();
             if (/not login/i.test(data.msg)) {
                 Api.go2login();
                 throw data;

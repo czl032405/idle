@@ -22,6 +22,7 @@ Vue.component('page-hero-battle', {
             this.isAutoFight = !this.isAutoFight;
             this.isAutoFight && this.autoFight();
             !this.isAutoFight && (this.isFighting = false);
+            this.isAutoFight && PostMessage("notification:开始挂机");
         },
         async autoFight() {
             while (this.isAutoFight && !this.isFighting) {

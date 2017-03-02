@@ -6,6 +6,7 @@ self.addEventListener("install", function () {
 
 self.addEventListener("activate", function (e) {
     console.log("service worker activate");
+     PostMessage(`notification:welcome back ${navigator.onLine}`);
     needUpdateManifest = true;
 })
 

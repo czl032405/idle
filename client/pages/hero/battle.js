@@ -81,6 +81,7 @@ Vue.component('page-hero-battle', {
                 }
             }
             catch (e) {
+                log("in battle error")
                 e.message && log(e.message);
                 var waitTime = typeof e == "object" ? 20 : e;
                 await this.countDown(parseInt(waitTime));

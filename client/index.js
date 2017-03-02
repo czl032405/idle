@@ -52,7 +52,7 @@ var vm = new Vue({
         }
     },
     async mounted() {
-
+        PostMessage("notification:welcome back index")
     },
     methods: {
 

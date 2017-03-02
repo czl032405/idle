@@ -1,4 +1,4 @@
-{
+
       var doc = document.currentScript.ownerDocument;
       Vue.component('page-user-register', {
      template: doc.querySelector("template").innerHTML,
@@ -31,4 +31,4 @@
         }
     })
 
-}
+

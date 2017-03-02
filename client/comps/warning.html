@@ -4,12 +4,12 @@
     </div>
 </template>
 <script>
-    {
+    
         var doc = document.currentScript.ownerDocument;
         Vue.component('idle-warning', {
             template: doc.querySelector("template").innerHTML,
             props: ['msg'],
         })
-    }
+    
 
 </script>

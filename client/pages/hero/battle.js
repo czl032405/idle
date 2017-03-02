@@ -1,4 +1,4 @@
-{
+
     var doc = document.currentScript.ownerDocument;
     Vue.component('page-hero-battle', {
         template: doc.querySelector("template").innerHTML,
@@ -17,13 +17,14 @@
         },
         async mounted() {
             this.attacker = (await Api.Hero.select()).result;
-
+            log("[battle.vue] mounted");
         },
         methods: {
             async autoFight() {
                 this.isAutoFight = !this.isAutoFight;
                 while (this.isAutoFight) {
                     if (this.isFighting) {
+                        log("[fight] isFighting break");
                         break;
                     }
                     await this.fight();
@@ -35,15 +36,15 @@
                 this.defender = {};
                 this.isFighting = true;
                 var result = (await Api.Hero.fight()).result;
-
-                if (typeof result != "object") {
+                log("[fight] begin");
+                if (typeof result != "object") { //等待
                     var nextActionTime = new Date(result);
                     var now = new Date();
                     var waitTime = Math.ceil((nextActionTime - now) / 1000);
                     await this.countDown(waitTime)
 
                 }
-                else {
+                else { //处理对战结果
                     this.attacker = result.A;
                     this.defender = result.B;
                     for (let i in result.roundInfos) {
@@ -80,6 +81,7 @@
                     await this.countDown(Math.ceil(result.resultInfo.battleDelay / 1000));
                 }
                 this.isFighting = false;
+                log("[fight] end");
             },
             async countDown(waitTime) {
                 this.countDownSecond = waitTime;
@@ -99,4 +101,4 @@
         }
     })
 
-}
+

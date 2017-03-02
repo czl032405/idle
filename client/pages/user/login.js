@@ -1,10 +1,9 @@
-{
+
     var doc = document.currentScript.ownerDocument;
     Vue.component('page-user-login', {
         template: doc.querySelector("template").innerHTML,
         data() {
             return {
-
                 name: "",
                 pw: "",
                 msg: "",
@@ -24,4 +23,4 @@
         }
     })
 
-}
+

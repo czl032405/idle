@@ -1,4 +1,4 @@
-{
+
     var doc = document.currentScript.ownerDocument;
     Vue.component('page-hero-map', {
         template: doc.querySelector("template").innerHTML,
@@ -28,4 +28,3 @@
             }
         }
     });
-}

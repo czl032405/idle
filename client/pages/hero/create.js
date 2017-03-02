@@ -1,4 +1,4 @@
-{
+
     var doc = document.currentScript.ownerDocument;
     Vue.component('page-hero-create', {
          template: doc.querySelector("template").innerHTML,
@@ -19,4 +19,4 @@
         }
     })
 
-}
+

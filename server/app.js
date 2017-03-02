@@ -39,7 +39,7 @@ const Idle = require("../core/idle");
 
 //ban filter
 {
-        //验证
+    //验证
     app.use(function (req, res, next) {
         if (req.session.ban) {
             next("ban: session ban");
@@ -75,7 +75,7 @@ const Idle = require("../core/idle");
         hash.update(content);
         var hex = hash.digest('hex').substr(0, 10);
         hashMap[`/${path.posix.join(file)}`] = { hash: hex };
-        /manifest/.test(file) && (hashMap[`/${path.posix.join(file)}`].content=content);
+        /manifest/.test(file) && (hashMap[`/${path.posix.join(file)}`].content = content);
     });
     hashMap["/"] = hashMap["/index.html"];
     manifest = JSON.parse(hashMap['/manifest.json'].content);
@@ -83,7 +83,7 @@ const Idle = require("../core/idle");
     manifest.files = hashMap;
 
     app.use('/manifest', function (req, res, next) {
-        res.setHeader('cache-control',`max-age=${3}`);
+        res.setHeader('cache-control', `max-age=${3}`);
         res.send(manifest);
     })
 

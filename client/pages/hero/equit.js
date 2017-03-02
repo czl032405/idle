@@ -1,4 +1,4 @@
-{
+
     var doc = document.currentScript.ownerDocument;
     Vue.component('page-hero-equit', {
         template: doc.querySelector("template").innerHTML,
@@ -45,4 +45,3 @@
         }
 
     });
-}

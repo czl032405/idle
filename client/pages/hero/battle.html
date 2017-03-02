@@ -1,5 +1,5 @@
 <template>
-    <div class="jumbotron" style="height:100vh">
+    <div class="jumbotron" style="min-height:90vh">
         <div class="btn-toolbar mb-3">
             <div class="lead">
                 <a href="" class="btn btn-primary" :class="{'btn-danger':isAutoFight}" @click.prevent="autoFight">{{isAutoFight?'stop':'fight'}}</a>
@@ -29,6 +29,7 @@
             </div>
             <div class="card w-50">
                 <div class="card-block">
+                    <small v-if="!defender.name">...</small>
                     <h4 class="card-title">{{defender.name}}</h4>
                     <p class="card-text">{{defender.job && defender.job.name}} {{defender.baseProps && 'lv.'+defender.baseProps.lv}} {{defender.map
                         && defender.map.name}}</p>

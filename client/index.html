@@ -23,6 +23,7 @@
         <idle-header></idle-header>
         <idle-warning :msg="msg"></idle-warning>
         <router-view></router-view>
+        <idle-log :logs="logs" @clear="logs=[];"></idle-log>
     </div>
 
     <script src="index.js"></script>

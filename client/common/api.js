@@ -1,6 +1,4 @@
-const PopMessage = function (msg) {
-    window.vm && (window.vm.msg = msg);
-};
+
 const Api = {
     test: "7",
     serverPath: "/api/",
@@ -13,8 +11,10 @@ const Api = {
             return data.json();
         }, (e) => {
             !/200|304/.test(e.status) && PopMessage(`${url}:${e.status}`);
+            log(`[ajax] ${url} ${e.status} ${JSON.stringify(e)}`);
             throw e;
         }).then((data) => {
+            log(`[ajax] ${url}`)
             console.groupCollapsed(`[ajax] ${url}`)
             param && console.log(param)
             data && console.log(data);
@@ -58,7 +58,7 @@ const Api = {
         myList() {
             return Api.getJson('hero/myList');
         },
-        mapList(){
+        mapList() {
             return Api.getJson('hero/mapList');
         },
         changeJob(job) {

@@ -1,5 +1,5 @@
-{
-    var doc = document.currentScript.ownerDocument;
+
+ var doc = document.currentScript.ownerDocument;
     Vue.component('page-hero-job', {
         template: doc.querySelector("template").innerHTML,
         data() {
@@ -31,4 +31,3 @@
         }
 
     });
-}

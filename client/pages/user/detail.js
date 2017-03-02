@@ -1,4 +1,4 @@
-{
+
     var doc = document.currentScript.ownerDocument;
     Vue.component('page-user-detail', {
         template: doc.querySelector("template").innerHTML,
@@ -29,4 +29,4 @@
         }
     })
 
-}
+

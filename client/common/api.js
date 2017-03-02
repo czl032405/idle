@@ -5,16 +5,17 @@ const Api = {
     getJson(url, param, type = "get", dataType = "json") {
         dataType == "jsonp" && (type = "jsonp");
         if (!/http/i.test(url)) url = this.serverPath + url;
+        log(`[ajax] ${url}`)
         return Vue.http[type](url, type == "post" ? param : {
             params: param,
         }, type == "post" && { emulateJSON: true }).then((data) => {
             return data.json();
         }, (e) => {
-            !/200|304/.test(e.status) && PopMessage(`${url}:${e.status}`);
-            log(`[ajax] ${url} ${e.status} ${JSON.stringify(e)}`);
+            !/^(200|304|0)$/.test(e.status) && PopMessage(`${url}:${e.status}`);
+            !navigator.onLine && PopMessage(`${url}:网络连接失败`);
+            log(`${url}:${e.status}`)
             throw e;
         }).then((data) => {
-            log(`[ajax] ${url}`)
             console.groupCollapsed(`[ajax] ${url}`)
             param && console.log(param)
             data && console.log(data);

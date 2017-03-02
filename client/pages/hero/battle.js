@@ -1,47 +1,46 @@
+var doc = document.currentScript.ownerDocument;
+Vue.component('page-hero-battle', {
+    template: doc.querySelector("template").innerHTML,
+    data() {
+        return {
+            msg: "",
+            attacker: {},
+            defender: {},
 
-    var doc = document.currentScript.ownerDocument;
-    Vue.component('page-hero-battle', {
-        template: doc.querySelector("template").innerHTML,
-        data() {
-            return {
-                msg: "",
-                attacker: {},
-                defender: {},
-
-                roundInfos: [],
-                resultInfo: null,
-                isAutoFight: false,
-                isFighting: false,
-                countDownSecond: -1
+            roundInfos: [],
+            resultInfo: null,
+            isAutoFight: false,
+            isFighting: false,
+            countDownSecond: -1
+        }
+    },
+    async mounted() {
+        this.attacker = (await Api.Hero.select()).result;
+    },
+    methods: {
+        async autoFight() {
+            this.isAutoFight = !this.isAutoFight;
+            while (this.isAutoFight) {
+                if (this.isFighting) {
+                    log("[fight] isFighting break");
+                    break;
+                }
+                await this.fight();
             }
         },
-        async mounted() {
-            this.attacker = (await Api.Hero.select()).result;
-            log("[battle.vue] mounted");
-        },
-        methods: {
-            async autoFight() {
-                this.isAutoFight = !this.isAutoFight;
-                while (this.isAutoFight) {
-                    if (this.isFighting) {
-                        log("[fight] isFighting break");
-                        break;
-                    }
-                    await this.fight();
-                }
-            },
-            async fight() {
-                this.roundInfos = [];
-                this.resultInfo = null;
-                this.defender = {};
-                this.isFighting = true;
-                var result = (await Api.Hero.fight()).result;
-                log("[fight] begin");
+        async fight() {
+            this.roundInfos = [];
+            this.resultInfo = null;
+            this.defender = {};
+            this.isFighting = true;
+            var result = null;
+            try {
+                result = (await Api.Hero.fight()).result;
                 if (typeof result != "object") { //等待
                     var nextActionTime = new Date(result);
                     var now = new Date();
                     var waitTime = Math.ceil((nextActionTime - now) / 1000);
-                    await this.countDown(waitTime)
+                    throw waitTime;
 
                 }
                 else { //处理对战结果
@@ -80,25 +79,30 @@
                     this.attacker.baseProps.maxexp = result.resultInfo.maxexp;
                     await this.countDown(Math.ceil(result.resultInfo.battleDelay / 1000));
                 }
-                this.isFighting = false;
-                log("[fight] end");
-            },
-            async countDown(waitTime) {
-                this.countDownSecond = waitTime;
-                while (this.countDownSecond >= 0) {
-                    await this.wait(1000);
-                    this.countDownSecond--;
-                }
-            },
-            async wait(timeout) {
-                timeout = timeout || 1000;
-                return new Promise((resolve) => {
-                    setTimeout(function () {
-                        resolve();
-                    }, timeout);
-                })
             }
+            catch (e) {
+                e.message && log(e.message);
+                var waitTime = typeof e == "object" ? 20 : e;
+                await this.countDown(parseInt(waitTime));
+            }
+            this.isFighting = false;
+        },
+        async countDown(waitTime) {
+            this.countDownSecond = waitTime;
+            while (this.countDownSecond >= 0) {
+                await this.wait(1000);
+                this.countDownSecond--;
+            }
+        },
+        async wait(timeout) {
+            timeout = timeout || 1000;
+            return new Promise((resolve) => {
+                setTimeout(function () {
+                    resolve();
+                }, timeout);
+            })
         }
-    })
+    }
+})
 
 

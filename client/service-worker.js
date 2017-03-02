@@ -15,10 +15,31 @@ self.addEventListener("fetch", async function (e) {
     }
 })
 
+self.addEventListener("message", async function (e) {
+    console.info(e);
+    if (/notification:/i.test(e.data)) {
+        const title = e.data.split(":")[1];
+        self.registration.showNotification(title);
+    }
+})
+
+self.addEventListener("error",function(e){
+    PostMessage(`notification:err:${e.message}`)
+})
+
+const PostMessage = function (msg) {
+    self.clients.matchAll().then(function (clients) {
+        clients.forEach(function (client) {
+            client.postMessage(msg);
+        });
+    });
+}
+
 
 const respondFilter = async function (request) {
     if (needUpdateManifest) {
         await loadManifest();
+
     }
     var cache = await caches.open(version)
     var res = await cache.match(request);
@@ -61,7 +82,7 @@ const loadManifest = async function () {
         }
     }
 
-    
+
     setTimeout(function () {
         needUpdateManifest = true;
     }, 2000);

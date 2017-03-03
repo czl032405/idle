@@ -33,6 +33,7 @@ Vue.component('page-hero-battle', {
             }
         },
         async fight() {
+            log("[fight] begin")
             this.roundInfos = [];
             this.resultInfo = null;
             this.defender = {};
@@ -50,6 +51,7 @@ Vue.component('page-hero-battle', {
                 else { //处理对战结果
                     this.attacker = result.A;
                     this.defender = result.B;
+                    log("[fight vs]"+ result.B.name);
                     for (let i in result.roundInfos) {
                         var roundInfo = result.roundInfos[i];
                         await this.wait(roundInfo.delay);
@@ -92,6 +94,7 @@ Vue.component('page-hero-battle', {
                 await this.countDown(parseInt(waitTime));
             }
             this.isFighting = false;
+            log("[fight] end")
         },
         async countDown(waitTime) {
             this.countDownSecond = waitTime;

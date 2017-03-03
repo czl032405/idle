@@ -6,9 +6,6 @@
     "background_color": "#fff",
     "description": "IDLE",
     "orientation": "portrait",
-    "background": {
-        "page": "index.html"
-    },
     "icons": [
         {
             "src": "favicon64.png",

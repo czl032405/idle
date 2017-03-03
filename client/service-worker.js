@@ -21,8 +21,7 @@ self.addEventListener("message", async function (e) {
         var id = e.data.id;
         var data = e.data.data;
         if (data == "getCountTest") {
-            PostMessage({ id, data: countTest });
-            return;
+         
         }
         //其他
 
@@ -101,7 +100,3 @@ const loadManifest = async function () {
 }
 
 
-var countTest = []
-setInterval(function () {
-    countTest.push(new Date().toLocaleTimeString());
-}, 10000);

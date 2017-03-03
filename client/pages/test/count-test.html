@@ -4,19 +4,27 @@
     </div>
 </template>
 <script>
-     var doc = document.currentScript.ownerDocument;
-     Vue.component('page-count-test', {
+    var doc = document.currentScript.ownerDocument;
+    var xinterval = null;
+    Vue.component('page-count-test', {
         template: doc.querySelector("template").innerHTML,
         data() {
             return {
                 countTest: [],
-               
+
             }
         },
         async mounted() {
-            this.countTest = await CallSW("getCountTest");
-            console.info(this.countTest);
+            if (!xinterval) {
+                xinterval = setInterval( ()=> {
+                    this.countTest.unshift(new Date().toLocaleTimeString())
+                }, 10000)
+
+            }
+
 
         },
+
     })
+
 </script>

@@ -22,7 +22,7 @@ Vue.component('page-hero-battle', {
             this.isAutoFight = !this.isAutoFight;
             this.isAutoFight && this.autoFight();
             !this.isAutoFight && (this.isFighting = false);
-            this.isAutoFight && PostMessage("notification:开始挂机");
+            this.isAutoFight && ShowNotification("开始挂机");
         },
         async autoFight() {
             while (this.isAutoFight && !this.isFighting) {
@@ -33,7 +33,6 @@ Vue.component('page-hero-battle', {
             }
         },
         async fight() {
-            log("[fight] begin")
             this.roundInfos = [];
             this.resultInfo = null;
             this.defender = {};
@@ -51,7 +50,6 @@ Vue.component('page-hero-battle', {
                 else { //处理对战结果
                     this.attacker = result.A;
                     this.defender = result.B;
-                    log("[fight vs]"+ result.B.name);
                     for (let i in result.roundInfos) {
                         var roundInfo = result.roundInfos[i];
                         await this.wait(roundInfo.delay);
@@ -87,14 +85,12 @@ Vue.component('page-hero-battle', {
                 }
             }
             catch (e) {
-                log("in battle error")
                 log(JSON.stringify(e));
                 e.message && log(e.message);
                 var waitTime = typeof e == "object" ? 60 : e;
                 await this.countDown(parseInt(waitTime));
             }
             this.isFighting = false;
-            log("[fight] end")
         },
         async countDown(waitTime) {
             this.countDownSecond = waitTime;

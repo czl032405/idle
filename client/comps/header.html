@@ -13,7 +13,9 @@
                 <li class="nav-item" :class="{active:selected=='hero'}" @click="selected='hero';expand=false;">
                     <router-link class="nav-link" to="/hero">hero</router-link>
                 </li>
-
+                <li class="nav-item" :class="{active:selected=='test-count'}" @click="selected='test-count';expand=false;">
+                    <router-link class="nav-link" to="/count-test">count-test</router-link>
+                </li>
             </ul>
         </div>
     </nav>

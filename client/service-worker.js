@@ -6,7 +6,7 @@ self.addEventListener("install", function () {
 
 self.addEventListener("activate", function (e) {
     console.log("service worker activate");
-     PostMessage(`notification:welcome back ${navigator.onLine}`);
+    PostMessage(`notification:welcome back ${navigator.onLine}`);
     needUpdateManifest = true;
 })
 
@@ -17,14 +17,21 @@ self.addEventListener("fetch", async function (e) {
 })
 
 self.addEventListener("message", async function (e) {
-    console.info(e);
-    if (/notification:/i.test(e.data)) {
-        const title = e.data.split(":")[1];
-        self.registration.showNotification(title);
+    if (e.data.id) {
+        var id = e.data.id;
+        var data = e.data.data;
+        if (data == "getCountTest") {
+            PostMessage({ id, data: countTest });
+            return;
+        }
+        //其他
+
+        PostMessage({ id, data: "received" });
     }
+
 })
 
-self.addEventListener("error",function(e){
+self.addEventListener("error", function (e) {
     PostMessage(`notification:err:${e.message}`)
 })
 
@@ -34,6 +41,10 @@ const PostMessage = function (msg) {
             client.postMessage(msg);
         });
     });
+}
+
+const showNotification = function (title) {
+    self.registration.showNotification(title);
 }
 
 
@@ -90,3 +101,7 @@ const loadManifest = async function () {
 }
 
 
+var countTest = []
+setInterval(function () {
+    countTest.push(new Date().toLocaleTimeString());
+}, 10000);

@@ -1,0 +1,22 @@
+<template>
+    <div class="list-group">
+        <span class="list-group-item" v-for="c in countTest">{{c}}</span>
+    </div>
+</template>
+<script>
+     var doc = document.currentScript.ownerDocument;
+     Vue.component('page-count-test', {
+        template: doc.querySelector("template").innerHTML,
+        data() {
+            return {
+                countTest: [],
+               
+            }
+        },
+        async mounted() {
+            this.countTest = await CallSW("getCountTest");
+            console.info(this.countTest);
+
+        },
+    })
+</script>

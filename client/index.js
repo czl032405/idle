@@ -3,6 +3,7 @@ var router = new VueRouter({
     mode: "hash",
     routes: [
         { path: "/index", component: Vue.component('page-index') },
+         { path: "/count-test", component: Vue.component('page-count-test') },
         {
             path: "/hero", component: Vue.component('page-hero'),
             children: [
@@ -52,7 +53,7 @@ var vm = new Vue({
         }
     },
     async mounted() {
-        PostMessage("notification:welcome back index")
+        ShowNotification("welcome back")
     },
     methods: {
 

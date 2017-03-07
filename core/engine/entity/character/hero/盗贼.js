@@ -1,6 +1,6 @@
 var Hero = require("./hero.js");
 var BaseProps = require("../base-props");
-class 战士 extends Hero {
+class 盗贼 extends Hero {
     constructor(name, baseProps, skills, equits) {
         skills = skills || [];
         //skills.push() //技能加成
@@ -11,4 +11,4 @@ class 战士 extends Hero {
  
 }
 
-module.exports = 战士;
+module.exports = 盗贼;

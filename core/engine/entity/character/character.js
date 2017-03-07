@@ -79,10 +79,10 @@ class Character extends Entity {
 
     attack(roundInfo) {
         var skill = this.parseNextSkill();
-        var skillName = skill.__proto__.constructor.name;
-        var lv = skill.lv;
+        var skillName = skill.name;
         roundInfo.skillName = skillName;
-        roundInfo.skillLv = lv;
+        roundInfo.skillLv = skill.lv;
+        roundInfo.skillProp = skill.prop;
         skill.attack(roundInfo);
         return roundInfo;
     }

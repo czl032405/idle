@@ -3,9 +3,12 @@ const path = require('path');
 const Entity = require('../entity.js');
 
 class Skill extends Entity {
-    constructor(name, lv) {
-        super(name);
-        this.lv = lv;
+    constructor(lv) {
+        super();
+        this.name = this.__proto__.constructor.name;
+        this.lv = lv || 1;
+        this.prop = "";
+
     }
 
     static build(name, lv) {
@@ -21,9 +24,14 @@ class Skill extends Entity {
             var SkillClass = require(classPath);
             return new SkillClass(lv);
         }
-        return new Skill(name,lv);
+        return new Skill(lv);
+    }
 
+    pre() {
+        return true;
     }
 
 }
 module.exports = Skill;
+
+

@@ -5,7 +5,7 @@ class 初心者 extends Hero {
         skills = skills || [];
         //skills.push() //技能加成
         //baseProps 属性加成
-        super(name, baseProps, "初心者", skills, equits);
+        super(name, baseProps,  skills, equits);
     }
 
 

@@ -53,7 +53,7 @@ var vm = new Vue({
         }
     },
     async mounted() {
-        ShowNotification("welcome back")
+        // ShowNotification("welcome back")
     },
     methods: {
 

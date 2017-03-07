@@ -1,3 +1,4 @@
+const Formula = require("../../formula.js");
 class BattleProps{
     constructor(baseProps){
         var defaultParm={
@@ -21,9 +22,12 @@ class BattleProps{
         }
         Object.assign(this,defaultParm);
 
-
-        this.maxhp = baseProps.str+baseProps.vit;
-        this.hp = this.maxhp;
+        var propArr="maxhp maxmp attack defense mattack mdefense speed critmult dropmult hit avoid parry crit counter".split(" "); 
+        for(let i in propArr){
+            this[propArr[i]] = Formula[propArr[i]](baseProps);
+        }
+        this.hp=this.maxhp;
+        this.mp = this.maxmp;
 
 
         this.nextInterval = this.interval;
@@ -31,7 +35,7 @@ class BattleProps{
     }
 
     get interval(){
-        return Math.floor(1000/this.speed);
+         return Math.floor((200-this.speed)*0.02*1000);
     }
 
 }

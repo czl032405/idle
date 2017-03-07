@@ -1,20 +1,26 @@
 class RoundInfo {
     constructor(o) {
         var defaultParam = {
-            isBuff:false,//是否buff回合
+            isBuff: false, //是否buff回合
             attacker: null,
             defender: null,
 
-            delay: 0,//毫秒后执行
-            aniDelay:0,//执行时长
+            delay: 0, //毫秒后执行
+            aniDelay: 0, //执行时长
             skillName: "-",
-            skillLv:0,
+            skillLv: 0,
+            skillProp:"",
             isAvoid: false,
             isParry: false,
             isCrit: false,
-            isCounter:false,
+            isCounter: false,
+
+
+
             //数值变动
             a: {
+                damage: 0, //受到物理伤害
+                mdamage: 0, //收到魔法伤害
                 maxhp: 0,
                 maxmp: 0,
                 hp: 0,
@@ -30,10 +36,11 @@ class RoundInfo {
                 avoid: 0,
                 parry: 0,
                 crit: 0,
-                counter:0,
-
+                counter: 0,
             },
             d: {
+                damage: 0,
+                mdamage: 0,
                 maxhp: 0,
                 maxmp: 0,
                 hp: 0,
@@ -49,7 +56,7 @@ class RoundInfo {
                 avoid: 0,
                 parry: 0,
                 crit: 0,
-                counter:0,
+                counter: 0,
             },
 
 
@@ -59,6 +66,8 @@ class RoundInfo {
         Object.assign(this, defaultParam, o);
 
     }
+
+
 
 }
 

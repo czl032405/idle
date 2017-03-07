@@ -1,20 +1,28 @@
 <template>
-    <nav class="nav">
-        <a class="nav-link active" href="idle.html">fight</a>
-        <a class="nav-link" href="skill.html">skill</a>
-        <a class="nav-link" href="job.html">job</a>
-        <a class="nav-link" href="equit.html">equit</a>
-        <!--<a class="nav-link" href="item.html">item</a>-->
-        <a class="nav-link" href="map.html">map</a>
-    </nav>
+    <div class="btn-group">
+        <a class="btn btn-primary " href="" role="button" :class="{active:selected=='battle'}"  @click.prevent="nav('battle')">battle</a>
+        <a class="btn btn-primary" href="" role="button" :class="{active:selected=='skill'}"  @click.prevent="nav('skill')">skill</a>
+        <a class="btn btn-primary" href="" role="button" :class="{active:selected=='job'}"  @click.prevent="nav('job')">job</a>
+        <a class="btn btn-primary" href="" role="button" :class="{active:selected=='equit'}"  @click.prevent="nav('equit')">equit</a>
+        <a class="btn btn-primary" href="" role="button" :class="{active:selected=='item'}"  @click.prevent="nav('item')">item</a>
+        <a class="btn btn-primary"href="" role="button" :class="{active:selected=='map'}"  @click.prevent="nav('map')">map</a>
+    </div>
 </template>
 
 <script>
-    
-        var doc = document.currentScript.ownerDocument;
-        Vue.component('idle-nav', {
-            template: doc.querySelector("template").innerHTML
-        })
-    
-
+    var doc = document.currentScript.ownerDocument;
+    Vue.component('idle-nav', {
+        template: doc.querySelector("template").innerHTML,
+        data() {
+            return {
+                selected: "battle",
+            }
+        },
+        methods: {
+            nav(rname) {
+                this.selected = rname;
+                this.$router.push(rname)
+            }
+        }
+    })
 </script>

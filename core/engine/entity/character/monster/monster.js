@@ -9,6 +9,8 @@ class Monster extends Character {
     constructor(name, baseProps, skills, equits, drops) {
         super(name, baseProps, skills, equits);
         this.drops = drops || {};
+        this.battleProps.nextInterval*=1.7;
+        this.battleProps.nextInterval=Math.floor(this.battleProps.nextInterval)
     }
 
     static build(name, lv) {

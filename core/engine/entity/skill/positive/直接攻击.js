@@ -1,14 +1,13 @@
 const PositiveSkill = require('./positive.js');
+const Formula = require('../../../formula.js')
 class 直接攻击 extends PositiveSkill {
     constructor(lv) {
-        lv = lv || 1;
-        console.info(lv);
-        super('直接攻击', lv);
+        super(lv);
     }
 
     attack(roundInfo) {
         super.attack(roundInfo);
-        roundInfo.d.hp -= 2;
+        roundInfo.d.damage = Formula.damage(roundInfo.attacker.battleProps) + 1;
     }
 
 }

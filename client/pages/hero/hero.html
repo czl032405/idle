@@ -1,5 +1,9 @@
 <template>
-    <router-view class="hero-view"></router-view>
+    <div>
+        <idle-nav></idle-nav>
+        <router-view class="hero-view"></router-view>
+    </div>
+
 </template>
 <script>
     {
@@ -8,5 +12,4 @@
             template: doc.querySelector("template").innerHTML,
         })
     }
-
 </script>

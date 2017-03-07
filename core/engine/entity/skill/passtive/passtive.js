@@ -1,7 +1,7 @@
-var Skill = require('../skill.js');
+const Skill = require('../skill.js');
 class PasstiveSkill extends Skill {
-    constructor(name, lv) {
-        super(name,lv);
+    constructor(lv) {
+        super(lv);
     }
 
     apply(character){

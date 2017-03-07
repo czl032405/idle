@@ -1,11 +1,14 @@
-var Skill = require('../skill.js');
+const Skill = require('../skill.js');
+const Formula = require('../../../formula.js')
+
 class PositiveSkill extends Skill {
-    constructor(name, lv) {
-        super(name,lv);
+    constructor(lv) {
+        super(lv);
     }
 
-    attack(roundInfo){
-        roundInfo.aniDelay=100;
+    attack(roundInfo) {
+        roundInfo.aniDelay = 100;
+        roundInfo.d.damage = Formula.damage(roundInfo.attacker.battleProps);
     }
 
 }

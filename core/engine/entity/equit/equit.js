@@ -2,13 +2,15 @@ const fs = require('fs');
 const path = require('path');
 const Entity = require('../entity.js');
 class Equit extends Entity {
-    constructor(name, lv) {
-        super(name);
-        this.lv = lv;//精炼等级
- 
+    constructor(lv) {
+        super();
+        this.name=this.__proto__.constructor.name;
+        this.lv = lv || 1;//精炼等级
+        this.type = "";
+
     }
 
-    static build(name,lv){
+    static build(name, lv) {
         var classPath = path.resolve(__dirname, `./${name}.js`);
         var exist = fs.existsSync(classPath);
         if (exist) {
@@ -18,8 +20,8 @@ class Equit extends Entity {
         return null;
     }
 
-    apply(character){
-        
+    apply(character) {
+
     }
 
 

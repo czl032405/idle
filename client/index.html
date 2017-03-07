@@ -21,11 +21,9 @@
 <body>
     <div class="app">
         <idle-header></idle-header>
-       
-            <idle-warning :msg="msg"></idle-warning>
-
+        <idle-warning :msg="msg"></idle-warning>
         <router-view></router-view>
-        <idle-log :logs="logs" @clear="logs=[];"></idle-log>
+        <idle-log :logs="logs" @clear="logs=[];" hidden></idle-log>
     </div>
 
     <script src="index.js"></script>

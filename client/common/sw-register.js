@@ -1,6 +1,9 @@
+
+
 var swRegistration = null;
-navigator.serviceWorker.register('../service-worker.js').then(function (registration) {
+navigator.serviceWorker && navigator.serviceWorker.register('../service-worker.js').then(function (registration) {
     console.log('ServiceWorker registration successful with scope: ', registration.scope);
+    console.info(registration)
     swRegistration = registration;
 
 }).catch(function (err) {
@@ -8,7 +11,7 @@ navigator.serviceWorker.register('../service-worker.js').then(function (registra
 });
 
 
-navigator.serviceWorker.addEventListener('message', function (e) {
+navigator.serviceWorker && navigator.serviceWorker.addEventListener('message', function (e) {
     if (e.data.id) {
         MessageResolves[e.data.id] && MessageResolves[e.data.id](e.data.data);
         delete MessageResolves[e.data.id];
@@ -26,7 +29,10 @@ const ShowNotification = function (title) {
 
 const CallSW = async function (data) {
     return new Promise(resolve => {
-        if (!navigator.serviceWorker.controller) {
+        if(!navigator.serviceWorker){
+            resolve("not support");
+        }
+        else if (!navigator.serviceWorker.controller) {
             resolve("not init controller");
         }
         else {

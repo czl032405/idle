@@ -358,20 +358,20 @@ const Hero = {
     calCanLearnSkills(hero) {
         var canLearnSkills = [];
         for (let i in SkillSetting) {
-            var isLearned = false;
             var name = i.split("-")[0];
             var lv = i.split("-")[1] || 1;
             var cost = SkillSetting[i].cost || 0;
-            for (let j in hero.learnedSkills) {
-                if (hero.learnedSkills[j].name == name && hero.learnedSkills[j].lv >= lv) {
-                    isLearned = true;
-                }
-            }
-            if (isLearned) {
+            var learnedIndex =  hero.learnedSkills.findIndex(skill => skill.name == name && skill.lv >= lv);
+            if (learnedIndex>-1) {
                 continue;
             }
-            if (this.handlePre(hero, SkillSetting[i].pre)) {
+            if (SkillSetting[i].pre && this.handlePre(hero, SkillSetting[i].pre)) {
                 canLearnSkills.push({ name, lv, cost });
+                continue;
+            }
+            if(!SkillSetting[i].pre && Engine.buildSkill(name,lv).pre()){
+                canLearnSkills.push({ name, lv, cost });
+                 continue;
             }
         }
         return canLearnSkills;
@@ -404,7 +404,7 @@ const Hero = {
     },
     parseEngineHero(hero) {
         hero = JSON.parse(JSON.stringify(hero));
-        var engineHero = Engine.buildHero(hero.name, hero.baseProps, hero.job, hero.skills, hero.equits);
+        var engineHero = Engine.buildHero(hero.name, hero.baseProps,  hero.skills, hero.equits,hero.job);
         engineHero.map = hero.map;
         return engineHero;
     },

@@ -49,8 +49,8 @@ class Battle {
         B.battleProps.nextInterval -= delay;
 
         if (action instanceof Buff) {
-            roundInfo = action.fire();
             action.nextInterval = action.interval;
+            roundInfo = action.fire();
         }
         if (action instanceof Character) {
             action.battleProps.nextInterval = action.battleProps.interval;
@@ -73,17 +73,34 @@ class Battle {
             });
         }
 
+        //cal roundInfo
         roundInfo.delay = delay;
         this.duration += roundInfo.delay;
         this.duration += roundInfo.aniDelay;
-        this.calRoundInfo(roundInfo);
+        roundInfo.a.hp -= roundInfo.a.damage;
+        roundInfo.a.hp -= roundInfo.a.mdamage;
+        roundInfo.d.hp -= roundInfo.d.damage;
+        roundInfo.d.hp -= roundInfo.d.mdamage;
+        if (roundInfo.isAvoid || roundInfo.isParry) {
+            roundInfo.d.hp < 0 && (roundInfo.d.hp = 0);
+        }
+        var attacker = A.name == roundInfo.attacker.name ? A : B;
+        var defender = attacker == A ? B : A;
+        for (let i in roundInfo.a) {
+            if (attacker.battleProps[i] != undefined) {
+                attacker.battleProps[i] += roundInfo.a[i];
+            }
 
+        }
+        for (let i in roundInfo.d) {
+            if (defender.battleProps[i] != undefined) {
+                defender.battleProps[i] += roundInfo.d[i];
+            }
+        }
         roundInfo.attacker = roundInfo.attacker.getRoundInfoStatus();
         roundInfo.defender = roundInfo.defender.getRoundInfoStatus();
-
         return roundInfo;
     }
-
 
 
 
@@ -113,22 +130,6 @@ class Battle {
         return action;
     }
 
-    calRoundInfo(roundInfo) {
-        var A = this.A;
-        var B = this.B;
-        var attacker = A.name == roundInfo.attacker.name ? A : B;
-        var defender = attacker == A ? B : A;
-
-        if (roundInfo.isAvoid || roundInfo.isParry) {
-            roundInfo.d.hp < 0 && (roundInfo.d.hp = 0);
-        }
-        for (let i in roundInfo.a) {
-            attacker.battleProps[i] += roundInfo.a[i];
-        }
-        for (let i in roundInfo.d) {
-            defender.battleProps[i] += roundInfo.d[i];
-        }
-    }
     checkStatus() {
         var A = this.A;
         var B = this.B;

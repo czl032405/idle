@@ -19,10 +19,10 @@ var router = new VueRouter({
 
 //全局组件注册
 //comps
-var comps = Resource.requireAll((require.context("./comps", true, /^\.\/.*\.vue/)))
-comps.forEach((comp) => {
-    Vue.component(comp.name, comp)
-});
+// var comps = Resource.requireAll((require.context("./comps", true, /^\.\/.*\.vue/)))
+// comps.forEach((comp) => {
+//     Vue.component(comp.name, comp)
+// });
 
 
 router.beforeEach(async function loginFilter(to, from, next) {

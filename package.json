@@ -9,7 +9,7 @@
     "dev:client": "set NODE_ENV=development && node node_modules/webpack/bin/webpack.js  --progress --watch",
     "dev:db": "mongod",
     "build": "npm run build:server && npm run build:client",
-    "build:server": "tsc",
+    "build:server": "node node_modules/typescript/bin/tsc",
     "build:client": "set NODE_ENV=production && node node_modules/webpack/bin/webpack.js --progress",
     "postinstall": "npm run build",
     "start": "node --harmony  dist/index.js "

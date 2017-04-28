@@ -1,0 +1,96 @@
+import * as express from "express";
+import Idle from "../../core/idle";
+import * as md5  from 'md5';
+var router = express.Router();
+export default function (app) {
+    app.use('/api/user', router);
+
+};
+
+router.get('*', (req, res, next) => {
+    var user = req.session.user;
+    if (/create|login/.test(req.path)) {
+        next();
+        return;
+    }
+    if (!user) {
+        next("not login");
+        return;
+    }
+    next();
+})
+
+router.get('/get', async (req, res, next) => {
+    var id = req.query.id;
+    try {
+        var result = null;
+        if (id) {
+
+            result = await Idle.Action.User.get(id);
+        }
+        else {
+            result = req.session.user;
+            await result.save();
+        }
+
+        res.send({ status: 1, result })
+    }
+    catch (e) {
+        next(e)
+    }
+})
+
+router.get('/create', async (req, res, next) => {
+    var name = req.query.name || "";
+    var pw = req.query.pw || "";
+    if (!name) {
+        next("请输入名字");
+        return;
+    }
+    if (!pw) {
+        next("请输入密码");
+        return;
+    }
+    if (pw.length < 6) {
+        next("密码长度必须大于6");
+        return;
+    }
+    try {
+        var result = await Idle.Action.User.create(name, pw);
+        result = await Idle.Action.User.get(result._id);
+        res.send({ status: 1, result });
+    }
+    catch (e) {
+        next(e);
+    }
+})
+
+
+
+router.get('/login', async (req, res, next) => {
+    var name = req.query.name || "";
+    var pw = req.query.pw || "";
+    if (!name) {
+        next("请输入名字");
+        return;
+    }
+    if (!pw) {
+        next("请输入密码");
+        return;
+    }
+    try {
+        var result = await Idle.Action.User.login(name, pw);
+        var date = new Date();
+        var maxAge = 30 * 24 * 60 * 60 * 1000;
+        res.cookie('u', result._id, { maxAge });
+        res.cookie('d', date.getTime(), { maxAge });
+        res.cookie('k', md5(result._id + date.getTime() + "boom"), { maxAge });
+        req.session.user = result;
+        result = await Idle.Action.User.get(result._id);
+        res.send({ status: 1, result });
+    }
+    catch (e) {
+        next(e)
+    }
+});
+

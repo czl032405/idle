@@ -12,17 +12,20 @@ Vue.use(VueResource);
 var router = new VueRouter({
     mode: 'hash',
     routes: [
-        { path: '/index', component: require('./pages/index.vue')},
-          { path: "*", redirect: '/index' },
+        { path: '/index', component: require('./pages/index.vue') },
+        { path: "*", redirect: '/index' },
     ]
 })
 
 //全局组件注册
 //comps
-// var comps = Resource.requireAll((require.context("./comps", true, /^\.\/.*\.vue/)))
-// comps.forEach((comp) => {
-//     Vue.component(comp.name, comp)
-// });
+var compsContext = require.context("./comps", true, /^\.\/.*\.vue/);
+compsContext.keys().forEach(path => {
+    var comp = compsContext(path);
+    var defaultName = path.replace(/\.\//, "").replace(/\//g, "-").replace(/\./g, "").replace(/vue/, "");
+    Vue.component(comp.name || defaultName, comp);
+})
+
 
 
 router.beforeEach(async function loginFilter(to, from, next) {

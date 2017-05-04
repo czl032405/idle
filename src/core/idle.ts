@@ -6,6 +6,7 @@ const Idle = {
     Action,
     Data,
 }
+
 export default Idle;
 
 

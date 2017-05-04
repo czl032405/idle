@@ -5,3 +5,33 @@
     margin:auto;
 
 }
+
+
+.PopMessage {
+    position: fixed;
+    z-index: 99999 !important;
+    top: 30%;
+    left:0;
+    overflow-x: hidden;
+    width:100%;
+    color: white;
+    text-align: center;
+    font-size: 0.9em;
+    &.small{
+         font-size: 0.7em;
+        
+    }
+    span{
+        display: inline-block;
+        padding: 1em 2em;
+        border-radius: 0.5em;
+        background-color: rgba(0, 0, 0, .6);
+        box-shadow: 0 0 .1em #666666;
+        font-weight: 100;
+    }
+
+    animation: fadeIn 0.5s linear 1;
+    &.removeing {
+         animation: fadeout 0.5s linear 1;
+    }
+}

@@ -6,11 +6,27 @@ import Entity from '../entity';
 class Skill extends Entity {
     lv: number = 1
     prop: string = ""
-    constructor(lv?:number) {
+    constructor(lv?: number) {
         super();
         lv && (this.lv = lv);
         this.name = Object.getPrototypeOf(this).constructor.name;
     }
+
+    parseDefenders(enimies: Character[],count:number=1) {
+        count = count > enimies.length ? enimies.length : count;
+        var pool = [].concat(enimies);
+        var result = [];
+        while (count > 0) {
+            var index = Math.floor(Math.random() * pool.length);
+            result.push(pool[index]);
+            pool.splice(index, 1)
+            count--;
+        }
+        return result;
+
+    }
+
+
 
     static build(name, lv): Skill {
         var ext = /\.ts$/.test(__filename) ? 'ts' : 'js';
@@ -28,7 +44,7 @@ class Skill extends Entity {
         return new Skill(lv);
     }
 
-    pre(hero:Character) {
+    pre(hero: Character) {
         return true;
     }
 

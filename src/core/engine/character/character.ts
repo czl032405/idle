@@ -1,26 +1,27 @@
-import BaseProps from '../../base-props';
+import BaseProps from '../base-props';
 import Equit from '../equit/equit';
-import BattleProps from '../../battle-props';
-import RoundInfo from '../../round-info';
-import skill from '../../../setting/skill';
+import BattleProps from '../battle-props';
+import RoundInfo from '../round-info';
+import skill from '../../setting/skill';
 import Entity from '../entity';
 import Buff from '../skill/buff/buff';
 import PasstiveSkill from '../skill/passtive/passtive';
 import PositiveSkill from '../skill/positive/positive';
 import 直接攻击 from '../skill/positive/直接攻击';
 import Skill from '../skill/skill';
-import ExpSetting from '../../../setting/exp';
-
+import ExpSetting from '../../setting/exp';
+import Item from '../item/item';
 class Character extends Entity {
-    baseProps:BaseProps
-    battleProps:BattleProps
-    equits:Equit[]
-    skills:Skill[]
-    passtiveSkills:PasstiveSkill[]
-    positiveSkills:PositiveSkill[]
-    buffs:Buff[]
-
-    constructor(name:string, baseProps?:BaseProps, skills?:Skill[], equits?:Equit[]) {
+    index: number //对战标识
+    baseProps: BaseProps
+    battleProps: BattleProps
+    equits: Equit[]
+    skills: Skill[]
+    passtiveSkills: PasstiveSkill[]
+    positiveSkills: PositiveSkill[]
+    buffs: Buff[]
+    drops: { name: string, lv: number, percent: number }[]
+    constructor(name: string, baseProps?: BaseProps, skills?: Skill[], equits?: Equit[]) {
         super(name);
         this.baseProps = baseProps || new BaseProps();
         this.skills = skills || [];
@@ -70,7 +71,7 @@ class Character extends Entity {
     initBuffs() {
         var buffs = this.buffs;
         for (let i in buffs) {
-            buffs[i].apply(this, this);
+            buffs[i].apply(this);
         }
     }
 
@@ -79,42 +80,63 @@ class Character extends Entity {
         return this.positiveSkills[index];
     }
 
-    preAttack(defender:Character) {
+
+
+
+    preAttack(friends: Character[], enimies: Character[]) {
         var attacker = this;
-        var defender = defender;
-        var roundInfo = new RoundInfo();
-        roundInfo.attacker = attacker;
-        roundInfo.defender = defender;
-        return roundInfo;
-    }
-
-
-    attack(roundInfo:RoundInfo) {
         var skill = this.parseNextSkill();
-        var skillName = skill.name;
-        roundInfo.skillName = skillName;
-        roundInfo.skillLv = skill.lv;
-        roundInfo.skillProp = skill.prop;
-        skill.attack(roundInfo);
+        var defenders = skill.parseDefenders(enimies);
+        var roundInfo = new RoundInfo(this, defenders);
+        roundInfo.skill = skill;
+        this.battleProps.nextInterval=this.battleProps.interval;
         return roundInfo;
     }
 
-    defend(roundInfo:RoundInfo) {
+
+    attack(roundInfo: RoundInfo) {
+        roundInfo.skill instanceof PositiveSkill && roundInfo.skill.attack(roundInfo);
         return roundInfo;
     }
 
-    getRoundInfoStatus() :Character{
+    defend(roundInfo: RoundInfo) {
+        return roundInfo;
+    }
+
+    drop() {
+        var dropExp = this.baseProps.exp;
+        var dropEquits:Equit[] = [];
+        var dropItems:Item[] = [];
+
+        for (let i in this.drops) {
+            var random = Math.random();
+            var drop = this.drops[i]
+            if (random < drop.percent) {
+                var equit = Equit.build(drop.name, drop.lv);
+                equit && dropEquits.push(equit);
+                var item = Item.build(drop.name, drop.lv);
+                item && dropItems.push(item);
+            }
+        }
+
+        return {
+            dropExp,
+            dropItems,
+            dropEquits,
+        }
+    }
+
+
+
+    getStatus(): Character {
         var obj = JSON.parse(JSON.stringify(this));
+        delete obj.baseProps;
         delete obj.equits;
         delete obj.passtiveSkills;
         delete obj.positiveSkills;
         delete obj.skills;
         delete obj.drops;
-        return obj;
-    }
-
-    getCurrentStatus():Character {
-        var obj = JSON.parse(JSON.stringify(this));
+        // delete obj.race;
         return obj;
     }
 

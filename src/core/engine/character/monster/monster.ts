@@ -1,22 +1,22 @@
 import Character from '../character';
-import BaseProps from '../../../base-props';
+import BaseProps from '../../base-props';
 import Skill from '../../skill/skill';
 import Equit from '../../equit/equit';
 import Item from '../../item/item';
-import SkillSetting from '../../../../setting/skill';
-import EquitSetting from '../../../../setting/equit';
-import ItemSetting from '../../../../setting/item';
-import MonsterSetting from '../../../../setting/monster';
+import SkillSetting from '../../../setting/skill';
+import EquitSetting from '../../../setting/equit';
+import ItemSetting from '../../../setting/item';
+import MonsterSetting from '../../../setting/monster';
 import * as fs from 'fs';
 import * as path from 'path';
 
 
 class Monster extends Character {
-    drops: {name:string,lv:number,percent:number}[]
+    race:string
     constructor(name: string, baseProps?: BaseProps, skills?: Skill[], equits?: Equit[], drops?: {name:string,lv:number,percent:number}[]) {
         super(name, baseProps, skills, equits);
         this.drops = drops ||[];
-
+        this.race = Object.getPrototypeOf(this).constructor.name;
         this.battleProps.nextInterval *= 1.7;
         this.battleProps.nextInterval = Math.floor(this.battleProps.nextInterval)
     }
@@ -56,38 +56,8 @@ class Monster extends Character {
         }
     }
 
-    drop() {
-        var dropExp = this.baseProps.exp;
-        var dropEquits = [];
-        var dropItems = [];
 
-        for (let i in this.drops) {
-            var random = Math.random();
-            var drop = this.drops[i]
-            if (random < drop.percent) {
-                var equit = Equit.build(drop.name, drop.lv);
-                equit && dropEquits.push(equit);
-                var item = Item.build(drop.name,drop.lv);
-                item && dropItems.push(item);
-            }
-        }
-
-        return {
-            dropExp,
-            dropItems,
-            dropEquits,
-        }
-    }
-
-    getCurrentStatus() {
-        var obj = JSON.parse(JSON.stringify(this));
-        delete obj.drops;
-        delete obj.passtiveSkills;
-        delete obj.positiveSkills;
-        delete obj.skills;
-        delete obj.equits;
-        return obj;
-    }
+   
 
 
 }

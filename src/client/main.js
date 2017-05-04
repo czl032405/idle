@@ -13,7 +13,9 @@ var router = new VueRouter({
     mode: 'hash',
     routes: [
         { path: '/index', component: require('./pages/index.vue') },
-        { path: "*", redirect: '/index' },
+        { path: '/api', component: require('./pages/api.vue') },
+        { path: '/route',component:require('./pages/route.vue')},
+        { path: "*",  redirect: /dev/.test(env)?'/route': '/index' },
     ]
 })
 

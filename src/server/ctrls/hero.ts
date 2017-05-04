@@ -1,7 +1,7 @@
 import * as express from "express";
 var router = express.Router();
 import Idle from "../../core/idle";
-import * as md5  from 'md5';
+import * as md5 from 'md5';
 export default function (app) {
     app.use('/api/hero', router);
 };
@@ -27,7 +27,7 @@ router.get('*', async function (req, res, next) {
     }
 
     if (!req.session.hero) {
-        next("no selected hero");
+        next("no hero to selecte");
         return;
     }
     next();
@@ -37,12 +37,22 @@ router.get('*', async function (req, res, next) {
 router.get('/create', async function (req, res, next) {
     var name = req.query.name;
     var user = req.session.user;
+    if (!name) {
+        next("请输入名字");
+        return;
+
+    }
+
     try {
         var result = await Idle.Action.Hero.create(user, name);
         req.session.hero = result;
         res.send({ status: 1, result })
     }
     catch (e) {
+        if (/duplicate key/.test(e.message)) {
+            next("名字已经被使用，请换一个");
+            return;
+        }
         next(e)
     }
 })
@@ -86,7 +96,7 @@ router.get('/myList', async function (req, res, next) {
     var user = req.session.user;
     try {
         var result = await Idle.Action.Hero.myList(user);
-        res.send({status:1,result});
+        res.send({ status: 1, result });
     }
     catch (e) {
         next(e)
@@ -97,6 +107,10 @@ router.get('/myList', async function (req, res, next) {
 router.get('/changeJob', async function (req, res, next) {
     var jobName = req.query.job;
     var hero = req.session.hero;
+    if (!jobName) {
+        next("请输入职业名称");
+        return;
+    }
     try {
         var result = await Idle.Action.Hero.changeJob(hero, { name: jobName });
         res.send({ status: 1, result });
@@ -110,6 +124,10 @@ router.get('/changeJob', async function (req, res, next) {
 router.get('/changeMap', async function (req, res, next) {
     var mapName = req.query.map;
     var hero = req.session.hero;
+    if (!mapName) {
+        next("请输入地图名称");
+        return;
+    }
     try {
         var result = await Idle.Action.Hero.changeMap(hero, { name: mapName });
         res.send({ status: 1, result });
@@ -137,6 +155,11 @@ router.get('/useSkills', async function (req, res, next) {
     var skillsStr = req.query.skills;//a-1,b-1,c-1
     var skills = [];
     var skillsMap = {};
+    if (!skillsStr) {
+        next("请输入技能");
+        return;
+    }
+
     try {
         var skillStrArr = skillsStr.split(',');
         for (let i in skillStrArr) {
@@ -150,7 +173,7 @@ router.get('/useSkills', async function (req, res, next) {
         }
     }
     catch (e) {
-        next("ban:query err");
+        next(e);
         return;
     }
 
@@ -170,6 +193,11 @@ router.get('/useSkills', async function (req, res, next) {
 router.get('/useEquits', async function (req, res, next) {
     var hero = req.session.hero;
     var equitIds = req.query.equits;//233,444,555
+    if (!equitIds) {
+        next("请输入装备");
+        return;
+    }
+    equitIds = equitIds.split(",");
     try {
         var result = await Idle.Action.Hero.useEquits(hero, equitIds);
         res.send({ status: 1, result });
@@ -183,6 +211,10 @@ router.get('/useEquits', async function (req, res, next) {
 router.get('/learnJob', async function (req, res, next) {
     var hero = req.session.hero;
     var jobName = req.query.job;
+    if(!jobName){
+        next("请输入职业名称");
+        return;
+    }
     try {
         var result = await Idle.Action.Hero.learnJob(hero, { name: jobName });
         res.send({ status: 1, result })
@@ -196,6 +228,14 @@ router.get('/learnSkill', async function (req, res, next) {
     var hero = req.session.hero;
     var skillName = req.query.skill;
     var skillLv = req.query.lv;
+    if(!skillName){
+        next("请输入技能名称");
+        return;
+    }
+    if(!skillLv){
+        next("请输入技能等级");
+        return;
+    }
     try {
         var result = await Idle.Action.Hero.learnSkill(hero, { name: skillName, lv: skillLv });
         res.send({ status: 1, result });
@@ -208,7 +248,7 @@ router.get('/learnSkill', async function (req, res, next) {
 
 router.get('/fight', async function (req, res, next) {
     var hero = req.session.hero;
-    console.info('fight'+ new Date());
+    console.info('fight' + new Date());
     try {
         var result = await Idle.Action.Hero.fight(hero);
         res.send({ status: 1, result });

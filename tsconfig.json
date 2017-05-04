@@ -1,5 +1,6 @@
 {
     "compilerOptions": {
+        "alwaysStrict":true,
         "experimentalDecorators":true,
         "sourceMap": true,
         "outDir": "./dist",

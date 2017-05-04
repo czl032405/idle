@@ -1,13 +1,13 @@
-import Equit from './entity/equit/equit';
+import Equit from './equit/equit';
 import BaseProps from './base-props';
-import Character from './entity/character/character';
-import Hero from './entity/character/hero/hero';
-import Monster from './entity/character/monster/monster';
-import Skill from './entity/skill/skill';
+import Character from './character/character';
+import Hero from './character/hero/hero';
+import Monster from './character/monster/monster';
+import Skill from './skill/skill';
 import Battle from "./battle";
 
 const Engine = {
-    buildBattle(A: Character, B: Character) {
+    buildBattle(A: Character[], B: Character[]) {
         var battle = new Battle(A, B);
         return battle;
     },

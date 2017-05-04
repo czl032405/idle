@@ -1,7 +1,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import Entity  from '../entity';
-import {IEquitType} from  '../../../setting/equit';
+import {IEquitType} from  '../../setting/equit';
 class Equit extends Entity {
     lv:number=1
     type:IEquitType="未知"

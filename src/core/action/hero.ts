@@ -1,3 +1,4 @@
+import Character from '../engine/character/character';
 import { print } from 'util';
 import IPreSetting from '../setting/ipre';
 import { IHero } from '../data/hero';
@@ -15,6 +16,7 @@ import SkillSetting from '../setting/skill';
 import { BattleResult } from "../engine/battle";
 
 
+
 class Hero {
     static async create(user: IUser, name: string) {
         var maxHero = IdleSetting.maxHero;
@@ -30,8 +32,15 @@ class Hero {
         var hero = user.heros.find(hero => hero._id == id);
         if (hero) {
             var result: IHero = await Data.Hero.findById(id);
-            await result.remove();
+            user.heros = user.heros.filter(hero => hero._id != id);
             await user.save();
+            if (result) {
+                await result.remove();
+            }
+            else {
+                throw "ban:trys to del hero not exist but own";
+            }
+
             return result;
         }
         else {
@@ -56,10 +65,11 @@ class Hero {
     }
     static async mapList() {
         var maps = JSON.parse(JSON.stringify(MapSetting));
-        return Object.keys(maps).map(name => {
+        Object.keys(maps).map(name => {
             delete maps[name].monsters;
             return maps[name];
         })
+        return maps;
     }
 
     static async changeMap(hero: IHero, map: { name: string }) {
@@ -202,7 +212,7 @@ class Hero {
         }
         var engineMonster = this.parseNextEngineMonster(hero);
         var engineHero = this.parseEngineHero(hero);
-        var battle = Engine.buildBattle(engineHero, engineMonster);
+        var battle = Engine.buildBattle([engineHero], engineMonster);
         var result = battle.run();
         await this.handleBattleResult(hero, result);
         return result;
@@ -263,19 +273,24 @@ class Hero {
         hero.canLearnSkills = canLearnSkills;
     }
     private static parseNextEngineMonster(hero: IHero) {
-        var monsters = MapSetting[hero.map.name].monsters;
+        var teams = MapSetting[hero.map.name].teams;
         var randomTotal = 0;
         var random = 0;
         var target = 0;
         random = Math.floor(Math.random() * randomTotal) + 1;
-        for (let i in monsters) {
-            target += monsters[i].appear;
+        for (let i in teams) {
+            target += teams[i].appear;
             if (target >= random) {
-                var name = i;
-                var maxLv = monsters[i].maxLevel || 1;
-                var minLv = monsters[i].minLevel || 1;
-                var lv = Math.floor(Math.random() * (maxLv - minLv + 1)) + minLv;
-                return Engine.buildMonster(i, lv);
+                var result:Character[] = [];
+                var team = teams[i];
+                team.monsters.forEach(ms=>{
+                    var count = Math.floor(Math.random()*(ms.maxCount-ms.minCount+1)+ms.minCount);
+                    for(let i = 0 ;i<count;i++){
+                        var lv = Math.floor(Math.random() * (ms.maxLevel - ms.minLevel + 1)) + ms.minLevel;
+                        result.push(Engine.buildMonster(ms.name,lv));
+                    }
+                })
+                return result;
             }
         }
         throw "error:parse no monster"

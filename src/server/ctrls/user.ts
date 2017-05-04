@@ -25,12 +25,10 @@ router.get('/get', async (req, res, next) => {
     try {
         var result = null;
         if (id) {
-
             result = await Idle.Action.User.get(id);
         }
         else {
-            result = req.session.user;
-            await result.save();
+            result = await Idle.Action.User.get(req.session.user._id);
         }
 
         res.send({ status: 1, result })

@@ -16,7 +16,7 @@ router.all('*', async function (req, res, next) {
         var u = req.cookies["u"];
         var d = req.cookies["d"];
         var k = req.cookies["k"];
-        var passDate = new Date(d);
+        var passDate = new Date(parseInt(d));
         passDate.setDate(new Date().getDate() + 100);
         if (k == md5(u + d + "boom") && new Date() < passDate) {
             var user = await Idle.Action.Admin.User.get(u);

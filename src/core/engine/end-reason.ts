@@ -1,9 +1,9 @@
-enum EndReason {
-    None,
-    AttackerDie ,
-    DefenderDie,
-    AllDie,
-    TimeOut,
-}
+type EndReason =
+   "None"|
+   "AttackerDie"|
+   "DefenderDie"|
+   "AllDie"|
+   "TimeOut"
+
 
 export default EndReason;

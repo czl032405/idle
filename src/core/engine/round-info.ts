@@ -1,24 +1,27 @@
-import BattlePropsChange from './battle-props-change';
-import Character from './entity/character/character';
-
+import RoundBattleInfo from './round-battle-info';
+import Character from './character/character';
+import Skill from './skill/skill';
 class RoundInfo {
     isBuff: boolean = false //是否buff回合
-    attacker: Character = null
-    defender: Character = null
     delay: number = 0 //毫秒后执行
     aniDelay: number = 0 //执行时长
-    skillName: string = "skillName"
-    skillLv: number = 0
-    skillProp: string = ""
-    isAvoid: boolean = false
-    isParry: boolean = false
-    isCrit: boolean = false
-    isCounter: boolean = false
+    skill: Skill = null
 
-    //数值变动
-    a: BattlePropsChange = new BattlePropsChange()
-    d: BattlePropsChange = new BattlePropsChange()
+    attacker: Character = null
+    defenders: Character[] = []
 
+
+
+    rbs: RoundBattleInfo[] = []
+
+    constructor(attacker: Character, defenders: Character[]) {
+        this.attacker = attacker;
+        this.defenders = defenders;
+
+        this.defenders.forEach(defender => {
+            this.rbs.push(new RoundBattleInfo());
+        })
+    }
 
 }
 

@@ -4,6 +4,7 @@ const fs = require('fs');
 const webpack = require('webpack')
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
+const LiveReloadPlugin = require("webpack-livereload-plugin");
 del.sync("dist/client/**");
 
 var venders = fs.readdirSync(path.resolve(__dirname, 'src/client/venders'))
@@ -31,7 +32,7 @@ module.exports = {
             { test: /\.html$/, use: "html-loader" },
             { test: /\.less$/, use: ExtractTextPlugin.extract({ use: ['css-loader', 'less-loader'], fallback: "style-loader", publicPath: "../" }) },
             { test: /\.css$/, use: ExtractTextPlugin.extract({ use: ['css-loader'], fallback: "style-loader", publicPath: "../" }) },
-            { test: /\.(png|jpg|gif|svg)$/, use: 'url-loader?limit=233&name=[path][name].[hash:6].[ext]' ,exclude:/favicon/},
+            { test: /\.(png|jpg|gif|svg)$/, use: 'url-loader?limit=233&name=[path][name].[hash:6].[ext]', exclude: /favicon/ },
             { test: /\.(eot|ttf|woff)$/, use: 'url-loader?limit=233&name=fonts/[name].[ext]' },
             { test: /\.(mp3)$/, use: 'url-loader?limit=1&name=audio/[name].[ext]' },
             { test: /\.js$/, use: "babel-loader", exclude: /(node_modules)|service-worker/ },
@@ -71,9 +72,9 @@ if (/production/.test(process.env.NODE_ENV)) {
     module.exports.plugins.push(new webpack.LoaderOptionsPlugin({
         minimize: false
     }))
-
-
-
+}
+else {
+    module.exports.plugins.push(new LiveReloadPlugin({appendScriptTag:true}));
 }
 
 

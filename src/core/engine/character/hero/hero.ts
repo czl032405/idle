@@ -1,8 +1,8 @@
-import BaseProps from '../../../base-props';
-import job from '../../../../setting/job';
+import BaseProps from '../../base-props';
+import job from '../../../setting/job';
 import * as path from 'path';
 import * as fs from 'fs';
-import hero from '../../../../../server/ctrls/hero';
+import hero from '../../../../server/ctrls/hero';
 import Character from '../character';
 import Equit from '../../equit/equit';
 import Skill from '../../skill/skill';

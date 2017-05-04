@@ -1,4 +1,4 @@
-import BaseProps from '../../../base-props';
+import BaseProps from '../../base-props';
 import Monster from './monster';
 class 特殊怪 extends Monster {
     constructor(lv?:number) {

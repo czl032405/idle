@@ -10,8 +10,6 @@ interface IPreSetting {
     equit?: IEquitType
     baseProps?: {
         lv?: number
-        exp?: number
-        maxexp?: number
         str?: number
         int?: number
         agi?: number

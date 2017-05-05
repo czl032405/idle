@@ -1,14 +1,14 @@
 import * as mongoose from 'mongoose';
-import { SkillSchema } from './hero';
+import { SkillSchema,EquitSchema } from './hero';
 const Schema = mongoose.Schema;
 
 
 interface IMonster extends mongoose.Document {
     _id: string
     name: string
-    baseProps: {
-        lv: number
-        exp: number
+    lv: number
+    exp:number
+    levelUpProps: {
         str: number
         int: number
         agi: number
@@ -17,14 +17,14 @@ interface IMonster extends mongoose.Document {
         luk: number
     }
     skills: { name: string, lv: number, date?: Date }[]
-    canLearnSkills: { name: string, lv: number, date?: Date }[]
+    equits:{_id:string,name:string,lv:number,date?:Date}[]
 }
 
 var Monster = mongoose.model<IMonster>('Monster', new Schema({
     name: { type: String, required: true, unique: true },
-    baseProps: {
-        lv: { type: Number, default: 1, },
-        exp: { type: Number, default: 1, },
+    lv: { type: Number, default: 1 },
+    exp:{ type: Number, default: 1 },
+    levelUpProps: {
         str: { type: Number, default: 1, },
         int: { type: Number, default: 1, },
         agi: { type: Number, default: 1, },
@@ -32,11 +32,17 @@ var Monster = mongoose.model<IMonster>('Monster', new Schema({
         dex: { type: Number, default: 1, },
         luk: { type: Number, default: 1, },
     },
-    skills: [
-        SkillSchema
+     equits: [
+        EquitSchema
     ],
-    canLearnSkills: [
-        SkillSchema
-    ],
+    skills: {
+        type: [
+            SkillSchema
+        ],
+        default: {}
+    },
 }, { versionKey: false }))
+
+export { IMonster }
+export default Monster;
 

@@ -190,13 +190,7 @@ class Battle {
                 return acc += drop.dropExp;
             }, 0);
             resultInfo.dropExp=Math.floor(resultInfo.dropExp/A.length);
-            A.forEach(a=>{
-                a.baseProps.exp+=resultInfo.dropExp;
-                while(ExpSetting[a.baseProps.lv]<=a.baseProps.exp){
-                    a.baseProps.lv++;
-                }
-            })
-
+           
         }
 
         return resultInfo;

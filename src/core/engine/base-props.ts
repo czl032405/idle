@@ -1,8 +1,7 @@
 
 class BaseProps  {
-    lv: number = 1
-    exp: number = 0
-    maxexp: number = 0
+    lv?: number = 1
+    exp?: number = 0
     str: number = 0
     int: number = 0
     agi: number = 0

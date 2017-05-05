@@ -5,13 +5,9 @@ class RoundInfo {
     isBuff: boolean = false //是否buff回合
     delay: number = 0 //毫秒后执行
     aniDelay: number = 0 //执行时长
-    skill: Skill = null
-
     attacker: Character = null
+    skill: Skill = null
     defenders: Character[] = []
-
-
-
     rbs: RoundBattleInfo[] = []
 
     constructor(attacker: Character, defenders: Character[]) {

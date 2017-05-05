@@ -20,6 +20,19 @@ interface IMapSetting {
 const MapSetting: IMapSetting = {
     新手村: {
         teams: {
+             一只史莱姆队: {
+                monsters: [
+                    {
+                        name: "史莱姆",
+                        minLevel: 1,
+                        maxLevel: 1,
+                        minCount: 1,
+                        maxCount: 1
+                    },
+                   
+                ],
+                appear: 1
+            },
             史莱姆队: {
                 monsters: [
                     {
@@ -27,7 +40,7 @@ const MapSetting: IMapSetting = {
                         minLevel: 1,
                         maxLevel: 3,
                         minCount: 1,
-                        maxCount: 4
+                        maxCount: 1
                     },
                     {
                         name: "金属史莱姆",
@@ -37,12 +50,12 @@ const MapSetting: IMapSetting = {
                         maxCount: 1
                     }
                 ],
-                appear: 10
+                appear: 1
             },
             Boss队:{
                 monsters:[
                     {
-                        name:"特殊怪",
+                        name:"测试怪",
                         minLevel:10,
                         maxLevel:10,
                         minCount:1,

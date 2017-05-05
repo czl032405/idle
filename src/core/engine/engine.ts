@@ -1,3 +1,4 @@
+import BattleProps from './battle-props';
 import Equit from './equit/equit';
 import BaseProps from './base-props';
 import Character from './character/character';
@@ -15,11 +16,11 @@ const Engine = {
         var hero = Hero.build(name, baseProps, skills, equits, job);
         return hero;
     },
-    buildBaseProps(obj:Object){
-        return Object.assign(new BaseProps(),obj)
+    buildBaseProps(obj: BaseProps) {
+        return Object.assign(new BaseProps(), obj)
     },
-    buildMonster(name: string, lv: number = 1) {
-        var monster = Monster.build(name, lv);
+    buildMonster(name: string, lv: number = 1, levelUpProps?: BaseProps) {
+        var monster = Monster.build(name, lv, levelUpProps);
         return monster;
     },
     buildSkill(name: string, lv: number = 1) {

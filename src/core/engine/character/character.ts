@@ -12,21 +12,35 @@ import Skill from '../skill/skill';
 import ExpSetting from '../../setting/exp';
 import Item from '../item/item';
 class Character extends Entity {
+    protected readonly baseProps: BaseProps
+    protected readonly equits: Equit[]
+    protected readonly skills: Skill[]
+
     index: number //对战标识
-    baseProps: BaseProps
+    protected drops: { name: string, lv: number, percent: number }[]
+    protected levelUpProps: BaseProps
     battleProps: BattleProps
-    equits: Equit[]
-    skills: Skill[]
     passtiveSkills: PasstiveSkill[]
     positiveSkills: PositiveSkill[]
     buffs: Buff[]
-    drops: { name: string, lv: number, percent: number }[]
+
+
     constructor(name: string, baseProps?: BaseProps, skills?: Skill[], equits?: Equit[]) {
         super(name);
         this.baseProps = baseProps || new BaseProps();
         this.skills = skills || [];
         this.equits = equits || [];
         this.buffs = [];
+        this.drops = [];
+        this.levelUpProps = {
+            str: 1,
+            agi: 1,
+            dex: 1,
+            int: 1,
+            luk: 1,
+            vit: 1,
+        }
+
         this.init();
     }
 
@@ -38,7 +52,6 @@ class Character extends Entity {
         this.initEquits();
         this.initSkills();
         this.initBuffs();
-        this.baseProps.maxexp = ExpSetting[this.baseProps.lv];
     }
 
     initBattleProps() {
@@ -89,7 +102,7 @@ class Character extends Entity {
         var defenders = skill.parseDefenders(enimies);
         var roundInfo = new RoundInfo(this, defenders);
         roundInfo.skill = skill;
-        this.battleProps.nextInterval=this.battleProps.interval;
+        this.battleProps.nextInterval = this.battleProps.interval;
         return roundInfo;
     }
 
@@ -105,8 +118,8 @@ class Character extends Entity {
 
     drop() {
         var dropExp = this.baseProps.exp;
-        var dropEquits:Equit[] = [];
-        var dropItems:Item[] = [];
+        var dropEquits: Equit[] = [];
+        var dropItems: Item[] = [];
 
         for (let i in this.drops) {
             var random = Math.random();
@@ -126,16 +139,28 @@ class Character extends Entity {
         }
     }
 
+    levelUp() {
+        var currentLv = this.baseProps.lv;
+        var baseProps: BaseProps = this.levelUpProps;
+        var skills: { name: string, lv: number }[] = [];
+        var skillPoints: number = Math.ceil((this.baseProps.lv + 1) / 10);;
+        return {
+            skillPoints,
+            baseProps,
+            skills
+        }
+    }
 
 
     getStatus(): Character {
         var obj = JSON.parse(JSON.stringify(this));
-        delete obj.baseProps;
+        // delete obj.baseProps;
         delete obj.equits;
         delete obj.passtiveSkills;
         delete obj.positiveSkills;
         delete obj.skills;
         delete obj.drops;
+        delete obj.levelUpProps;
         // delete obj.race;
         return obj;
     }

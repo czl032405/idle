@@ -1,3 +1,4 @@
+import { IMonster } from '../data/monster';
 import Character from '../engine/character/character';
 import { print } from 'util';
 import IPreSetting from '../setting/ipre';
@@ -11,7 +12,6 @@ import EquitSetting from '../setting/equit';
 import ItemSetting from '../setting/item';
 import JobSetting from '../setting/job';
 import MapSetting from '../setting/map';
-import MonsterSetting from '../setting/monster';
 import SkillSetting from '../setting/skill';
 import { BattleResult } from "../engine/battle";
 
@@ -192,30 +192,52 @@ class Hero {
         return await hero.save();
     }
 
-    static async removeEquits(hero, ids) {
-
+    static async removeEquits(hero: IHero, ids: string[]) {
+        hero.equits = hero.equits.filter(equit => !ids.find(id => equit._id == id))
+        return await hero.save();
+    }
+    static async removeItem(hero: IHero, ids: string[]) {
+        hero.bagItems = hero.bagItems.filter(item => !ids.find(id => item._id == id))
+        return await hero.save();
     }
 
-    static async removeItem(hero, ids) {
-
+    static async useMonsters(hero: IHero, ids: string[]) {
+        if (ids.length > IdleSetting.maxBattleMonster) {
+            throw "ban:trys to use too many monsters";
+        }
+        var checked = !ids.find(id => !hero.monsters.find(monster => monster._id == id));
+        if (checked) {
+            hero.battleMonsters = hero.monsters.filter(monster => ids.find(id => monster._id == id))
+        }
+        else {
+            throw "ban:trys to use monsters not yours";
+        }
     }
-    static async sendEquit(hero, hero2, ids) {
 
-    }
-    static async sendItem(hero, hero2, ids) {
-
-    }
 
     static async fight(hero: IHero) {
         if (new Date() < new Date(hero.nextActionDate)) {
             return hero.nextActionDate;
         }
-        var engineMonster = this.parseNextEngineMonster(hero);
+
+        var monsters = await Data.Monster.find({ _id: { $in: hero.battleMonsters.map(m => m._id) } });
+        var engineHeroMonsters = monsters.map(monster => this.parseEngineMonster(monster));
         var engineHero = this.parseEngineHero(hero);
-        var battle = Engine.buildBattle([engineHero], engineMonster);
+        var engineMonsters = this.parseNextMapEngineMonster(hero);
+        var battle = Engine.buildBattle([].concat(engineHero).concat(engineHeroMonsters), engineMonsters);
         var result = battle.run();
         await this.handleBattleResult(hero, result);
         return result;
+    }
+
+    static async fightTvT(A: IHero[], B: IHero[]) {
+        var teamA = A.map(hero => this.parseEngineHero(hero));
+        var teamB = B.map(hero => this.parseEngineHero(hero));
+        var battle = Engine.buildBattle(teamA, teamB);
+        var result = battle.run();
+        await this.handleBattleResultTvT(A, B, result);
+        return result;
+
     }
 
     private static handlePre(hero: IHero, pre?: IPreSetting) {
@@ -266,34 +288,39 @@ class Hero {
                 var pass1 = this.handlePre(hero, SkillSetting[skillName][lv].pre);
                 var pass2 = Engine.buildSkill(skillName, lv).pre(this.parseEngineHero(hero));
                 if (pass1 && pass2) {
-                    canLearnSkills.push({ name, lv });
+                    canLearnSkills.push({ name: skillName, lv });
                 }
             })
         })
         hero.canLearnSkills = canLearnSkills;
     }
-    private static parseNextEngineMonster(hero: IHero) {
+    private static parseNextMapEngineMonster(hero: IHero) {
         var teams = MapSetting[hero.map.name].teams;
-        var randomTotal = 0;
+        var randomTotal = Object.keys(teams).reduce((acc, teamName) => { return acc + teams[teamName].appear }, 0);
         var random = 0;
         var target = 0;
         random = Math.floor(Math.random() * randomTotal) + 1;
         for (let i in teams) {
             target += teams[i].appear;
             if (target >= random) {
-                var result:Character[] = [];
+                var result: Character[] = [];
                 var team = teams[i];
-                team.monsters.forEach(ms=>{
-                    var count = Math.floor(Math.random()*(ms.maxCount-ms.minCount+1)+ms.minCount);
-                    for(let i = 0 ;i<count;i++){
+                team.monsters.forEach(ms => {
+                    var count = Math.floor(Math.random() * (ms.maxCount - ms.minCount + 1) + ms.minCount);
+                    for (let i = 0; i < count; i++) {
                         var lv = Math.floor(Math.random() * (ms.maxLevel - ms.minLevel + 1)) + ms.minLevel;
-                        result.push(Engine.buildMonster(ms.name,lv));
+                        result.push(Engine.buildMonster(ms.name, lv));
                     }
                 })
                 return result;
             }
         }
         throw "error:parse no monster"
+    }
+    private static parseEngineMonster(monster: IMonster) {
+        monster = JSON.parse(JSON.stringify(monster));
+        var engineMonster = Engine.buildMonster(monster.name, monster.lv, monster.levelUpProps);
+        return engineMonster;
     }
     private static parseEngineHero(hero: IHero) {
         hero = JSON.parse(JSON.stringify(hero));
@@ -307,10 +334,12 @@ class Hero {
 
     private static async handleBattleResult(hero: IHero, result: BattleResult) {
         var resultInfo = result.resultInfo;
+        var monsters = await Data.Monster.find({ _id: { $in: hero.battleMonsters.map(m => m._id) } });
         var now = new Date();
         hero.lastActionDate = now;
         hero.nextActionDate = now;
         hero.nextActionDate.setSeconds(now.getSeconds() + resultInfo.battleDelay / 1000 + resultInfo.duration / 1000);
+
         if (resultInfo.dropEquits.length > 0) {
             await this.addEquits(hero, resultInfo.dropEquits);
         }
@@ -319,21 +348,40 @@ class Hero {
         }
         if (resultInfo.dropExp > 0) {
             hero.baseProps.exp += resultInfo.dropExp;
-        }
-        if (hero.baseProps.exp > ExpSetting[hero.baseProps.lv]) {
-            hero.baseProps.lv++;
-
-            var levelUpProps = JobSetting[hero.job.name].levelup.baseProps;
-            for (let i in levelUpProps) {
-                if (hero.baseProps[i]) {
-                    hero.baseProps[i] += levelUpProps[i];
-                }
+            while (hero.baseProps.exp > ExpSetting[hero.baseProps.lv]) {
+                hero.baseProps.lv++;
+                var engineHero = this.parseEngineHero(hero);
+                var { skillPoints, baseProps } = engineHero.levelUp();
+                hero.skillPoints += skillPoints;
+                Object.keys(baseProps).forEach(key => {
+                    if (hero.baseProps[key] != undefined) {
+                        hero.baseProps[key] += baseProps[key];
+                    }
+                });
             }
-            hero.skillPoints += Math.ceil(hero.baseProps.lv / 10);
+            monsters.forEach(monster => {
+                monster.exp += resultInfo.dropExp;
+                while (monster.exp > ExpSetting[monster.lv]) {
+                    monster.lv++;
+                    var engineMonster = this.parseEngineMonster(monster);
+                    var { skills } = engineMonster.levelUp();
+                    monster.skills = monster.skills.concat(skills)
+                }
+
+            })
+
             this.calCanLearnJobs(hero);
             this.calCanLearnSkills(hero);
         }
+
+
+
+
         await hero.save();
+    }
+
+    private static async handleBattleResultTvT(A: IHero[], B: IHero[], result: BattleResult) {
+
     }
 
 }

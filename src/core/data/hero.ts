@@ -32,6 +32,7 @@ interface IHero extends mongoose.Document {
     bagEquits:{_id?:string,name:string,lv:number,date?:Date}[]
     bagItems:{_id?:string,name:string,count:number}[]
     monsters:{_id?:string,name:string}[]
+    battleMonsters:{_id?:string,name:string}[]
     lastActionDate:Date
     nextActionDate:Date
 }
@@ -48,12 +49,12 @@ var Hero = mongoose.model<IHero>('Hero', new Schema({
     baseProps: {
         lv: { type: Number, default: 1, },
         exp: { type: Number, default: 1, },
-        str: { type: Number, default: 1, },
-        int: { type: Number, default: 1, },
-        agi: { type: Number, default: 1, },
-        vit: { type: Number, default: 1, },
-        dex: { type: Number, default: 1, },
-        luk: { type: Number, default: 1, },
+        str: { type: Number, default: 5, },
+        int: { type: Number, default: 5, },
+        agi: { type: Number, default: 5, },
+        vit: { type: Number, default: 5, },
+        dex: { type: Number, default: 5, },
+        luk: { type: Number, default: 5, },
     },
     job: { type: JobSchema, default: {} },
     map: { type: MapSchema, default: {} },
@@ -94,6 +95,7 @@ var Hero = mongoose.model<IHero>('Hero', new Schema({
         ItemSchema
     ],
     monsters:[{_id:String,name:String}],
+    battleMonsters:[{_id:String,name:String}],
     lastActionDate: { type: Date, default: Date.now },
     nextActionDate: { type: Date, default: Date.now },
     creatdDate: { type: Date, default: Date.now },

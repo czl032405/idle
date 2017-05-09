@@ -1,0 +1,113 @@
+.battle-view {
+    padding-top: 10px;
+    .progress-bar {
+        transition: width linear .2s;
+    }
+    .teams {
+        display: flex;
+        .team {
+            margin-right: 10px;
+
+            flex: 1;
+            &:nth-child(2) {
+                margin-right: 0;
+                margin-left: 10px;
+            }
+            .character {
+                position: relative;
+                padding: 20px;
+                box-shadow: 0 0 2px 1px #ddd;
+                small {
+                    white-space: nowrap;
+                }
+                .progress {
+                    margin-bottom: 5px;
+                }
+                .progress-bar {
+                    height: 7px;
+                }
+                .buffs {
+                    height: 1.7em;
+                }
+            }
+        }
+    }
+
+    .battle-info {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        .skill {
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            transition: all linear .3s;
+          
+            border: 1px solid transparent;
+
+            &.直接攻击 {
+                border: 1px solid #0275d8;;
+                 
+            }
+        }
+        .skill-name {
+            font-size: 1rem;
+            position: absolute;
+            top: 2px;
+            right: 2px;
+            color: #aaa;
+             animation: fadeInUp linear .1s;
+        }
+        .change {
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            transition: all linear .3s;
+            border: 1px solid transparent;
+            &.直接攻击 {
+                border: 1px solid #c9302c;;
+            }
+        }
+        .change-value {
+            font-size: 1rem;
+            position: absolute;
+            top: 2px;
+            right: 2px;
+
+
+            &.up {
+                animation: fadeInUp linear .2s;
+                color: #5cb85c;
+            }
+            &.down {
+                animation: fadeInDown linear .2s;
+                color: #c9302c;
+            }
+        }
+    }
+    .result{
+        position: fixed;
+        background:rgba(0,0,0,0.5);
+        left:0;
+        right:0;
+        bottom:0;
+        top:0;
+        animation: fadeIn linear 0.2s;
+        .container{
+            position: absolute;
+            top:20%;
+            left:10%;
+            right:10%;
+            bottom:20%;
+            background:white;
+            padding-top:20px;
+            border-radius: 5px;
+        }
+    }
+}

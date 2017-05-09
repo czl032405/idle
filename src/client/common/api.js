@@ -60,6 +60,11 @@ const ApiMap = {
         learnSkill: 'skill|lv',
         fight: '',
     },
+    setting:{
+        exp:'',
+        idle:'',
+        map:'',
+    }
 
 
 }

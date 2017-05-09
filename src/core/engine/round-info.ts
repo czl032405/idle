@@ -4,11 +4,12 @@ import Skill from './skill/skill';
 class RoundInfo {
     isBuff: boolean = false //是否buff回合
     delay: number = 0 //毫秒后执行
-    aniDelay: number = 0 //执行时长
+    aniDelay: number = 900 //执行时长 最小500
     attacker: Character = null
     skill: Skill = null
     defenders: Character[] = []
     rbs: RoundBattleInfo[] = []
+
 
     constructor(attacker: Character, defenders: Character[]) {
         this.attacker = attacker;

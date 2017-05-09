@@ -70,6 +70,7 @@ class Battle {
         var attacker = action instanceof Buff ? action.owner : action;
         var friends = A.find(character => character == attacker) ? A : B;
         var enimies = A == friends ? B : A;
+        enimies=enimies.filter(c=>c.battleProps.hp>0);
         roundInfo = action instanceof Buff ? action.preFire(friends, enimies) : attacker.preAttack(friends, enimies);
         var defenders = roundInfo.defenders;
         attacker.buffs.forEach((b) => {
@@ -100,11 +101,13 @@ class Battle {
             Object.keys(rb.ac).forEach(propKey => {
                 if (roundInfo.attacker.battleProps[propKey] != undefined) {
                     roundInfo.attacker.battleProps[propKey] += rb.ac[propKey];
+                    roundInfo.attacker.battleProps[propKey]<0 && (roundInfo.attacker.battleProps[propKey]=0);
                 }
             })
             Object.keys(rb.dc).forEach(propKey => {
                 if (roundInfo.defenders[index].battleProps[propKey] != undefined) {
                     roundInfo.defenders[index].battleProps[propKey] += rb.dc[propKey];
+                    roundInfo.defenders[index].battleProps[propKey] <0 && (roundInfo.defenders[index].battleProps[propKey] =0);
                 }
             })
         })
@@ -124,7 +127,7 @@ class Battle {
         var action: Character | Buff = null;
 
         [A, B].forEach(characters => {
-            characters.forEach(character => {
+            characters.filter(character=>character.battleProps.hp>0).forEach(character => {
                 character.buffs.forEach(buff => {
                     action = action || buff;
                     if (action instanceof Buff && buff.nextInterval < action.nextInterval) {
@@ -136,7 +139,7 @@ class Battle {
 
 
         [A, B].forEach(characters => {
-            characters.forEach(character => {
+            characters.filter(character=>character.battleProps.hp>0).forEach(character => {
                 action = action || character;
                 if (action instanceof Buff && character.battleProps.nextInterval < action.nextInterval) {
                     action = character;

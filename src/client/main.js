@@ -13,6 +13,9 @@ var router = new VueRouter({
     mode: 'hash',
     routes: [
         { path: '/index', component: require('./pages/index.vue') },
+        { path: '/user/detail', component: require('./pages/user/detail.vue') },
+        { path: '/hero/create',component:require('./pages/hero/create.vue')},
+        { path: '/hero/battle/:heroId',component:require('./pages/hero/battle.vue')},
         { path: '/api', component: require('./pages/api.vue') },
         { path: '/route',component:require('./pages/route.vue')},
         { path: "*",  redirect: /dev/.test(env)?'/route': '/index' },
@@ -35,7 +38,7 @@ router.beforeEach(async function loginFilter(to, from, next) {
 });
 
 
-if (/dev/.test(env)) {
+if (!/dev/.test(env)) {
     Vue.config.errorHandler = function (err, vm) {
         console.error(err);
         console.error(vm)

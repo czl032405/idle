@@ -31,7 +31,7 @@ const MapSetting: IMapSetting = {
                     },
                    
                 ],
-                appear: 1
+                appear: 100
             },
             史莱姆队: {
                 monsters: [
@@ -40,17 +40,10 @@ const MapSetting: IMapSetting = {
                         minLevel: 1,
                         maxLevel: 3,
                         minCount: 1,
-                        maxCount: 1
-                    },
-                    {
-                        name: "金属史莱姆",
-                        minLevel: 1,
-                        maxLevel: 3,
-                        minCount: 1,
-                        maxCount: 1
+                        maxCount: 3
                     }
                 ],
-                appear: 1
+                appear: 10
             },
             Boss队:{
                 monsters:[

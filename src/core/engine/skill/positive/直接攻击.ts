@@ -7,14 +7,11 @@ class 直接攻击 extends PositiveSkill {
         super(lv);
     }
     parseDefenders(enimies: Character[]){
-        return super.parseDefenders(enimies,enimies.length)
+        return super.parseDefenders(enimies,1)
     }
 
     attack(roundInfo: RoundInfo) {
-        super.attack(roundInfo);
-       roundInfo.rbs.forEach(rb=>{
-           rb.dc.hp=-1
-       })
+        roundInfo.rbs[0].dc.hp=-10;
     }
 
 }

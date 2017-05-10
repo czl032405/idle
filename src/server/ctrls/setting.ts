@@ -6,17 +6,26 @@ export default function (app) {
 };
 
 router.all('/exp', function (req, res, next) {
-    res.send(Idle.Setting.ExpSetting);
+  res.send({
+    statuts: 1,
+    result: Idle.Setting.ExpSetting
+  });
 })
 
-router.all('/idle',function(req,res,next){
-  res.send(Idle.Setting.IdleSetting);
+router.all('/idle', function (req, res, next) {
+  res.send({
+    statuts: 1,
+    result: Idle.Setting.IdleSetting
+  });
 })
 
-router.all('/map',function(req,res,next) {
+router.all('/map', function (req, res, next) {
   var mapSetting = JSON.parse(JSON.stringify(Idle.Setting.MapSetting));
-  Object.keys(mapSetting).forEach(key=>{
+  Object.keys(mapSetting).forEach(key => {
     delete mapSetting[key].teams;
   })
-  res.send(mapSetting);
+  res.send({
+    statuts: 1,
+    result: mapSetting
+  });
 })

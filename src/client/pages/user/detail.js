@@ -4,11 +4,14 @@ export default {
     data() {
         return {
             user: {},
-            heros:[]
+            heros: []
         }
     },
     async mounted() {
-        await this.getUser();
+            await this.getUser();
+    },
+    async activated() {
+    
         await this.getHeros();
     },
     methods: {
@@ -18,13 +21,13 @@ export default {
         },
         async getHeros() {
             var result = await Api.Hero.myList();
-            this.heros= result.result;
+            this.heros = result.result;
 
         },
-        async deleteHero(id){
-            if(confirm("确认删除?")){
-                var result = await Api.Hero.del({id});
-                this.heros=this.heros.filter(hero=>hero._id!=id);
+        async deleteHero(id) {
+            if (confirm("确认删除?")) {
+                var result = await Api.Hero.del({ id });
+                this.heros = this.heros.filter(hero => hero._id != id);
             }
         }
     }

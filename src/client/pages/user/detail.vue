@@ -7,13 +7,14 @@
         <hr>
         <div class="heros">
             <h4>heros</h4>
-            <div class="hero pd-2 pb-2" v-for="hero in heros">
+            <div class="hero pt-2 pb-2" v-for="hero in heros">
                 <div class="left">
-                    <h5 class="text-primary">{{hero.name}}</h5>
+                    <strong class="text-muted">{{hero.name}}</strong>
                     <small>{{hero.job.name}}</small>
                     <small>lv.{{hero.baseProps.lv}}</small>
+                    <small>sp.{{hero.skillPoints}}</small>
                     <br>
-                    <small class="text-muted">offline for {{ ((new Date()-new Date(hero.lastActionDate))/1000/3600/24).toFixed(0)}} days {{((new Date()-new Date(hero.lastActionDate))/1000/3600%24).toFixed(0)}} hrs {{((new Date()-new Date(hero.lastActionDate))/1000/60%60).toFixed(0)}} mins</small>
+                    <small class="text-muted">offline for {{hero.lastActionDate | differNow}}</small>
                 </div>
                 <div class="right">
                     <router-link :to="'/hero/battle/'+hero._id" class="btn">go</router-link>

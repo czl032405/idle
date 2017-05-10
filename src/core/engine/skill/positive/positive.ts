@@ -8,9 +8,8 @@ class PositiveSkill extends Skill {
     }
 
     attack(roundInfo: RoundInfo) {
-        roundInfo.rbs.forEach(rb => {
-            rb.dc.hp = -1
-        })
+        var attack = roundInfo.attacker.battleProps.attack;
+        roundInfo.rbs[0].dc.hp=-attack;
     }
 
 }

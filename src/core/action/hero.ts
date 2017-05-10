@@ -15,8 +15,6 @@ import MapSetting from '../setting/map';
 import SkillSetting from '../setting/skill';
 import { BattleResult } from "../engine/battle";
 
-
-
 class Hero {
     static async create(user: IUser, name: string) {
         var maxHero = IdleSetting.maxHero;
@@ -224,6 +222,7 @@ class Hero {
         var engineHeroMonsters = monsters.map(monster => this.parseEngineMonster(monster));
         var engineHero = this.parseEngineHero(hero);
         var engineMonsters = this.parseNextMapEngineMonster(hero);
+
         var battle = Engine.buildBattle([].concat(engineHero).concat(engineHeroMonsters), engineMonsters);
         var result = battle.run();
         await this.handleBattleResult(hero, result);
@@ -295,11 +294,10 @@ class Hero {
         hero.canLearnSkills = canLearnSkills;
     }
     private static parseNextMapEngineMonster(hero: IHero) {
-        var teams = MapSetting[hero.map.name].teams;
-        var randomTotal = Object.keys(teams).reduce((acc, teamName) => { return acc + teams[teamName].appear }, 0);
-        var random = 0;
+        var teams = MapSetting[hero.map.name].teams.filter(team => this.handlePre(hero, team.pre));
+        var randomTotal = teams.reduce((acc, team) => { return acc + team.appear }, 0);
+        var random = Math.floor(Math.random() * randomTotal) + 1;;
         var target = 0;
-        random = Math.floor(Math.random() * randomTotal) + 1;
         for (let i in teams) {
             target += teams[i].appear;
             if (target >= random) {
@@ -320,6 +318,7 @@ class Hero {
     private static parseEngineMonster(monster: IMonster) {
         monster = JSON.parse(JSON.stringify(monster));
         var engineMonster = Engine.buildMonster(monster.name, monster.lv, monster.levelUpProps);
+        monster.lastActionHp!=0 && (engineMonster.battleProps.hp = monster.lastActionHp);
         return engineMonster;
     }
     private static parseEngineHero(hero: IHero) {
@@ -329,6 +328,7 @@ class Hero {
         var equits = hero.equits.map(equit => Engine.buildEquit(equit.name, equit.lv));
         var job = hero.job.name;
         var engineHero = Engine.buildHero(hero.name, baseProps, skills, equits, job);
+        hero.lastActionHp!=0 && (engineHero.battleProps.hp = hero.lastActionHp);
         return engineHero;
     }
 
@@ -339,6 +339,12 @@ class Hero {
         hero.lastActionDate = now;
         hero.nextActionDate = now;
         hero.nextActionDate.setSeconds(now.getSeconds() + resultInfo.battleDelay / 1000 + resultInfo.duration / 1000);
+        var lastEngineHero = resultInfo.A.find(c => c.name == hero.name && c.hasOwnProperty("job"));
+        lastEngineHero && (hero.lastActionHp = lastEngineHero.battleProps.hp);
+        monsters.forEach(m => {
+            var lastEngineMonster = resultInfo.A.find(c => c.name == m.name && c.hasOwnProperty("race"))
+            lastEngineMonster&& (m.lastActionHp = lastEngineMonster.battleProps.hp);
+        })
 
         if (resultInfo.dropEquits.length > 0) {
             await this.addEquits(hero, resultInfo.dropEquits);

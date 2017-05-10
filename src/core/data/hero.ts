@@ -35,6 +35,8 @@ interface IHero extends mongoose.Document {
     battleMonsters:{_id?:string,name:string}[]
     lastActionDate:Date
     nextActionDate:Date
+    creatdDate:Date
+    lastActionHp:number
 }
 
 
@@ -99,6 +101,7 @@ var Hero = mongoose.model<IHero>('Hero', new Schema({
     lastActionDate: { type: Date, default: Date.now },
     nextActionDate: { type: Date, default: Date.now },
     creatdDate: { type: Date, default: Date.now },
+    lastActionHp:{type:Number,default:0}
 }, { versionKey: false }));
 
 

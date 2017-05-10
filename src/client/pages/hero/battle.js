@@ -1,5 +1,6 @@
 import Api from 'common/api';
 import Time from 'common/time';
+import Setting from 'common/setting';
 import Vue from 'vue';
 export default {
     name: "battle",
@@ -12,14 +13,18 @@ export default {
             B: [],
             resultInfo: null,
             wait: 0,
+
+            expSetting: {},
+
             test: [],
         }
     },
     async mounted() {
-        this.battle();
-    },
-    async destroyed() {
 
+
+        this.expSetting = await Setting.getExpSetting();
+                console.info(this.expSetting)
+        this.battle();
     },
     methods: {
         async battle() {
@@ -39,7 +44,7 @@ export default {
                         await Time.wait(roundInfo.delay);
                         var attacker = this.A.concat(this.B).find(character => character.index == roundInfo.attacker.index);
                         Vue.set(attacker, "battleInfo", { skill: roundInfo.skill })
-                        await Time.wait(roundInfo.aniDelay - 500);
+                        await Time.wait(roundInfo.aniDelay - 900);
                         roundInfo.rbs.forEach((rb, index) => {
                             if (!attacker.battleInfo.c) {
                                 attacker.battleInfo.c = attacker.battleInfo.c || rb.ac;
@@ -56,11 +61,11 @@ export default {
                             Object.assign(defender.battleInfo, rb);
                             Object.assign(defender, roundInfo.defenders[index]);
                         })
-                        await Time.wait(500);
+                        await Time.wait(900);
                     }
                     console.info('round end');
                     this.resultInfo = result.resultInfo
-                    this.wait = Math.ceil(result.resultInfo.battleDelay/1000);
+                    this.wait = Math.ceil(result.resultInfo.battleDelay / 1000);
                     while (this.wait > 0) {
                         this.wait--;
                         await Time.wait(1000);

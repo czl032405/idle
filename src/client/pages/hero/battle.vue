@@ -3,15 +3,30 @@
         <h2 style="text-indent:10px;">battle <a href="" class="btn" @click.prevent="toggleBattle">{{isBattle?'stop':(isBattling?'stopping':'start')}}</a></h2>
         <small class="text-muted" v-if="wait>0">wait {{wait}}</small>
         <div class="teams">
-            <div class="team" v-for="team in [A,B]">
-                <div class="character" v-for="c in team">
-                    <h5 class="text-muted"> {{c.name}} <br> <small>lv.{{c.baseProps.lv}}</small> <small>{{c.job && c.job.name}}</small></h5>
-                    <div class="progress">
-                        <div class="progress-bar bg-success" :style="{width: c.battleProps.hp/c.battleProps.maxhp*100 +'%'}"></div>
+            <div class="team" v-for="team in [A,B]" v-if="team.length">
+                <div class="character" :class="{die:c.battleProps.hp<=0}" v-for="c in team">
+                    <div class="text-muted info">
+                        <span>{{c.name}}</span>
+                        <br>
+                        <small>lv.{{c.baseProps.lv}}</small>
+                        <small>{{c.job && c.job.name}}</small>
+                        <br>
                     </div>
-                    <div class="progress" style="margin-bottom:0;">
-                        <div class="progress-bar bg-info" :style="{width: c.battleProps.mp/c.battleProps.maxmp*100 +'%'}"></div>
+                    <div class="progresss">
+                        <div class="progress">
+                            <span>{{c.battleProps.hp}}/{{c.battleProps.maxhp}}</span>
+                            <div class="progress-bar bg-success" :style="{width: c.battleProps.hp/c.battleProps.maxhp*100 +'%'}"></div>
+                        </div>
+                        <div class="progress" v-if="c.battleProps.maxmp>0">
+                            <span>{{c.battleProps.mp}}/{{c.battleProps.maxmp}}</span>
+                            <div class="progress-bar bg-info" :style="{width: c.battleProps.mp/c.battleProps.maxmp*100 +'%'}"></div>
+                        </div>
+                        <div class="progress" v-if="team == A">
+                              <span>{{ c.baseProps.exp}}/{{expSetting[c.baseProps.lv]}}</span>
+                            <div class="progress-bar bg-warning" :style="{width: c.baseProps.exp/expSetting[c.baseProps.lv]*100 +'%'}"></div>
+                        </div>
                     </div>
+
                     <div class="buffs">
                         <span class="badge badge-default" v-for="b in c.buffs">{{b.name}}</span>
                     </div>
@@ -23,7 +38,6 @@
                             <div class="change-values" v-if="c.battleInfo">
                                 <span class="change-value" :class="[key,{up:value>0,down:value<0}]" v-if="value" v-for="(value,key) in c.battleInfo.c">{{/hp$/.test(key)?value:key}}</span>
                             </div>
-
                         </div>
                     </div>
                 </div>

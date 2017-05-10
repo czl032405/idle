@@ -1,6 +1,9 @@
 <template>
     <div class="wrap">
-         <router-view class="app"></router-view>
+        <keep-alive>
+            <router-view class="app"></router-view>
+        </keep-alive>
+
     </div>
 </template>
 <style src="./app.less" lang="less"></style>

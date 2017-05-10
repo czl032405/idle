@@ -44,8 +44,6 @@ app.use(express.static(staticPath,{
         if(/\.[^\.]*\./.test(path)){
             res.setHeader('Cache-Control','max-age=6666666666');
         }
-
-
     }
 }));
 
@@ -56,8 +54,8 @@ app.use(express.static(staticPath,{
 var ext = /\.ts$/.test(__filename) ? 'ts' : 'js';
 var controllers = glob.sync(`./ctrls/*.${ext}`, { cwd: __dirname });
 controllers.forEach(function (controller) {
+    console.info(controller);
     require(controller).default(app);
-
 });
 
 

@@ -4,7 +4,7 @@ import Skill from './skill/skill';
 class RoundInfo {
     isBuff: boolean = false //是否buff回合
     delay: number = 0 //毫秒后执行
-    aniDelay: number = 900 //执行时长 最小500
+    aniDelay: number = 1300 //执行时长
     attacker: Character = null
     skill: Skill = null
     defenders: Character[] = []

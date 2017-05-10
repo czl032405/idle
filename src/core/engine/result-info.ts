@@ -1,3 +1,4 @@
+import Character from './character/character';
 import EndReason from './end-reason';
 
 class ResultInfo {
@@ -8,6 +9,8 @@ class ResultInfo {
     dropEquits: { name: string, lv: number }[] = []
     dropItems: { name: string, count: number }[] = []
     dropExp: number = 0
+    A:Character[]
+    B:Character[]
 
 
 }

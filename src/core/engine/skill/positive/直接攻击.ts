@@ -11,7 +11,7 @@ class 直接攻击 extends PositiveSkill {
     }
 
     attack(roundInfo: RoundInfo) {
-        roundInfo.rbs[0].dc.hp=-10;
+        super.attack(roundInfo);
     }
 
 }

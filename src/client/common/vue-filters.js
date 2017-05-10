@@ -22,6 +22,11 @@ const Filters = {
         for (var k in o)
             if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
         return fmt;
+    },
+    differNow(value){
+        var differDate = new Date(value);
+        var nowDate = new Date();
+        return `${((nowDate-differDate)/1000/3600/24).toFixed(0)} days ${((nowDate-differDate)/1000/3600%24).toFixed(0)} hrs ${((nowDate-differDate)/1000/60%60).toFixed(0)} mins`
     }
 
 }

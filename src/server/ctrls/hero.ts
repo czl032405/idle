@@ -248,7 +248,7 @@ router.get('/learnSkill', async function (req, res, next) {
 
 router.get('/fight', async function (req, res, next) {
     var hero = req.session.hero;
-    console.info('fight' + new Date());
+    console.info('fight ' + new Date());
     try {
         var result = await Idle.Action.Hero.fight(hero);
         res.send({ status: 1, result });

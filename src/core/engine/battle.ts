@@ -34,6 +34,7 @@ class Battle {
         var resultInfo: ResultInfo = this.checkStatus();
         var A: Character[] = this.A.map(character => character.getStatus())
         var B: Character[] = this.B.map(character => character.getStatus())
+        this.preAction();
         while (resultInfo.endReason == "None") {
             roundInfos.push(this.action());
             resultInfo = this.checkStatus();
@@ -46,6 +47,18 @@ class Battle {
             B
         }
         return result;
+    }
+
+    preAction() {
+        var A: Character[] = this.A;
+        var B: Character[] = this.B;
+        var index = 0;
+        [A, B].forEach(characters => {
+            characters.forEach(character=>{
+                character.battleProps.nextInterval =  Math.floor(character.battleProps.nextInterval * index/5);
+                index++;
+            })
+        })
     }
 
 
@@ -70,7 +83,7 @@ class Battle {
         var attacker = action instanceof Buff ? action.owner : action;
         var friends = A.find(character => character == attacker) ? A : B;
         var enimies = A == friends ? B : A;
-        enimies=enimies.filter(c=>c.battleProps.hp>0);
+        enimies = enimies.filter(c => c.battleProps.hp > 0);
         roundInfo = action instanceof Buff ? action.preFire(friends, enimies) : attacker.preAttack(friends, enimies);
         var defenders = roundInfo.defenders;
         attacker.buffs.forEach((b) => {
@@ -101,20 +114,20 @@ class Battle {
             Object.keys(rb.ac).forEach(propKey => {
                 if (roundInfo.attacker.battleProps[propKey] != undefined) {
                     roundInfo.attacker.battleProps[propKey] += rb.ac[propKey];
-                    roundInfo.attacker.battleProps[propKey]<0 && (roundInfo.attacker.battleProps[propKey]=0);
+                    roundInfo.attacker.battleProps[propKey] < 0 && (roundInfo.attacker.battleProps[propKey] = 0);
                 }
             })
             Object.keys(rb.dc).forEach(propKey => {
                 if (roundInfo.defenders[index].battleProps[propKey] != undefined) {
                     roundInfo.defenders[index].battleProps[propKey] += rb.dc[propKey];
-                    roundInfo.defenders[index].battleProps[propKey] <0 && (roundInfo.defenders[index].battleProps[propKey] =0);
+                    roundInfo.defenders[index].battleProps[propKey] < 0 && (roundInfo.defenders[index].battleProps[propKey] = 0);
                 }
             })
         })
 
 
         roundInfo.attacker = roundInfo.attacker.getStatus();
-        roundInfo.defenders= roundInfo.defenders.map(defender => defender.getStatus());
+        roundInfo.defenders = roundInfo.defenders.map(defender => defender.getStatus());
         return roundInfo;
     }
 
@@ -127,7 +140,7 @@ class Battle {
         var action: Character | Buff = null;
 
         [A, B].forEach(characters => {
-            characters.filter(character=>character.battleProps.hp>0).forEach(character => {
+            characters.filter(character => character.battleProps.hp > 0).forEach(character => {
                 character.buffs.forEach(buff => {
                     action = action || buff;
                     if (action instanceof Buff && buff.nextInterval < action.nextInterval) {
@@ -139,7 +152,7 @@ class Battle {
 
 
         [A, B].forEach(characters => {
-            characters.filter(character=>character.battleProps.hp>0).forEach(character => {
+            characters.filter(character => character.battleProps.hp > 0).forEach(character => {
                 action = action || character;
                 if (action instanceof Buff && character.battleProps.nextInterval < action.nextInterval) {
                     action = character;
@@ -156,6 +169,8 @@ class Battle {
         var A = this.A;
         var B = this.B;
         var resultInfo = new ResultInfo();
+        resultInfo.A = A.map(c => c.getStatus());
+        resultInfo.B = B.map(c => c.getStatus());
         resultInfo.duration = this.duration;
         var delays = [1000, 5000, 10000]
         if (!A.find(c => c.battleProps.hp > 0) && !B.find(c => c.battleProps.hp > 0)) {
@@ -192,8 +207,8 @@ class Battle {
             resultInfo.dropExp = drops.reduce((acc, drop) => {
                 return acc += drop.dropExp;
             }, 0);
-            resultInfo.dropExp=Math.floor(resultInfo.dropExp/A.length);
-           
+            resultInfo.dropExp = Math.floor(resultInfo.dropExp / A.length);
+
         }
 
         return resultInfo;

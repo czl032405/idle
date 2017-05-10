@@ -31,7 +31,7 @@ class BattleProps {
     }
 
     get interval() {
-        return Math.floor((200 - this.speed) * 0.02 * 1000);
+        return Math.floor((270 - this.speed) * 0.02 * 1000);
     }
 
 }

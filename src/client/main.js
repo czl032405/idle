@@ -1,11 +1,13 @@
 
 import Vue from 'vue';
+import Vuex from 'vuex';
 import VueRouter from 'vue-router';
 import VueResource from 'vue-resource';
 import App from './pages/app.vue';
 import VueFilters from 'common/vue-filters';
 import env from 'env';
 import Resource from 'common/resource';
+Vue.use(Vuex);
 Vue.use(VueRouter);
 Vue.use(VueResource);
 
@@ -14,11 +16,11 @@ var router = new VueRouter({
     routes: [
         { path: '/index', component: require('./pages/index.vue') },
         { path: '/user/detail', component: require('./pages/user/detail.vue') },
-        { path: '/hero/create',component:require('./pages/hero/create.vue')},
-        { path: '/hero/battle/:heroId',component:require('./pages/hero/battle.vue')},
+        { path: '/hero/create', component: require('./pages/hero/create.vue') },
+        { path: '/hero/battle/:heroId', component: require('./pages/hero/battle.vue') },
         { path: '/api', component: require('./pages/api.vue') },
-        { path: '/route',component:require('./pages/route.vue')},
-        { path: "*",  redirect: /dev/.test(env)?'/route': '/index' },
+        { path: '/route', component: require('./pages/route.vue') },
+        { path: "*", redirect: /dev/.test(env) ? '/route' : '/index' },
     ]
 })
 
@@ -46,8 +48,15 @@ if (!/dev/.test(env)) {
 
 }
 
+
+const store = new Vuex.Store({
+    state: {
+        count: 0
+    },
+})
+
 //app
-var app = new Vue(Vue.util.extend({ router }, App)).$mount('app');
+var app = new Vue(Vue.util.extend({ router,store }, App)).$mount('app');
 var fullLoading = document.querySelector(".full-loading");
 fullLoading && (fullLoading.style.display = "none");
 

@@ -1,4 +1,4 @@
-import Formula from "./formula";
+import F from "./formula";
 import BaseProps from './base-props';
 class BattleProps {
     maxhp: number = 1
@@ -19,19 +19,16 @@ class BattleProps {
     counter: number = 0
     nextInterval:number=1
     constructor(baseProps: BaseProps) {
-        var propArr = "maxhp maxmp attack defense mattack mdefense speed critmult dropmult hit avoid parry crit counter".split(" ");
-
-        propArr.forEach(prop=>{
-             Formula[prop] && (this[prop] = Formula[prop](baseProps));
+        Object.keys(F.battleProps).forEach(key=>{
+            this[key]!=undefined && (this[key]=F.battleProps[key](baseProps));
         })
         this.hp = this.maxhp;
         this.mp = this.maxmp;
         this.nextInterval = this.interval;
-
     }
 
     get interval() {
-        return Math.floor((270 - this.speed) * 0.02 * 1000);
+      return F.battle.interval(this);
     }
 
 }

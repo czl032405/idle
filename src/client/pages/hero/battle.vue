@@ -1,7 +1,6 @@
 <template>
     <div class="battle-view container">
         <h2 style="text-indent:10px;">battle <a href="" class="btn" @click.prevent="toggleBattle">{{isBattle?'stop':(isBattling?'stopping':'start')}}</a></h2>
-        <small class="text-muted" v-if="wait>0">wait {{wait}}</small>
         <div class="teams">
             <div class="team" v-for="team in [A,B]" v-if="team.length">
                 <div class="character" :class="{die:c.battleProps.hp<=0}" v-for="c in team">
@@ -22,7 +21,7 @@
                             <div class="progress-bar bg-info" :style="{width: c.battleProps.mp/c.battleProps.maxmp*100 +'%'}"></div>
                         </div>
                         <div class="progress" v-if="team == A">
-                              <span>{{ c.baseProps.exp}}/{{expSetting[c.baseProps.lv]}}</span>
+                            <span>{{ c.baseProps.exp}}/{{expSetting[c.baseProps.lv]}}</span>
                             <div class="progress-bar bg-warning" :style="{width: c.baseProps.exp/expSetting[c.baseProps.lv]*100 +'%'}"></div>
                         </div>
                     </div>
@@ -53,7 +52,8 @@
                 <p>获得:{{resultInfo.dropExp}}exp</p>
                 <p v-if="resultInfo.dropEquits && resultInfo.dropEquits.length">掉落: <span v-for="equit in  resultInfo.dropEquits">{{equit.name}} lv.{{equit.lv}}</span></p>
                 <p v-if="resultInfo.dropItems && resultInfo.dropItems.length">掉落: <span v-for="item in  resultInfo.dropItems">{{item.name}} lv.{{item.lv}}</span></p>
-                <small>耗时:{{resultInfo.duration}}</small>
+                <p class="text-muted">耗时:{{resultInfo.duration}}</p>
+                <p class="text-muted" v-if="wait>0">wait:{{wait}}</p>
             </div>
         </div>
 

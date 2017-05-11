@@ -1,5 +1,5 @@
 import Skill from '../skill';
-import Formula from '../../formula'
+import F from '../../formula'
 import RoundInfo from '../../round-info';
 
 class PositiveSkill extends Skill {

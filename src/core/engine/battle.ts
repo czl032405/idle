@@ -50,15 +50,15 @@ class Battle {
     }
 
     preAction() {
-        var A: Character[] = this.A;
-        var B: Character[] = this.B;
-        var index = 0;
-        [A, B].forEach(characters => {
-            characters.forEach(character=>{
-                character.battleProps.nextInterval =  Math.floor(character.battleProps.nextInterval * index/5);
-                index++;
-            })
-        })
+        // var A: Character[] = this.A;
+        // var B: Character[] = this.B;
+        // var index = 0;
+        // [A, B].forEach(characters => {
+        //     characters.forEach(character=>{
+        //         character.battleProps.nextInterval =  Math.floor(character.battleProps.nextInterval * index/5);
+        //         index++;
+        //     })
+        // })
     }
 
 
@@ -196,8 +196,8 @@ class Battle {
         }
 
 
-        if (resultInfo.endReason == "DefenderDie" && !this.isTvT) {
-            var drops = B.map(b => b.drop());
+        if (!this.isTvT) {
+            var drops = B.filter(character=>character.battleProps.hp<=0).map(b => b.drop());
             resultInfo.dropEquits = drops.reduce((acc, drop) => {
                 return acc.concat(drop.dropEquits);
             }, []);

@@ -1,5 +1,5 @@
 <template>
-    <div class="user-detail-view container">
+    <div class="user-detail-view ">
         <div class="detail">
             <h2>{{user.name}} <router-link to="/user/login" class="btn">logout</router-link></h2>
             <small class="text-muted">age. {{ ((new Date()-new Date(user.creatdDate))/1000/3600/24).toFixed(0)}} days {{((new Date()-new Date(user.creatdDate))/1000/3600%24).toFixed(0)}} hrs {{((new Date()-new Date(user.creatdDate))/1000/60%60).toFixed(0)}} mins</small>
@@ -17,7 +17,7 @@
                     <small class="text-muted">offline for {{hero.lastActionDate | differNow}}</small>
                 </div>
                 <div class="right">
-                    <router-link :to="'/hero/battle/'+hero._id" class="btn">go</router-link>
+                    <router-link :to="'/hero/battle/'" class="btn">go</router-link>
                     <a href="" class="btn text-danger" @click.prevent="deleteHero(hero._id)">delete</a>
                 </div>
             </div>

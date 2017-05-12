@@ -1,5 +1,5 @@
 <template>
-    <div class="login-view container">
+    <div class="login-view ">
         <h2>Login User</h2>
             <form action="" autocomplete="on">
                 <div class="form-group">
@@ -12,7 +12,7 @@
                 </div>
               
                 <button class="btn btn-primary btn-block" @click="login">Login</button>
-
+                <router-link to="/user/create" class="btn btn-block">Create</router-link>
             </form>
     </div>
 </template>

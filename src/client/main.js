@@ -15,11 +15,15 @@ var router = new VueRouter({
     mode: 'hash',
     routes: [
         { path: '/index', component: require('./pages/index.vue') },
-        { path:'/user/create',component:require('./pages/user/create.vue')},
-        { path:'/user/login',component:require('./pages/user/login.vue')},
+        { path: '/user/create', component: require('./pages/user/create.vue') },
+        { path: '/user/login', component: require('./pages/user/login.vue') },
         { path: '/user/detail', component: require('./pages/user/detail.vue') },
         { path: '/hero/create', component: require('./pages/hero/create.vue') },
-        { path: '/hero/battle/:heroId', component: require('./pages/hero/battle.vue') },
+        { path: '/hero/battle', component: require('./pages/hero/battle.vue') },
+           { path: '/hero/job', component: require('./pages/hero/job.vue') },
+              { path: '/hero/skill', component: require('./pages/hero/skill.vue') },
+                 { path: '/hero/equit', component: require('./pages/hero/equit.vue') },
+                    { path: '/hero/item', component: require('./pages/hero/item.vue') },
         { path: '/api', component: require('./pages/api.vue') },
         { path: '/route', component: require('./pages/route.vue') },
         { path: "*", redirect: /dev/.test(env) ? '/route' : '/index' },
@@ -58,7 +62,7 @@ const store = new Vuex.Store({
 })
 
 //app
-var app = new Vue(Vue.util.extend({ router,store }, App)).$mount('app');
+var app = new Vue(Vue.util.extend({ router, store }, App)).$mount('app');
 var fullLoading = document.querySelector(".full-loading");
 fullLoading && (fullLoading.style.display = "none");
 

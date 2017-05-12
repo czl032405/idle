@@ -1,5 +1,5 @@
 <template>
-    <div class="create-view container">
+    <div class="create-view">
         <h2>Create User</h2>
             <form action="">
                 <div class="form-group">

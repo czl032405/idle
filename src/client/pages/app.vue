@@ -1,7 +1,9 @@
 <template>
-    <div class="wrap">
+    <div class="wrap ">
+        <idle-nav></idle-nav>
+
         <keep-alive>
-            <router-view class="app"></router-view>
+            <router-view class="app container"></router-view>
         </keep-alive>
 
     </div>

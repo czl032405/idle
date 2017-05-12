@@ -1,5 +1,5 @@
 <template>
-    <div class="battle-view container">
+    <div class="battle-view ">
         <h2 style="text-indent:10px;">battle <a href="" class="btn" @click.prevent="toggleBattle">{{isBattle?'stop':(isBattling?'stopping':'start')}}</a></h2>
         <div class="teams">
             <div class="team" v-for="team in [A,B]" v-if="team.length">

@@ -15,6 +15,8 @@ var router = new VueRouter({
     mode: 'hash',
     routes: [
         { path: '/index', component: require('./pages/index.vue') },
+        { path:'/user/create',component:require('./pages/user/create.vue')},
+        { path:'/user/login',component:require('./pages/user/login.vue')},
         { path: '/user/detail', component: require('./pages/user/detail.vue') },
         { path: '/hero/create', component: require('./pages/hero/create.vue') },
         { path: '/hero/battle/:heroId', component: require('./pages/hero/battle.vue') },
@@ -59,4 +61,6 @@ const store = new Vuex.Store({
 var app = new Vue(Vue.util.extend({ router,store }, App)).$mount('app');
 var fullLoading = document.querySelector(".full-loading");
 fullLoading && (fullLoading.style.display = "none");
+
+export default app;
 

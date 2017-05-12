@@ -1,7 +1,7 @@
 <template>
     <div class="user-detail-view container">
         <div class="detail">
-            <h2>{{user.name}}</h2>
+            <h2>{{user.name}} <router-link to="/user/login" class="btn">logout</router-link></h2>
             <small class="text-muted">age. {{ ((new Date()-new Date(user.creatdDate))/1000/3600/24).toFixed(0)}} days {{((new Date()-new Date(user.creatdDate))/1000/3600%24).toFixed(0)}} hrs {{((new Date()-new Date(user.creatdDate))/1000/60%60).toFixed(0)}} mins</small>
         </div>
         <hr>

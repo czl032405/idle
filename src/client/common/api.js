@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import PopMessage from 'common/pop-message';
+import app from '../main.js';
 const Api = {
     test: "7",
     serverPath: "/api",
@@ -35,7 +36,8 @@ const Api = {
     },
     go2login() {
         console.info("login");
-        // router.push('/user/login');
+     
+        app.$router.push('/user/login');
     }
 
 
@@ -52,7 +54,6 @@ const ApiMap = {
         del: 'id',
         select: 'id',
         myList: '',
-        mapList: '',
         changeJob: 'job',
         useSkills: 'skills',
         useEquits: 'equits',

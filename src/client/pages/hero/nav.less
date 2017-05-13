@@ -1,0 +1,99 @@
+.hero-nav {
+    position: absolute;
+    z-index: 2;
+    top: 7px;
+    right: 20px;
+    width: 3rem;
+    height: 3rem;
+    &.trans{
+        transition: all linear 0.2s;
+    }
+    span {
+        position: relative;
+        z-index: 1;
+        display: block;
+        display: flex;
+        width: 100%;
+        height: 100%;
+        cursor: pointer;
+        color: white;
+        border-radius: 50%;
+        border-radius: 50%;
+        background: #0275d8;
+        box-shadow: 0 0 1px 1px #0275d8;
+
+        justify-content: center;
+        align-items: center;
+        // &:hover {
+        //     background: lighten(#234567,50%);
+        //     box-shadow: 0 0 1px 1px lighten(#234567,50%);
+        // }
+    }
+    a {
+        font-size: 12px;
+        position: absolute;
+        z-index: -1;
+        top: .5rem;
+        left: .5rem;
+        display: flex;
+        width: 2rem;
+        height: 2rem;
+        cursor: pointer;
+        cursor: pointer;
+        transition: all linear .2s;
+        text-decoration: none;
+        color: white;
+        border-radius: 50%;
+        background: #0275d8;
+        box-shadow: 0 0 1px 1px #0275d8;
+
+        justify-content: center;
+        align-items: center;
+
+        &:hover {
+            background: lighten(#0275d8,50%);
+            box-shadow: 0 0 1px 1px lighten(#0275d8,50%);
+        }
+
+
+        &.show:nth-child(2) {
+            top: 2.2rem;
+            left: -2.5rem;
+                  transition: all linear .2s .1s;
+        }
+        &.show:nth-child(3) {
+            top: 4rem;
+            left: -0.5rem;
+               transition: all linear .2s .2s;
+        }
+           &.show:nth-child(4) {
+            top: 4.5rem;
+            left: 2rem;
+               transition: all linear .2s .3s;
+        }
+
+        &.show:nth-child(5) {
+            top: 3rem;
+            left: -5rem;
+               transition: all linear .2s .4s;
+        }
+        &.show:nth-child(6) {
+            top: 5rem;
+            left: -3rem;
+               transition: all linear .2s .5s;
+        }
+        &.show:nth-child(7) {
+            top: 6.5rem;
+            left: -.5rem;
+               transition: all linear .2s .6s;
+        }
+        &.show:nth-child(8) {
+            top: 7.5rem;
+            left: 2rem;
+               transition: all linear .2s .7s;
+        }
+
+
+      
+    }
+}

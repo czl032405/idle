@@ -19,24 +19,25 @@ var router = new VueRouter({
         { path: '/user/login', component: require('./pages/user/login.vue') },
         { path: '/user/detail', component: require('./pages/user/detail.vue') },
         { path: '/hero/create', component: require('./pages/hero/create.vue') },
-        { path: '/hero/battle', component: require('./pages/hero/battle.vue') },
-           { path: '/hero/job', component: require('./pages/hero/job.vue') },
-              { path: '/hero/skill', component: require('./pages/hero/skill.vue') },
-                 { path: '/hero/equit', component: require('./pages/hero/equit.vue') },
-                    { path: '/hero/item', component: require('./pages/hero/item.vue') },
+        {
+            path: '/hero', component: require('./pages/hero/hero.vue'),
+            children: [
+                { path: '', redirect: 'detail' },
+                { path: 'detail', component: require('./pages/hero/detail.vue') },
+                { path: 'battle', component: require('./pages/hero/battle.vue') },
+                { path: 'job', component: require('./pages/hero/job.vue') },
+                { path: 'skill', component: require('./pages/hero/skill.vue') },
+                { path: 'equit', component: require('./pages/hero/equit.vue') },
+                { path: 'item', component: require('./pages/hero/item.vue') },
+                { path: 'map', component: require('./pages/hero/map.vue') },
+            ]
+        },
+
+
         { path: '/api', component: require('./pages/api.vue') },
         { path: '/route', component: require('./pages/route.vue') },
         { path: "*", redirect: /dev/.test(env) ? '/route' : '/index' },
     ]
-})
-
-//全局组件注册
-//comps
-var compsContext = require.context("./comps", true, /^\.\/.*\.vue/);
-compsContext.keys().forEach(path => {
-    var comp = compsContext(path);
-    var defaultName = path.replace(/\.\//, "").replace(/\//g, "-").replace(/\./g, "").replace(/vue/, "");
-    Vue.component(comp.name || defaultName, comp);
 })
 
 

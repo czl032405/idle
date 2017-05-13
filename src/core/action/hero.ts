@@ -160,6 +160,8 @@ class Hero {
             var learnedSkill = hero.learnedSkills.find(learnedSkill => learnedSkill.name == skill.name)
             if (learnedSkill) {
                 learnedSkill.lv = skill.lv;
+                var equitedSkill =hero.skills.find(s=>s.name==skill.name);
+                equitedSkill && (equitedSkill.lv=skill.lv);
             }
             else {
                 hero.learnedSkills.push(skill);

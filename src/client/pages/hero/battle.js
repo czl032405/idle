@@ -20,10 +20,7 @@ export default {
         }
     },
     async mounted() {
-
-
         this.expSetting = await Setting.getExpSetting();
-                console.info(this.expSetting)
         this.battle();
     },
     methods: {
@@ -38,8 +35,6 @@ export default {
                     for (let i = 0; i < result.roundInfos.length; i++) {
                         this.A.forEach(c => Vue.set(c, "battleInfo", null));
                         this.B.forEach(c => Vue.set(c, "battleInfo", null));
-
-                        console.info(`round ${i}`)
                         var roundInfo = result.roundInfos[i];
                         await Time.wait(roundInfo.delay);
                         var attacker = this.A.concat(this.B).find(character => character.index == roundInfo.attacker.index);

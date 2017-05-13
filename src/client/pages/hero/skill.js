@@ -1,5 +1,5 @@
 import Api from 'common/api';
-import Vue from 'Vue';
+import Vue from 'vue';
 import PopMessage from 'common/pop-message';
 export default {
     name: "skill",

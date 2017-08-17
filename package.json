@@ -5,7 +5,7 @@
   "main": "src/index.ts",
   "scripts": {
     "dev": "npm-run-all -p dev:*",
-    "dev:server": "nodemon -w src -e ts  --exec \"tsc && node --harmony --debug  dist/index.js  \" ",
+    "dev:server": "nodemon -w src -e ts  --exec \"tsc && node  --inspect  dist/index.js  \" ",
     "dev:client": "cross-env NODE_ENV=development  node node_modules/webpack/bin/webpack.js  --progress --watch",
     "dev:db": "mongod",
     "build": "npm run build:server && npm run build:client",
@@ -30,6 +30,7 @@
     "http-proxy": "^1.16.2",
     "md5": "^2.2.1",
     "mongoose": "^4.7.7",
+    "pmx": "^1.2.0",
     "request": "^2.79.0",
     "socket.io": "^1.7.2",
     "typescript": "^2.3.1",

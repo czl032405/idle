@@ -11,7 +11,7 @@
     "build": "npm run build:server && npm run build:client",
     "build:server": "node node_modules/typescript/bin/tsc",
     "build:client": "cross-env NODE_ENV=production  node node_modules/webpack/bin/webpack.js --progress",
-    "start": "node dist/index.js "
+    "start": "cross-env PORT=9001 node dist/index.js "
   },
   "engines": {
     "node": "7.0.0",

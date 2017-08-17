@@ -5,9 +5,9 @@ const webpack = require('webpack')
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
 const LiveReloadPlugin = require("webpack-livereload-plugin");
-del.sync("dist/client/**");
+del.sync("dist/**");
 
-var venders = fs.readdirSync(path.resolve(__dirname, 'src/client/venders'))
+var venders = fs.readdirSync(path.resolve(__dirname, 'src/venders'))
 venders.sort(function (a, b) {
     return a > b ? -1 : 1;
 })
@@ -18,13 +18,13 @@ venders = venders.reduce((a, b) => {
 }, {});
 
 module.exports = {
-    context: path.resolve(__dirname, "src/client"),
+    context: path.resolve(__dirname, "src"),
     entry: {
         'main': './main.js',
     },
     output: {
         filename: 'js/[name].[chunkhash:6].js',
-        path: path.resolve(__dirname, './dist/client'),
+        path: path.resolve(__dirname, './dist'),
         publicPath: '',
     },
     module: {
@@ -42,9 +42,9 @@ module.exports = {
     },
     resolve: {
         alias: {
-            images: path.resolve(__dirname, './src/client/images/'),
+            images: path.resolve(__dirname, './src/images/'),
         },
-        modules: [`./src/client`, 'node_modules/'],
+        modules: [`./src`, 'node_modules/'],
     },
     externals: {
         env: /production/.test(process.env.NODE_ENV) ? '"pro"' : '"dev"'

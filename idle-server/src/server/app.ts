@@ -12,11 +12,6 @@ import * as express from "express";
 const app = express();
 const args = process.argv.join(" ");
 
-//  import ("../core/idle");
-
-
-
-
 app.use(compress());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
@@ -37,7 +32,8 @@ app.set('port', (process.env.PORT || 80));
 app.set('etag', false)
 
 
-const staticPath = path.resolve(__dirname, '../client');
+const staticPath = path.resolve(__dirname, '../../../idle-client/dist');
+console.info(staticPath);
 app.use(express.static(staticPath,{
     etag:false,
     setHeaders(res: express.Response, path: string, stat: any){
@@ -54,7 +50,6 @@ app.use(express.static(staticPath,{
 var ext = /\.ts$/.test(__filename) ? 'ts' : 'js';
 var controllers = glob.sync(`./ctrls/*.${ext}`, { cwd: __dirname });
 controllers.forEach(function (controller) {
-    console.info(controller);
     require(controller).default(app);
 });
 
@@ -75,7 +70,7 @@ app.use(async function (err, req, res, next) {
 
     }
     else {
-        res.status(err.status || 500);
+        // res.status(err.status || 500);
         next(err);
 
     }

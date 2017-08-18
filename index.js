@@ -10,6 +10,16 @@ pmx.action('client:build', function (reply) {
         reply(e)
     })
 })
+pmx.action('client:install', function (reply) {
+    var child = spawn('npm', ['install'], { cwd: "./idle-client", stdio: "inherit" });
+    child.on('close', function () {
+        console.info('boom');
+        reply({ boom: true })
+    })
+    child.on('error', function (e) {
+        reply(e)
+    })
+})
 
 pmx.action('server:build', function (reply) {
     var child = spawn('npm', ['run', 'build'], { cwd: "./idle-server", stdio: "inherit" });
@@ -21,6 +31,18 @@ pmx.action('server:build', function (reply) {
         reply(e)
     })
 })
+
+pmx.action('server:install', function (reply) {
+    var child = spawn('npm', ['install'], { cwd: "./idle-server", stdio: "inherit" });
+    child.on('close', function () {
+        console.info('boom');
+        reply({ boom: true })
+    })
+    child.on('error', function (e) {
+        reply(e)
+    })
+})
+
 
 require('./idle-server/dist');
 

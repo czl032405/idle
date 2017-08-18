@@ -4,7 +4,7 @@ module.exports = {
       name: 'idle',
       script: "./index.js",
       env:{
-        port:9001
+        PORT:9001
       },
     }
   ]

@@ -1,0 +1,1 @@
+require('./idle-server/dist')

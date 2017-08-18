@@ -2,12 +2,9 @@ module.exports = {
   apps: [
     {
       name: 'idle',
-      cwd: "./",
-      script: 'index.js',
-      env: {
-        PORT: 9001
-      },
-      post_update: ["npm install"]
+      cwd: "./idle-server",
+      script: 'npm',
+      args:"start"
     },
   ],
   deploy: {

@@ -1,0 +1,22 @@
+{
+  "name": "idle",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/czl032405/idle.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/czl032405/idle/issues"
+  },
+  "homepage": "https://github.com/czl032405/idle#readme",
+  "dependencies": {
+    "pmx": "^1.2.0"
+  }
+}

@@ -3,108 +3,64 @@ const util = require('util');
 const exec = util.promisify(require('child_process').exec);
 
 
-
-// pmx.action('client:build', function (reply) {
-//     var child = spawn('npm', ['run', 'build'], { cwd: "./idle-client", stdio: "inherit" });
-//     child.on('close', function () {
-//         console.info('boom');
-//         reply({ boom: true })
-//     })
-//     child.on('error', function (e) {
-//         reply(e)
-//     })
-// })
-// pmx.action('client:install', function (reply) {
-//     var child = spawn('npm', ['install'], { cwd: "./idle-client", stdio: "inherit" });
-//     child.on('close', function () {
-//         console.info('boom');
-//         reply({ boom: true })
-//     })
-//     child.on('error', function (e) {
-//         reply(e)
-//     })
-// })
-
-// pmx.action('server:build', function (reply) {
-//     var child = spawn('npm', ['run', 'build'], { cwd: "./idle-server", stdio: "inherit" });
-//     child.on('close', function () {
-//         console.info('boom');
-//         reply({ boom: true })
-//     })
-//     child.on('error', function (e) {
-//         reply(e)
-//     })
-// })
-
-// pmx.action('server:install', function (reply) {
-//     var child = spawn('npm', ['install'], { cwd: "./idle-server", stdio: "inherit" });
-//     child.on('close', function () {
-//         console.info('boom');
-//         reply({ boom: true })
-//     })
-//     child.on('error', function (e) {
-//         reply(e)
-//     })
-// })
-
-
-//todo 
-var installClient = async function (reply) {
-    reply = reply || function (e) {console.error(e) };
+var installClient = async function (data,res) {
     try {
-        reply('delete package-lock.json');
+        res.send('delete package-lock.json');
         var { stdout, stderr } = await exec('rm -rf package-lock.json', { cwd: "./idle-client" });
-        reply(stdout)
-        reply(stderr)
+        res.send(stdout)
+        res.send(stderr)
 
 
-        reply('begin: npm install in ./idle-client')
+        res.send('begin: npm install in ./idle-client')
         var { stdout, stderr } = await exec('npm install', { cwd: "./idle-client" });
-        reply(stdout)
-        reply(stderr)
-        reply('end')
+        res.send(stdout)
+        res.send(stderr)
+        res.send('end')
 
-        reply('begin: npm run build in ./idle-client')
+        res.send('begin: npm run build in ./idle-client')
         var { stdout, stderr } = await exec('npm run build', { cwd: "./idle-client" });
-        reply(stdout)
-        reply(stderr)
-        reply('end')
+        res.send(stdout)
+        res.send(stderr)
+        res.send('end')
+
+        res.end('action end');
 
     } catch (error) {
-        reply(error);
+        res.error(error);
     }
 }
 
 
-var installServer = async function (reply) {
-    reply = reply || function (e) {console.error(e) };
+var installServer = async function (data,res) {
     try {
-        reply('delete package-lock.json');
+        res.send('delete package-lock.json');
         var { stdout, stderr } = await exec('rm -rf package-lock.json', { cwd: "./idle-server" });
-        reply(stdout)
-        reply(stderr)
+        res.send(stdout)
+        res.send(stderr)
 
-        reply('begin: npm install in ./idle-server')
+        res.send('begin: npm install in ./idle-server')
         var { stdout, stderr } = await exec('npm install', { cwd: "./idle-server" });
-        reply(stdout)
-        reply(stderr)
-        reply('end')
+        res.send(stdout)
+        res.send(stderr)
+        res.send('end')
 
-        reply('begin: npm run build in ./idle-server')
+        res.send('begin: npm run build in ./idle-server')
         var { stdout, stderr } = await exec('npm run build', { cwd: "./idle-server" });
-        reply(stdout)
-        reply(stderr)
-        reply('end')
+        res.send(stdout)
+        res.send(stderr)
+        res.send('end')
+
+        res.end('action end')
 
     } catch (error) {
-        reply(error);
+        res.erro(error);
     }
 }
 
 
-pmx.action('client:install',installClient)
+pmx.scopedAction('client:install',installClient)
 
-pmx.action('server:install',installServer);
+pmx.scopedAction('server:install',installServer);
 
 require('./idle-server/dist');
 

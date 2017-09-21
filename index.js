@@ -1,7 +1,7 @@
 const pmx = require("pmx");
 const util = require('util');
 const exec = util.promisify(require('child_process').exec);
-
+const fs = require('fs');
 
 var installClient = async function (data,res) {
     try {
@@ -62,6 +62,15 @@ pmx.scopedAction('client:install',installClient)
 
 pmx.scopedAction('server:install',installServer);
 
-require('./idle-server/dist');
+
+if(fs.existsSync('./idle-server/dist')){
+    require('./idle-server/dist');
+}
+else{
+    setInterval(function(){
+        console.error('no dist');
+    },6666)
+}
+
 
 

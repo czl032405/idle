@@ -14,8 +14,7 @@ router.get('*', (req, res, next) => {
         return;
     }
     if (!user) {
-        next("not login");
-        return;
+        throw "not login";
     }
     next();
 })
@@ -42,16 +41,13 @@ router.get('/create', async (req, res, next) => {
     var name = req.query.name || "";
     var pw = req.query.pw || "";
     if (!name) {
-        next("请输入名字");
-        return;
+        throw "请输入名字";
     }
     if (!pw) {
-        next("请输入密码");
-        return;
+        throw "请输入密码";
     }
     if (pw.length < 6) {
-        next("密码长度必须大于6");
-        return;
+        throw "密码长度必须大于6";
     }
     try {
         var result = await Idle.Action.User.create(name, pw);
@@ -64,17 +60,14 @@ router.get('/create', async (req, res, next) => {
 })
 
 
-
 router.get('/login', async (req, res, next) => {
     var name = req.query.name || "";
     var pw = req.query.pw || "";
     if (!name) {
-        next("请输入名字");
-        return;
+        throw "请输入名字";
     }
     if (!pw) {
-        next("请输入密码");
-        return;
+        throw "请输入密码";
     }
     try {
         var result = await Idle.Action.User.login(name, pw);

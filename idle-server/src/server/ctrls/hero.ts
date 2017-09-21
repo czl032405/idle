@@ -8,12 +8,10 @@ export default function (app) {
 
 router.get('*', async function (req, res, next) {
     if (!req.session.user) {
-        next("not login");
-        return;
+        throw "not login";
     }
     if (/create/.test(req.path)) {
         next();
-        return;
     }
     var user = req.session.user;
     if (user.heros.length > 0 && !req.session.hero) {
@@ -27,8 +25,7 @@ router.get('*', async function (req, res, next) {
     }
 
     if (!req.session.hero) {
-        next("no hero to selecte");
-        return;
+        throw "no hero to selecte";
     }
     next();
 })
@@ -38,8 +35,7 @@ router.get('/create', async function (req, res, next) {
     var name = req.query.name;
     var user = req.session.user;
     if (!name) {
-        next("请输入名字");
-        return;
+        throw "请输入名字";
 
     }
 
@@ -50,8 +46,7 @@ router.get('/create', async function (req, res, next) {
     }
     catch (e) {
         if (/duplicate key/.test(e.message)) {
-            next("名字已经被使用，请换一个");
-            return;
+            throw "名字已经被使用，请换一个";
         }
         next(e)
     }
@@ -108,8 +103,7 @@ router.get('/changeJob', async function (req, res, next) {
     var jobName = req.query.job;
     var hero = req.session.hero;
     if (!jobName) {
-        next("请输入职业名称");
-        return;
+        throw "请输入职业名称";
     }
     try {
         var result = await Idle.Action.Hero.changeJob(hero, { name: jobName });
@@ -125,8 +119,7 @@ router.get('/changeMap', async function (req, res, next) {
     var mapName = req.query.map;
     var hero = req.session.hero;
     if (!mapName) {
-        next("请输入地图名称");
-        return;
+        throw "请输入地图名称";
     }
     try {
         var result = await Idle.Action.Hero.changeMap(hero, { name: mapName });
@@ -156,8 +149,7 @@ router.get('/useSkills', async function (req, res, next) {
     var skills = [];
     var skillsMap = {};
     if (!skillsStr) {
-        next("请输入技能");
-        return;
+        throw "请输入技能";
     }
 
     try {
@@ -194,8 +186,7 @@ router.get('/useEquits', async function (req, res, next) {
     var hero = req.session.hero;
     var equitIds = req.query.equits;//233,444,555
     if (!equitIds) {
-        next("请输入装备");
-        return;
+        throw "请输入装备";
     }
     equitIds = equitIds.split(",");
     try {
@@ -212,8 +203,7 @@ router.get('/learnJob', async function (req, res, next) {
     var hero = req.session.hero;
     var jobName = req.query.job;
     if(!jobName){
-        next("请输入职业名称");
-        return;
+        throw "请输入职业名称";
     }
     try {
         var result = await Idle.Action.Hero.learnJob(hero, { name: jobName });
@@ -229,12 +219,10 @@ router.get('/learnSkill', async function (req, res, next) {
     var skillName = req.query.skill;
     var skillLv = req.query.lv;
     if(!skillName){
-        next("请输入技能名称");
-        return;
+        throw "请输入技能名称";
     }
     if(!skillLv){
-        next("请输入技能等级");
-        return;
+        throw "请输入技能等级";
     }
     try {
         var result = await Idle.Action.Hero.learnSkill(hero, { name: skillName, lv: skillLv });

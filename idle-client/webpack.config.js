@@ -49,6 +49,19 @@ module.exports = {
     externals: {
         env: /production/.test(process.env.NODE_ENV) ? '"pro"' : '"dev"'
     },
+    devServer: {
+        contentBase: path.join(__dirname, ""),
+        inline: true,
+        host: "0.0.0.0",
+        port: 80,
+        proxy: {
+            "/api/*": {
+                target: "http://idle.my-egg.me",
+                changeOrigin: true,
+            }
+        },
+
+    },
     plugins: [],
     performance: { hints: false },
     devtool: '#source-map'
@@ -74,7 +87,7 @@ if (/production/.test(process.env.NODE_ENV)) {
     }))
 }
 else {
-    module.exports.plugins.push(new LiveReloadPlugin({appendScriptTag:true}));
+    module.exports.plugins.push(new LiveReloadPlugin({ appendScriptTag: true }));
 }
 
 

@@ -9,16 +9,14 @@ export default function (app) {
 router.get('*', async (req, res, next) => {
     var user = req.session.user;
     if (!user) {
-        next("not login");
-        return;
+        throw "not login";
     }
     if (user.name == 'czl') {
         next();
         return;
     }
     else {
-        next("ban:trys to use admin");
-        return;
+        throw "ban:trys to use admin";
     }
 
 })
@@ -38,8 +36,7 @@ router.get('/user/list', async (req, res, next) => {
 router.get('/user/ban', async (req, res, next) => {
     var name = req.query.name;
     if (!name) {
-        next("请输入名字");
-        return;
+        throw "请输入名字";
     }
     try {
         var result = await Idle.Action.Admin.User.ban(name);
